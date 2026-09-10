@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LENTERA — Dashboard Guru BK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* ── Design Tokens (subset dari main.css) ── */
+    :root {
+      --color-primary:       #F4A62A;
+      --color-primary-dark:  #D4891A;
+      --color-primary-light: #FDD17A;
+      --color-secondary:     #4A7C59;
+      --color-accent:        #C0392B;
+      --color-teal:          #2C9B8F;
+      --color-indigo:        #4C5FA1;
+      --color-warning:       #F39C12;
+      --color-success:       #27AE60;
+      --color-danger:        #E74C3C;
+      --color-bg:            #F8F5EE;
+      --color-bg-dark:       #1C1A14;
+      --color-card:          #FFFFFF;
+      --color-surface:       #EDE7D5;
+      --color-text:          #2B2417;
+      --color-text-muted:    #7A6E5F;
+      --color-text-light:    #AFA394;
+      --color-sidebar:       #1C2A20;
+      --font-body:   'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-display:'Playfair Display', Georgia, serif;
+      --radius-sm:   6px;
+      --radius-md:   12px;
+      --radius-lg:   20px;
+      --radius-full: 9999px;
+      --shadow-sm:  0 1px 3px rgba(43,36,23,0.08);
+      --shadow-md:  0 4px 16px rgba(43,36,23,0.10);
+      --shadow-lg:  0 8px 32px rgba(43,36,23,0.12);
+      --transition: 200ms ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: inherit; }
+    ul, ol { list-style: none; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 240px;
+      background: var(--color-sidebar);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      transition: transform var(--transition);
+    }
+    .sidebar-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar-logo-icon { font-size: 1.5rem; }
+    .sidebar-logo-text {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .sidebar-logo-sub {
+      font-size: 10px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: block;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      overflow-y: auto;
+    }
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.3);
+      padding: 12px 8px 6px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      transition: all var(--transition);
+      cursor: pointer;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
+    .nav-item.active {
+      background: rgba(244,166,42,0.15);
+      color: var(--color-primary-light);
+      font-weight: 600;
+    }
+    .nav-icon { font-size: 1rem; flex-shrink: 0; width: 20px; text-align: center; }
+    .nav-badge {
+      margin-left: auto;
+      background: var(--color-danger);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      min-width: 20px;
+      text-align: center;
+    }
+    .nav-badge--warn { background: var(--color-warning); color: #1C1A14; }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .bk-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .bk-avatar {
+      width: 36px; height: 36px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .bk-info { flex: 1; overflow: hidden; }
+    .bk-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bk-role {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .btn-logout {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.3);
+      font-size: 1rem;
+      transition: color var(--transition);
+      padding: 4px;
+    }
+    .btn-logout:hover { color: var(--color-danger); }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      flex: 1;
+      margin-left: 240px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--color-card);
+      border-bottom: 1px solid var(--color-surface);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+    .topbar-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar-school {
+      font-size: 12px;
+      color: var(--color-text-muted);
+      background: var(--color-surface);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-weight: 500;
+    }
+    .topbar-notif {
+      position: relative;
+      background: none;
+      border: 1.5px solid var(--color-surface);
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      transition: all var(--transition);
+    }
+    .topbar-notif:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .notif-dot {
+      position: absolute;
+      top: -3px; right: -3px;
+      width: 10px; height: 10px;
+      background: var(--color-danger);
+      border-radius: 50%;
+      border: 2px solid var(--color-card);
+    }
+
+    /* ── PAGE CONTENT ── */
+    .page-content {
+      flex: 1;
+      padding: 28px;
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-header {
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: 4px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+
+    /* ── STATS CARDS ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--color-card);
+      border: 1.5px solid var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .stat-card--danger  { border-color: rgba(231,76,60,0.3);  background: rgba(231,76,60,0.03); }
+    .stat-card--warning { border-color: rgba(243,156,18,0.3); background: rgba(243,156,18,0.03); }
+    .stat-card--success { border-color: rgba(39,174,96,0.3);  background: rgba(39,174,96,0.03); }
+    .stat-card--indigo  { border-color: rgba(76,95,161,0.3);  background: rgba(76,95,161,0.03); }
+    .stat-icon { font-size: 1.8rem; margin-bottom: 10px; }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-value--danger  { color: var(--color-danger); }
+    .stat-value--warning { color: var(--color-warning); }
+    .stat-value--success { color: var(--color-success); }
+    .stat-value--indigo  { color: var(--color-indigo); }
+    .stat-label { font-size: 12px; color: var(--color-text-muted); font-weight: 500; }
+    .stat-trend {
+      font-size: 11px;
+      color: var(--color-text-light);
+      margin-top: 6px;
+    }
+
+    /* ── GRID LAYOUT ── */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .dashboard-grid--full { grid-column: 1 / -1; }
+
+    /* ── PANEL / CARD ── */
+    .panel {
+      background: var(--color-card);
+      border: 1.5px solid var(--color-surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--color-surface);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .panel-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-action {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-primary-dark);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .panel-action:hover { color: var(--color-primary); }
+    .panel-body { padding: 0; }
+
+    /* ── TABLE ── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table thead tr {
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-surface);
+    }
+    .data-table th {
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+    .data-table td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--color-surface);
+      vertical-align: middle;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tbody tr {
+      transition: background var(--transition);
+      cursor: pointer;
+    }
+    .data-table tbody tr:hover { background: rgba(244,166,42,0.04); }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge--kritis  { background: rgba(231,76,60,0.15);  color: #C0392B; }
+    .badge--tinggi  { background: rgba(243,156,18,0.15); color: #D4881A; }
+    .badge--sedang  { background: rgba(76,95,161,0.15);  color: #4C5FA1; }
+    .badge--normal  { background: rgba(39,174,96,0.12);  color: #1E8449; }
+    .badge--ksatria { background: rgba(244,166,42,0.15); color: #B7780F; }
+    .badge--daun    { background: rgba(127,140,141,0.15); color: #616A6B; }
+    .badge--belum   { background: rgba(231,76,60,0.1);   color: #C0392B; }
+    .badge--proses  { background: rgba(243,156,18,0.1);  color: #D4881A; }
+    .badge--selesai { background: rgba(39,174,96,0.1);   color: #1E8449; }
+
+    /* ── URGENSI INDICATOR ── */
+    .urgensi-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .urgensi-dot--kritis { background: var(--color-danger);  animation: pulse-dot 1s ease-in-out infinite; }
+    .urgensi-dot--tinggi { background: var(--color-warning); }
+    .urgensi-dot--sedang { background: var(--color-indigo);  }
+    .urgensi-dot--normal { background: var(--color-success); }
+
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,0.6); }
+      50%       { box-shadow: 0 0 0 5px rgba(231,76,60,0); }
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 20px;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-surface);
+      flex-wrap: wrap;
+    }
+    .filter-label { font-size: 12px; font-weight: 600; color: var(--color-text-muted); }
+    .filter-select {
+      font-family: var(--font-body);
+      font-size: 12px;
+      padding: 6px 10px;
+      border: 1.5px solid var(--color-surface);
+      border-radius: var(--radius-sm);
+      background: var(--color-card);
+      color: var(--color-text);
+      cursor: pointer;
+      transition: border-color var(--transition);
+    }
+    .filter-select:focus { outline: none; border-color: var(--color-primary); }
+    .filter-input {
+      font-family: var(--font-body);
+      font-size: 12px;
+      padding: 6px 12px;
+      border: 1.5px solid var(--color-surface);
+      border-radius: var(--radius-sm);
+      background: var(--color-card);
+      color: var(--color-text);
+      flex: 1;
+      min-width: 160px;
+      transition: border-color var(--transition);
+    }
+    .filter-input:focus { outline: none; border-color: var(--color-primary); }
+    .btn-filter {
+      padding: 6px 16px;
+      background: var(--color-primary);
+      color: var(--color-bg-dark);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      transition: background var(--transition);
+    }
+    .btn-filter:hover { background: var(--color-primary-dark); }
+
+    /* ── PROGRESS BAR ── */
+    .mini-bar {
+      height: 6px;
+      background: var(--color-surface);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      min-width: 80px;
+    }
+    .mini-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 600ms ease;
+    }
+    .mini-fill--gold   { background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark)); }
+    .mini-fill--green  { background: linear-gradient(90deg, var(--color-secondary), var(--color-teal)); }
+    .mini-fill--gray   { background: #95A5A6; }
+
+    /* ── DISTRIBUSI CHART (Pure CSS Bar Chart) ── */
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 12px;
+      height: 140px;
+      padding: 16px 20px 0;
+    }
+    .chart-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+    .chart-bar-wrap {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .chart-bar {
+      width: 100%;
+      max-width: 48px;
+      border-radius: 6px 6px 0 0;
+      transition: height 800ms cubic-bezier(0.25,0.46,0.45,0.94);
+      position: relative;
+      min-height: 4px;
+    }
+    .chart-bar--pasif      { background: linear-gradient(180deg, #95A5A6, #7F8C8D); }
+    .chart-bar--reaktif    { background: linear-gradient(180deg, #F39C12, #E67E22); }
+    .chart-bar--asertif    { background: linear-gradient(180deg, #2ECC71, #27AE60); }
+    .chart-bar--internalis { background: linear-gradient(180deg, #9B59B6, #8E44AD); }
+    .chart-bar--tarikdiri  { background: linear-gradient(180deg, #3498DB, #2980B9); }
+    .chart-pct {
+      position: absolute;
+      top: -20px; left: 50%; transform: translateX(-50%);
+      font-size: 10px; font-weight: 700; color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+    .chart-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-text-muted);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px 20px 16px;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      color: var(--color-text-muted);
+    }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ── LAPORAN DETAIL MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      animation: fadeIn 200ms ease forwards;
+    }
+    .modal-overlay[hidden] { display: none; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal-box {
+      background: var(--color-card);
+      border-radius: var(--radius-lg);
+      max-width: 580px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      animation: slideUp 250ms cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--color-surface);
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    }
+    .modal-title { font-size: 17px; font-weight: 700; }
+    .modal-close {
+      background: var(--color-surface); border: none;
+      width: 32px; height: 32px; border-radius: 50%;
+      font-size: 1rem; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .modal-close:hover { background: var(--color-danger); color: white; }
+    .modal-body { padding: 20px 24px; }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--color-surface);
+      display: flex; gap: 10px; justify-content: flex-end;
+    }
+
+    /* Detail Laporan */
+    .laporan-isi-box {
+      background: var(--color-bg);
+      border: 1.5px solid var(--color-surface);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--color-text);
+      margin: 12px 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .laporan-isi-box.encrypted {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--color-text-muted); font-style: italic;
+    }
+    .detail-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .detail-item { display: flex; flex-direction: column; gap: 3px; }
+    .detail-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); }
+    .detail-value { font-size: 14px; font-weight: 500; color: var(--color-text); }
+
+    .profil-skor {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      background: var(--color-bg); border-radius: var(--radius-md); padding: 14px;
+      margin: 12px 0;
+    }
+    .profil-skor-item { text-align: center; }
+    .profil-skor-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: 4px; }
+    .profil-skor-val { font-size: 22px; font-weight: 800; }
+    .profil-skor-val--gold  { color: var(--color-primary-dark); }
+    .profil-skor-val--gray  { color: var(--color-text-muted); }
+    .profil-skor-val--danger{ color: var(--color-danger); }
+
+    .catatan-bk-area {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 13px;
+      padding: 12px;
+      border: 1.5px solid var(--color-surface);
+      border-radius: var(--radius-md);
+      background: var(--color-bg);
+      color: var(--color-text);
+      resize: vertical;
+      transition: border-color var(--transition);
+    }
+    .catatan-bk-area:focus { outline: none; border-color: var(--color-primary); }
+
+    /* ── TOMBOL ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 18px; font-size: 13px; font-weight: 600;
+      border-radius: var(--radius-full); border: 2px solid transparent;
+      transition: all var(--transition); cursor: pointer; white-space: nowrap;
+    }
+    .btn--primary { background: var(--color-primary); color: var(--color-bg-dark); border-color: var(--color-primary); }
+    .btn--primary:hover { background: var(--color-primary-dark); }
+    .btn--secondary { background: var(--color-secondary); color: white; }
+    .btn--secondary:hover { filter: brightness(0.9); }
+    .btn--ghost { background: transparent; color: var(--color-text-muted); border-color: var(--color-surface); }
+    .btn--ghost:hover { background: var(--color-surface); }
+    .btn--danger { background: rgba(231,76,60,0.1); color: var(--color-danger); border-color: rgba(231,76,60,0.3); }
+    .btn--danger:hover { background: var(--color-danger); color: white; }
+    .btn--sm { font-size: 12px; padding: 5px 12px; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--color-text-muted);
+    }
+    .empty-state-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .empty-state-text { font-size: 14px; }
+
+    /* ── ALERT BANNER ── */
+    .alert-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1.5px solid;
+    }
+    .alert-banner--danger {
+      background: rgba(231,76,60,0.08);
+      border-color: rgba(231,76,60,0.3);
+      color: var(--color-danger);
+    }
+    .alert-banner--warning {
+      background: rgba(243,156,18,0.08);
+      border-color: rgba(243,156,18,0.3);
+      color: #B7780F;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .page-content { padding: 16px; }
+      .detail-row { grid-template-columns: 1fr; }
+      .profil-skor { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ░░ SIDEBAR ░░ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Navigasi Dashboard BK">
+    <div class="sidebar-logo">
+      <span class="sidebar-logo-icon" aria-hidden="true">🔦</span>
+      <div>
+        <div class="sidebar-logo-text">LENTERA</div>
+        <span class="sidebar-logo-sub">Dashboard Guru BK</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu Utama</div>
+      <button class="nav-item active" data-view="overview" aria-current="page">
+        <span class="nav-icon" aria-hidden="true">📊</span> Ringkasan
+      </button>
+      <button class="nav-item" data-view="laporan">
+        <span class="nav-icon" aria-hidden="true">📋</span> Laporan Masuk
+        <span class="nav-badge" id="badge-laporan" aria-label="laporan belum dibaca">0</span>
+      </button>
+      <button class="nav-item" data-view="sesi">
+        <span class="nav-icon" aria-hidden="true">🎮</span> Data Sesi
+      </button>
+      <button class="nav-item" data-view="analisis">
+        <span class="nav-icon" aria-hidden="true">🧠</span> Analisis Respons
+      </button>
+      <button class="nav-item" data-view="konseling">
+        <span class="nav-icon" aria-hidden="true">💬</span> Permintaan Konseling
+        <span class="nav-badge nav-badge--warn" id="badge-konseling" aria-label="permintaan konseling menunggu">0</span>
+      </button>
+
+      <div class="nav-section-label" style="margin-top:16px;">Admin</div>
+      <button class="nav-item" data-view="sekolah">
+        <span class="nav-icon" aria-hidden="true">🏫</span> Data Sekolah
+      </button>
+      <button class="nav-item" data-view="akun">
+        <span class="nav-icon" aria-hidden="true">👤</span> Kelola Akun BK
+      </button>
+      <button class="nav-item" data-view="audit">
+        <span class="nav-icon" aria-hidden="true">🔍</span> Audit Log
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="bk-profile">
+        <div class="bk-avatar" aria-hidden="true">👩</div>
+        <div class="bk-info">
+          <div class="bk-name" id="bk-nama">Ibu Sari Wulandari</div>
+          <div class="bk-role">Guru BK</div>
+        </div>
+        <button class="btn-logout" id="btn-logout" aria-label="Keluar dari dashboard" title="Keluar">⏻</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ░░ MAIN CONTENT ░░ -->
+  <main class="main-content" id="main-content">
+
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">📊 Ringkasan Dashboard</div>
+      <div class="topbar-right">
+        <span class="topbar-school" id="topbar-school">SMA Negeri 1 Yogyakarta</span>
+        <button class="topbar-notif" id="btn-notif" aria-label="Notifikasi">
+          🔔
+          <span class="notif-dot" id="notif-dot" hidden></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="page-content" id="page-content">
+
+      <!-- ══ VIEW: OVERVIEW ══ -->
+      <div id="view-overview" class="view">
+
+        <!-- Alert kritis -->
+        <div class="alert-banner alert-banner--danger" id="alert-kritis" hidden role="alert">
+          <span aria-hidden="true">🚨</span>
+          <strong>Laporan Kritis Masuk!</strong> Ada laporan dengan indikasi tingkat urgensi KRITIS yang membutuhkan tindakan segera.
+          <button class="btn btn--danger btn--sm" style="margin-left:auto;" onclick="navigateTo('laporan')">
+            Lihat Sekarang
+          </button>
+        </div>
+
+        <div class="section-header">
+          <h1 class="section-title">Ringkasan Dashboard 📊</h1>
+          <p class="section-sub" id="overview-sub">Data per hari ini · <span id="overview-date"></span></p>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card stat-card--danger">
+            <div class="stat-icon" aria-hidden="true">🚨</div>
+            <div class="stat-value stat-value--danger" id="stat-laporan-belum">0</div>
+            <div class="stat-label">Laporan Belum Dibaca</div>
+            <div class="stat-trend" id="trend-laporan">↑ Perlu tindak lanjut segera</div>
+          </div>
+          <div class="stat-card stat-card--warning">
+            <div class="stat-icon" aria-hidden="true">💬</div>
+            <div class="stat-value stat-value--warning" id="stat-konseling">0</div>
+            <div class="stat-label">Permintaan Konseling</div>
+            <div class="stat-trend">Menunggu konfirmasi jadwal</div>
+          </div>
+          <div class="stat-card stat-card--success">
+            <div class="stat-icon" aria-hidden="true">🎮</div>
+            <div class="stat-value stat-value--success" id="stat-sesi-total">0</div>
+            <div class="stat-label">Total Sesi Dimainkan</div>
+            <div class="stat-trend" id="trend-sesi">Bulan ini</div>
+          </div>
+          <div class="stat-card stat-card--indigo">
+            <div class="stat-icon" aria-hidden="true">🍃</div>
+            <div class="stat-value stat-value--indigo" id="stat-tipe-daun">0</div>
+            <div class="stat-label">Siswa Tipe "Daun Terduduk"</div>
+            <div class="stat-trend">Perlu perhatian ekstra</div>
+          </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+
+          <!-- Panel: Laporan Terbaru -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title"><span aria-hidden="true">📋</span> Laporan Terbaru</span>
+              <button class="panel-action" onclick="navigateTo('laporan')">Lihat Semua →</button>
+            </div>
+            <div class="panel-body">
+              <table class="data-table" aria-label="Tabel laporan terbaru">
+                <thead>
+                  <tr>
+                    <th>Urgensi</th>
+                    <th>Identitas</th>
+                    <th>Tipe Mental</th>
+                    <th>Waktu</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-laporan-recent">
+                  <!-- Diisi oleh JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Panel: Distribusi Tipe Skor -->
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title"><span aria-hidden="true">🧠</span> Distribusi Respons Pos 2</span>
+              <button class="panel-action" onclick="navigateTo('analisis')">Analisis Lengkap →</button>
+            </div>
+            <div class="panel-body">
+              <div class="chart-bars" id="chart-bars" aria-label="Grafik distribusi tipe respons">
+                <!-- Diisi oleh JS -->
+              </div>
+              <div class="chart-legend" id="chart-legend"></div>
+            </div>
+          </div>
+
+          <!-- Panel: Tren Skor Mingguan -->
+          <div class="panel dashboard-grid--full">
+            <div class="panel-header">
+              <span class="panel-title"><span aria-hidden="true">📈</span> Tren Skor Resiliensi Rata-rata (7 Hari)</span>
+            </div>
+            <div class="panel-body" style="padding: 20px;">
+              <div id="tren-chart" style="display:flex; align-items:flex-end; gap:12px; height:100px;">
+                <!-- Diisi oleh JS -->
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--color-text-light);" id="tren-labels"></div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /view-overview -->
+
+      <!-- ══ VIEW: LAPORAN ══ -->
+      <div id="view-laporan" class="view" hidden>
+        <div class="section-header">
+          <h1 class="section-title">Laporan Masuk 📋</h1>
+          <p class="section-sub">Semua laporan bullying dari Bilik Lentera (Pos 4)</p>
+        </div>
+
+        <div class="panel">
+          <div class="filter-bar" role="search" aria-label="Filter laporan">
+            <span class="filter-label">Filter:</span>
+            <select class="filter-select" id="filter-urgensi" aria-label="Filter urgensi">
+              <option value="">Semua Urgensi</option>
+              <option value="kritis">🔴 Kritis</option>
+              <option value="tinggi">🟠 Tinggi</option>
+              <option value="sedang">🔵 Sedang</option>
+              <option value="normal">🟢 Normal</option>
+            </select>
+            <select class="filter-select" id="filter-status-laporan" aria-label="Filter status">
+              <option value="">Semua Status</option>
+              <option value="belum_dibaca">Belum Dibaca</option>
+              <option value="dalam_proses">Dalam Proses</option>
+              <option value="selesai">Selesai</option>
+            </select>
+            <input type="text" class="filter-input" id="filter-search" placeholder="Cari ID sesi atau tipe mental…" aria-label="Cari laporan" />
+            <button class="btn-filter" id="btn-apply-filter">Terapkan</button>
+          </div>
+          <div class="panel-body">
+            <table class="data-table" aria-label="Tabel laporan masuk" id="table-laporan">
+              <thead>
+                <tr>
+                  <th>Urgensi</th>
+                  <th>ID Laporan</th>
+                  <th>Identitas</th>
+                  <th>Tipe Mental</th>
+                  <th>Skor</th>
+                  <th>Tanggal Kirim</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-laporan-all">
+                <!-- Diisi oleh JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div><!-- /view-laporan -->
+
+      <!-- ══ VIEW: ANALISIS ══ -->
+      <div id="view-analisis" class="view" hidden>
+        <div class="section-header">
+          <h1 class="section-title">Analisis Respons Siswa 🧠</h1>
+          <p class="section-sub">Distribusi tipe respons per skenario bullying untuk merancang intervensi yang tepat</p>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="panel" id="panel-analisis-s1">
+            <div class="panel-header">
+              <span class="panel-title">Skenario 1 — Body Shaming</span>
+            </div>
+            <div class="panel-body" id="analisis-s1-body" style="padding:16px 20px;">
+              <!-- Diisi oleh JS -->
+            </div>
+          </div>
+          <div class="panel" id="panel-analisis-s2">
+            <div class="panel-header">
+              <span class="panel-title">Skenario 2 — Meremehkan Pencapaian</span>
+            </div>
+            <div class="panel-body" id="analisis-s2-body" style="padding:16px 20px;">
+              <!-- Diisi oleh JS -->
+            </div>
+          </div>
+          <div class="panel dashboard-grid--full" id="panel-analisis-s3">
+            <div class="panel-header">
+              <span class="panel-title">Skenario 3 — Pengucilan Halus</span>
+              <span style="font-size:12px;color:var(--color-text-muted);">Persentase dari total responden</span>
+            </div>
+            <div class="panel-body" id="analisis-s3-body" style="padding:16px 20px;">
+              <!-- Diisi oleh JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: SESI ══ -->
+      <div id="view-sesi" class="view" hidden>
+        <div class="section-header">
+          <h1 class="section-title">Data Sesi Permainan 🎮</h1>
+          <p class="section-sub">Semua sesi yang pernah dimainkan di sekolahmu</p>
+        </div>
+        <div class="panel">
+          <div class="panel-body">
+            <table class="data-table" aria-label="Tabel data sesi">
+              <thead>
+                <tr>
+                  <th>Session ID</th>
+                  <th>Nama / Anonim</th>
+                  <th>Tipe Mental</th>
+                  <th>Skor</th>
+                  <th>Stres Type</th>
+                  <th>Ada Laporan</th>
+                  <th>Status Sesi</th>
+                  <th>Mulai</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-sesi">
+                <!-- Diisi oleh JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: KONSELING ══ -->
+      <div id="view-konseling" class="view" hidden>
+        <div class="section-header">
+          <h1 class="section-title">Permintaan Konseling 💬</h1>
+          <p class="section-sub">Siswa yang meminta sesi ngobrol santai dengan Guru BK</p>
+        </div>
+        <div class="panel">
+          <div class="panel-body">
+            <table class="data-table" aria-label="Tabel permintaan konseling">
+              <thead>
+                <tr>
+                  <th>Nama Siswa</th>
+                  <th>Metode</th>
+                  <th>Waktu Pilihan</th>
+                  <th>Tipe Mental</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-konseling">
+                <!-- Diisi oleh JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </main><!-- /main-content -->
+
+  <!-- ░░ MODAL: DETAIL LAPORAN ░░ -->
+  <div class="modal-overlay" id="modal-laporan" hidden role="dialog" aria-modal="true" aria-labelledby="modal-laporan-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--color-text-muted);margin-bottom:4px;">Detail Laporan</div>
+          <h2 class="modal-title" id="modal-laporan-title">Laporan #—</h2>
+        </div>
+        <button class="modal-close" id="btn-close-modal" aria-label="Tutup modal">✕</button>
+      </div>
+      <div class="modal-body" id="modal-laporan-body">
+        <!-- Diisi oleh JS -->
+      </div>
+      <div class="modal-footer" id="modal-laporan-footer">
+        <button class="btn btn--ghost btn--sm" id="btn-modal-close-bottom">Tutup</button>
+        <button class="btn btn--secondary btn--sm" id="btn-save-catatan">💾 Simpan Catatan</button>
+        <button class="btn btn--primary btn--sm" id="btn-mark-done">✅ Tandai Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ TOAST ░░ -->
+  <div id="toast-container" style="position:fixed;bottom:20px;right:20px;z-index:500;display:flex;flex-direction:column;gap:8px;" aria-live="polite"></div>
+
+  <script>
+    'use strict';
+
+    // ── Mock Data (simulasi data dari localStorage game) ──────────────────────
+    const MOCK_DATA = _buildMockData();
+
+    function _buildMockData() {
+      // Ambil laporan dari localStorage (dikirim oleh pos4-bilik-lentera.js)
+      let laporanBK = [];
+      try {
+        laporanBK = JSON.parse(localStorage.getItem('lentera_laporan_bk') || '[]');
+      } catch (e) { laporanBK = []; }
+
+      // Generate data dummy untuk demo jika tidak ada data nyata
+      if (laporanBK.length === 0) {
+        laporanBK = [
+          {
+            sessionId: 'ln_demo_001',
+            timestamp: new Date(Date.now() - 3600000).toISOString(),
+            isAnonim: true,
+            isiLaporan: 'Teman-teman di kelas sering bilang kalau aku terlalu sensitif dan lebay setiap kali aku merasa sedih. Mereka bilang "cuma bercanda" tapi aku tidak merasa itu bercanda. Aku jadi malas ke sekolah.',
+            skor: { resiliensi: 3, isolasi: 3, stresType: 'sosial', pos2: [{skenario:1,pilihan:'A',tipe:'pasif',skor:1},{skenario:2,pilihan:'A',tipe:'internalisasi',skor:1},{skenario:3,pilihan:'A',tipe:'menarikdiri',skor:1}] },
+            avatarConfig: { cuaca: 'mendung', tas: 'hp', qte: 'menunduk', baterai: 'pohon' },
+            _status: 'belum_dibaca',
+            _urgensi: 'tinggi',
+            _kataKunci: ['malas ke sekolah', 'tidak merasa bercanda'],
+          },
+          {
+            sessionId: 'ln_demo_002',
+            timestamp: new Date(Date.now() - 7200000).toISOString(),
+            isAnonim: false,
+            namaPemain: 'Deni Pratama',
+            isiLaporan: 'Ada sekelompok anak yang selalu mengucilkan aku waktu istirahat. Mereka bilang aku tidak boleh ikut nongkrong karena "beda". Sudah berlangsung 2 bulan.',
+            skor: { resiliensi: 5, isolasi: 2, stresType: 'sosial', pos2: [{skenario:1,pilihan:'B',tipe:'reaktif',skor:2},{skenario:2,pilihan:'A',tipe:'internalisasi',skor:1},{skenario:3,pilihan:'A',tipe:'menarikdiri',skor:1}] },
+            avatarConfig: { cuaca: 'mendung', tas: 'hp', qte: 'panik', baterai: 'pohon' },
+            _status: 'sudah_dibaca',
+            _urgensi: 'kritis',
+            _kataKunci: ['dikucilkan', 'beda', '2 bulan'],
+          },
+          {
+            sessionId: 'ln_demo_003',
+            timestamp: new Date(Date.now() - 86400000).toISOString(),
+            isAnonim: true,
+            isiLaporan: 'Guruku sering nyindir penampilanku di depan teman-teman. Katanya sambil bercanda tapi aku malu sekali.',
+            skor: { resiliensi: 4, isolasi: 2, stresType: 'insecurity', pos2: [{skenario:1,pilihan:'A',tipe:'pasif',skor:1},{skenario:2,pilihan:'B',tipe:'reaktif',skor:2},{skenario:3,pilihan:'C',tipe:'asertif',skor:3}] },
+            avatarConfig: { cuaca: 'kabut', tas: 'kaca', qte: 'panik', baterai: 'pojok' },
+            _status: 'dalam_proses',
+            _urgensi: 'sedang',
+            _kataKunci: ['guru', 'sindir', 'malu'],
+          },
+        ];
+      }
+
+      const sesiSelesai = [
+        { id:'ln_x1', nama:'[Anonim]', tipe:'ksatria', skor:82, stres:'akademik', laporan:false, status:'completed', mulai: new Date(Date.now()-900000).toISOString() },
+        { id:'ln_x2', nama:'Rika N.', tipe:'daun',     skor:38, stres:'sosial',   laporan:true,  status:'completed', mulai: new Date(Date.now()-3600000).toISOString() },
+        { id:'ln_x3', nama:'[Anonim]', tipe:'daun',    skor:45, stres:'insecurity', laporan:false, status:'completed', mulai: new Date(Date.now()-7200000).toISOString() },
+        { id:'ln_x4', nama:'Bagas P.', tipe:'ksatria',skor:78, stres:'akademik', laporan:false, status:'completed', mulai: new Date(Date.now()-86400000).toISOString() },
+      ];
+
+      return { laporan: laporanBK, sesi: sesiSelesai };
+    }
+
+    // ── Navigasi Views ─────────────────────────────────────────────────────────
+    const VIEWS = ['overview','laporan','sesi','analisis','konseling','sekolah','akun','audit'];
+    const VIEW_TITLES = {
+      overview: '📊 Ringkasan Dashboard',
+      laporan:  '📋 Laporan Masuk',
+      sesi:     '🎮 Data Sesi',
+      analisis: '🧠 Analisis Respons',
+      konseling:'💬 Permintaan Konseling',
+      sekolah:  '🏫 Data Sekolah',
+      akun:     '👤 Kelola Akun BK',
+      audit:    '🔍 Audit Log',
+    };
+
+    function navigateTo(viewId) {
+      VIEWS.forEach(v => {
+        const el    = document.getElementById(`view-${v}`);
+        const navEl = document.querySelector(`[data-view="${v}"]`);
+        if (el)    el.hidden = (v !== viewId);
+        if (navEl) {
+          navEl.classList.toggle('active', v === viewId);
+          navEl.setAttribute('aria-current', v === viewId ? 'page' : 'false');
+        }
+      });
+      const titleEl = document.getElementById('topbar-title');
+      if (titleEl) titleEl.textContent = VIEW_TITLES[viewId] || viewId;
+    }
+
+    // ── Render Overview ────────────────────────────────────────────────────────
+    function renderOverview() {
+      const data     = MOCK_DATA;
+      const belumDibaca = data.laporan.filter(l => l._status === 'belum_dibaca').length;
+      const kritis      = data.laporan.filter(l => l._urgensi === 'kritis').length;
+      const daun        = data.sesi.filter(s => s.tipe === 'daun').length;
+
+      document.getElementById('stat-laporan-belum').textContent = belumDibaca;
+      document.getElementById('stat-konseling').textContent     = '2';
+      document.getElementById('stat-sesi-total').textContent    = data.sesi.length;
+      document.getElementById('stat-tipe-daun').textContent     = daun;
+      document.getElementById('overview-date').textContent      = new Intl.DateTimeFormat('id-ID',{dateStyle:'full'}).format(new Date());
+      document.getElementById('badge-laporan').textContent      = belumDibaca;
+      document.getElementById('badge-konseling').textContent    = '2';
+
+      if (kritis > 0) {
+        document.getElementById('alert-kritis').hidden = false;
+        document.getElementById('notif-dot').hidden    = false;
+      }
+
+      // Render laporan recent
+      const tbody = document.getElementById('tbody-laporan-recent');
+      tbody.innerHTML = data.laporan.slice(0, 5).map(l => `
+        <tr onclick="openLaporan('${l.sessionId}')" style="cursor:pointer;">
+          <td>
+            <span class="urgensi-dot urgensi-dot--${l._urgensi}" aria-hidden="true"></span>
+            <span class="badge badge--${l._urgensi}" style="margin-left:6px;">${l._urgensi}</span>
+          </td>
+          <td style="color:var(--color-text-muted);font-size:12px;">
+            ${l.isAnonim ? '🎭 Anonim' : `🙋 ${_escHtml(l.namaPemain || '—')}`}
+          </td>
+          <td><span class="badge badge--${_getTipeMental(l.skor)}">${_getTipeMental(l.skor) === 'ksatria' ? '⚔️ Ksatria' : '🍃 Daun Terduduk'}</span></td>
+          <td style="font-size:12px;color:var(--color-text-muted);">${_timeAgo(l.timestamp)}</td>
+          <td><span class="badge badge--${l._status.replace('_','')}${l._status==='belum_dibaca'?'':''}">${_statusLabel(l._status)}</span></td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--color-text-muted);">Belum ada laporan</td></tr>';
+
+      // Chart distribusi respons
+      _renderDistribusiChart();
+      _renderTrenChart();
+    }
+
+    function _renderDistribusiChart() {
+      const chartEl  = document.getElementById('chart-bars');
+      const legendEl = document.getElementById('chart-legend');
+      const data     = MOCK_DATA.laporan;
+
+      // Hitung distribusi dari semua pos2 responses
+      const counts = { asertif: 0, reaktif: 0, pasif: 0, internalisasi: 0, menarikdiri: 0 };
+      data.forEach(l => {
+        (l.skor.pos2 || []).forEach(r => {
+          if (counts.hasOwnProperty(r.tipe)) counts[r.tipe]++;
+        });
+      });
+      const total = Object.values(counts).reduce((a,b) => a+b, 0) || 1;
+
+      const colors  = { asertif:'--color-success', reaktif:'--color-warning', pasif:'--color-text-muted', internalisasi:'--color-indigo', menarikdiri:'--color-teal' };
+      const labels  = { asertif:'Asertif', reaktif:'Reaktif', pasif:'Pasif', internalisasi:'Internalisasi', menarikdiri:'Menarik Diri' };
+      const barClass= { asertif:'chart-bar--asertif', reaktif:'chart-bar--reaktif', pasif:'chart-bar--pasif', internalisasi:'chart-bar--internalis', menarikdiri:'chart-bar--tarikdiri' };
+
+      const maxPct = Math.max(...Object.values(counts)) / total * 100 || 10;
+
+      chartEl.innerHTML = Object.entries(counts).map(([tipe, count]) => {
+        const pct = Math.round(count / total * 100);
+        const hPct = (pct / maxPct) * 80;
+        return `
+          <div class="chart-col" role="img" aria-label="${labels[tipe]}: ${pct}%">
+            <div class="chart-bar-wrap">
+              <div class="chart-bar ${barClass[tipe]}" style="height:${Math.max(4, hPct)}px;">
+                <span class="chart-pct">${pct}%</span>
+              </div>
+            </div>
+            <div class="chart-label">${labels[tipe]}</div>
+          </div>
+        `;
+      }).join('');
+
+      legendEl.innerHTML = Object.entries(labels).map(([tipe, label]) => `
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(${colors[tipe]})"></div>
+          <span>${label}</span>
+        </div>
+      `).join('');
+    }
+
+    function _renderTrenChart() {
+      const chartEl  = document.getElementById('tren-chart');
+      const labelsEl = document.getElementById('tren-labels');
+      // Simulasi data tren 7 hari
+      const tren = [
+        { hari: 'Sen',  avg: 5.2 },
+        { hari: 'Sel',  avg: 4.8 },
+        { hari: 'Rab',  avg: 6.1 },
+        { hari: 'Kam',  avg: 5.5 },
+        { hari: 'Jum',  avg: 7.0 },
+        { hari: 'Sab',  avg: 6.3 },
+        { hari: 'Mng',  avg: 5.9 },
+      ];
+      const maxVal = Math.max(...tren.map(t => t.avg));
+      chartEl.innerHTML = tren.map(t => {
+        const hPct = (t.avg / maxVal) * 90;
+        const color = t.avg >= 6 ? '#27AE60' : t.avg >= 4 ? '#F39C12' : '#E74C3C';
+        return `
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div style="flex:1;display:flex;align-items:flex-end;width:100%;">
+              <div style="width:100%;max-width:40px;height:${hPct}px;background:${color};border-radius:4px 4px 0 0;margin:0 auto;min-height:4px;" title="${t.hari}: avg ${t.avg}"></div>
+            </div>
+            <span style="font-size:10px;font-weight:700;color:var(--color-text-muted);">${t.avg}</span>
+          </div>
+        `;
+      }).join('');
+      labelsEl.innerHTML = tren.map(t => `<span>${t.hari}</span>`).join('');
+    }
+
+    // ── Render Laporan ──────────────────────────────────────────────────────────
+    function renderLaporan(filter = {}) {
+      let data = [...MOCK_DATA.laporan];
+      if (filter.urgensi) data = data.filter(l => l._urgensi === filter.urgensi);
+      if (filter.status)  data = data.filter(l => l._status  === filter.status);
+
+      const tbody = document.getElementById('tbody-laporan-all');
+      tbody.innerHTML = data.map((l, i) => `
+        <tr>
+          <td>
+            <span class="urgensi-dot urgensi-dot--${l._urgensi}" style="margin-right:6px;" aria-hidden="true"></span>
+            <span class="badge badge--${l._urgensi}">${l._urgensi.toUpperCase()}</span>
+          </td>
+          <td style="font-size:11px;color:var(--color-text-muted);font-family:monospace;">${l.sessionId.slice(0,14)}…</td>
+          <td>${l.isAnonim ? '<span class="badge badge--normal">🎭 Anonim</span>' : `<span class="badge badge--indigo">🙋 ${_escHtml(l.namaPemain||'—')}</span>`}</td>
+          <td><span class="badge badge--${_getTipeMental(l.skor)}">${_getTipeMental(l.skor)==='ksatria'?'⚔️ Ksatria':'🍃 Daun'}</span></td>
+          <td>
+            <div class="mini-bar"><div class="mini-fill mini-fill--${_getTipeMental(l.skor)==='ksatria'?'gold':'gray'}" style="width:${_getSkorPct(l.skor)}%"></div></div>
+            <span style="font-size:11px;color:var(--color-text-muted);">${_getSkorPct(l.skor)}%</span>
+          </td>
+          <td style="font-size:12px;color:var(--color-text-muted);">${_formatDate(l.timestamp)}</td>
+          <td><span class="badge badge--${l._status.replace('_','').replace('belum','belum')}">${_statusLabel(l._status)}</span></td>
+          <td>
+            <button class="btn btn--primary btn--sm" onclick="openLaporan('${l.sessionId}')">
+              🔍 Baca
+            </button>
+          </td>
+        </tr>
+      `).join('') || `<tr><td colspan="8" class="empty-state"><div class="empty-state-icon">📭</div><p class="empty-state-text">Tidak ada laporan yang cocok</p></td></tr>`;
+    }
+
+    // ── Render Analisis ─────────────────────────────────────────────────────────
+    function renderAnalisis() {
+      const data = MOCK_DATA.laporan;
+      [1, 2, 3].forEach(sId => {
+        const bodyEl = document.getElementById(`analisis-s${sId}-body`);
+        if (!bodyEl) return;
+
+        const responses = data.flatMap(l => (l.skor.pos2||[]).filter(r => r.skenario === sId));
+        const total     = responses.length || 1;
+        const counts    = { asertif:0, reaktif:0, pasif:0, internalisasi:0, menarikdiri:0 };
+        responses.forEach(r => { if (counts.hasOwnProperty(r.tipe)) counts[r.tipe]++; });
+
+        const sortedEntries = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+        const colors = { asertif:'#27AE60', reaktif:'#F39C12', pasif:'#7F8C8D', internalisasi:'#9B59B6', menarikdiri:'#3498DB' };
+        const label  = { asertif:'Asertif', reaktif:'Reaktif', pasif:'Pasif', internalisasi:'Internalisasi', menarikdiri:'Menarik Diri' };
+
+        bodyEl.innerHTML = sortedEntries.map(([tipe, count]) => {
+          const pct = Math.round(count / total * 100);
+          return `
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:13px;font-weight:500;color:var(--color-text);">${label[tipe]}</span>
+                <span style="font-size:12px;font-weight:700;color:var(--color-text-muted);">${count} (${pct}%)</span>
+              </div>
+              <div class="mini-bar" style="height:10px;">
+                <div class="mini-fill" style="width:${pct}%;background:${colors[tipe]};"></div>
+              </div>
+            </div>
+          `;
+        }).join('') || '<p style="color:var(--color-text-muted);font-size:13px;">Belum ada data</p>';
+      });
+    }
+
+    // ── Render Sesi ────────────────────────────────────────────────────────────
+    function renderSesi() {
+      const tbody = document.getElementById('tbody-sesi');
+      tbody.innerHTML = MOCK_DATA.sesi.map(s => `
+        <tr>
+          <td style="font-size:11px;color:var(--color-text-muted);font-family:monospace;">${s.id}</td>
+          <td>${s.nama}</td>
+          <td><span class="badge badge--${s.tipe}">${s.tipe==='ksatria'?'⚔️ Ksatria':'🍃 Daun'}</span></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="mini-bar" style="width:60px;"><div class="mini-fill mini-fill--${s.tipe==='ksatria'?'gold':'gray'}" style="width:${s.skor}%"></div></div>
+              <span style="font-size:12px;font-weight:600;">${s.skor}%</span>
+            </div>
+          </td>
+          <td><span class="badge badge--indigo">${s.stres}</span></td>
+          <td>${s.laporan ? '<span class="badge badge--danger">📋 Ada</span>' : '<span style="color:var(--color-text-light);font-size:12px;">—</span>'}</td>
+          <td><span class="badge badge--selesai">${s.status}</span></td>
+          <td style="font-size:12px;color:var(--color-text-muted);">${_timeAgo(s.mulai)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ── Render Konseling ───────────────────────────────────────────────────────
+    function renderKonseling() {
+      const mockKonseling = [
+        { nama:'[Anonim]', metode:'zoom',       waktu:'Selasa/Rabu sore', tipe:'daun',    status:'menunggu' },
+        { nama:'Rika N.',  metode:'chat',        waktu:'Kapan saja',       tipe:'daun',    status:'menunggu' },
+      ];
+      const tbody = document.getElementById('tbody-konseling');
+      tbody.innerHTML = mockKonseling.map(k => `
+        <tr>
+          <td>${k.nama}</td>
+          <td><span class="badge badge--indigo">${k.metode}</span></td>
+          <td style="font-size:12px;color:var(--color-text-muted);">${k.waktu}</td>
+          <td><span class="badge badge--${k.tipe}">${k.tipe==='ksatria'?'⚔️ Ksatria':'🍃 Daun'}</span></td>
+          <td><span class="badge badge--warning">⏳ Menunggu</span></td>
+          <td>
+            <button class="btn btn--primary btn--sm" onclick="showToastDashboard('✅ Jadwal dikonfirmasi! Link akan dikirim.','success')">
+              ✓ Konfirmasi
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ── Modal Detail Laporan ───────────────────────────────────────────────────
+    function openLaporan(sessionId) {
+      const laporan = MOCK_DATA.laporan.find(l => l.sessionId === sessionId);
+      if (!laporan) return;
+
+      const modal   = document.getElementById('modal-laporan');
+      const titleEl = document.getElementById('modal-laporan-title');
+      const bodyEl  = document.getElementById('modal-laporan-body');
+
+      titleEl.textContent = `Laporan #${sessionId.slice(-6).toUpperCase()}`;
+
+      const tipe   = _getTipeMental(laporan.skor);
+      const skorPct= _getSkorPct(laporan.skor);
+
+      bodyEl.innerHTML = `
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="detail-label">Identitas</span>
+            <span class="detail-value">${laporan.isAnonim ? '🎭 Anonim' : `🙋 ${_escHtml(laporan.namaPemain||'—')}`}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Urgensi</span>
+            <span class="badge badge--${laporan._urgensi}" style="margin-top:2px;">${laporan._urgensi.toUpperCase()}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Tanggal Kirim</span>
+            <span class="detail-value">${_formatDate(laporan.timestamp)}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Status</span>
+            <span class="badge badge--${laporan._status.replace('_','')}" style="margin-top:2px;">${_statusLabel(laporan._status)}</span>
+          </div>
+        </div>
+
+        <div class="detail-item" style="margin-bottom:8px;">
+          <span class="detail-label">Kata Kunci Terdeteksi</span>
+          <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;">
+            ${(laporan._kataKunci||[]).map(k => `<span class="badge badge--danger">⚠️ ${_escHtml(k)}</span>`).join('') || '<span style="color:var(--color-text-muted);font-size:12px;">—</span>'}
+          </div>
+        </div>
+
+        <div class="detail-item" style="margin-bottom:16px;">
+          <span class="detail-label">Isi Laporan (Terdekripsi untuk BK)</span>
+          <div class="laporan-isi-box">${_escHtml(laporan.isiLaporan || '—')}</div>
+          <p style="font-size:11px;color:var(--color-text-light);">🔒 Konten ini terenkripsi di server dan hanya didekripsi saat kamu membukanya</p>
+        </div>
+
+        <div class="detail-item" style="margin-bottom:16px;">
+          <span class="detail-label">Profil Mental Skor</span>
+          <div class="profil-skor">
+            <div class="profil-skor-item">
+              <div class="profil-skor-label">Tipe Mental</div>
+              <div class="profil-skor-val ${tipe==='ksatria'?'profil-skor-val--gold':'profil-skor-val--gray'}">${tipe==='ksatria'?'⚔️ Ksatria':'🍃 Daun'}</div>
+            </div>
+            <div class="profil-skor-item">
+              <div class="profil-skor-label">Skor Keseluruhan</div>
+              <div class="profil-skor-val ${skorPct<50?'profil-skor-val--danger':''}">${skorPct}%</div>
+            </div>
+            <div class="profil-skor-item">
+              <div class="profil-skor-label">Resiliensi</div>
+              <div class="profil-skor-val">${laporan.skor.resiliensi}/9</div>
+            </div>
+            <div class="profil-skor-item">
+              <div class="profil-skor-label">Isolasi Sosial</div>
+              <div class="profil-skor-val ${laporan.skor.isolasi>=3?'profil-skor-val--danger':''}">${laporan.skor.isolasi}/3</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <span class="detail-label" style="display:block;margin-bottom:6px;">Catatan Tindak Lanjut Guru BK</span>
+          <textarea class="catatan-bk-area" id="input-catatan-bk" rows="3"
+            placeholder="Tulis catatan tindak lanjut di sini (hanya terlihat oleh BK)…"
+            aria-label="Catatan tindak lanjut"></textarea>
+        </div>
+      `;
+
+      // Bind tombol-tombol modal
+      document.getElementById('btn-save-catatan').onclick = () => {
+        const catatan = document.getElementById('input-catatan-bk')?.value;
+        showToastDashboard('💾 Catatan tersimpan', 'success');
+        _addAuditLog('SIMPAN_CATATAN', sessionId);
+      };
+
+      document.getElementById('btn-mark-done').onclick = () => {
+        laporan._status = 'selesai';
+        modal.hidden = true;
+        showToastDashboard('✅ Laporan ditandai selesai', 'success');
+        renderLaporan();
+        renderOverview();
+        _addAuditLog('TANDAI_SELESAI', sessionId);
+      };
+
+      modal.hidden = false;
+      document.getElementById('btn-close-modal').focus();
+      _addAuditLog('BACA_LAPORAN', sessionId);
+    }
+
+    // ── Audit Log (simulasi) ───────────────────────────────────────────────────
+    function _addAuditLog(aksi, targetId) {
+      console.info(`[AuditLog] ${aksi} | target: ${targetId} | user: ${document.getElementById('bk-nama').textContent} | time: ${new Date().toISOString()}`);
+    }
+
+    // ── Toast Notifikasi ───────────────────────────────────────────────────────
+    function showToastDashboard(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const colors = { info: '#2980B9', success: '#27AE60', danger: '#E74C3C', warning: '#F39C12' };
+      toast.style.cssText = `
+        background: #1C1A14; color: #FDFAF4; padding: 12px 18px;
+        border-radius: 10px; font-size: 13px; font-weight: 500;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        border-left: 4px solid ${colors[type]||colors.info};
+        max-width: 300px; animation: none;
+        transition: opacity 300ms, transform 300ms;
+        opacity: 1;
+      `;
+      toast.textContent = msg;
+      toast.setAttribute('role', 'status');
+      container.appendChild(toast);
+      setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateX(20px)'; setTimeout(() => toast.remove(), 350); }, 3000);
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
+    function _getTipeMental(skor) {
+      return (skor.resiliensi >= 7 && skor.isolasi <= 1) ? 'ksatria' : 'daun';
+    }
+    function _getSkorPct(skor) {
+      const pctResi = (skor.resiliensi / 9) * 70;
+      const pctIso  = ((3 - skor.isolasi + 1) / 3) * 30;
+      return Math.min(100, Math.round(pctResi + pctIso));
+    }
+    function _statusLabel(status) {
+      const map = { belum_dibaca:'🔴 Belum Dibaca', sudah_dibaca:'👁 Sudah Dibaca', dalam_proses:'🔄 Dalam Proses', selesai:'✅ Selesai', dirujuk:'📤 Dirujuk' };
+      return map[status] || status;
+    }
+    function _timeAgo(iso) {
+      const diff = Date.now() - new Date(iso).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 60)   return `${mins} menit lalu`;
+      if (mins < 1440) return `${Math.floor(mins/60)} jam lalu`;
+      return `${Math.floor(mins/1440)} hari lalu`;
+    }
+    function _formatDate(iso) {
+      return new Intl.DateTimeFormat('id-ID', { dateStyle:'medium', timeStyle:'short' }).format(new Date(iso));
+    }
+    function _escHtml(str) {
+      const d = document.createElement('div');
+      d.appendChild(document.createTextNode(str));
+      return d.innerHTML;
+    }
+
+    // ── Event Listeners ────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sidebar navigation
+      document.querySelectorAll('[data-view]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const view = btn.dataset.view;
+          navigateTo(view);
+          switch(view) {
+            case 'overview':  renderOverview(); break;
+            case 'laporan':   renderLaporan();  break;
+            case 'sesi':      renderSesi();     break;
+            case 'analisis':  renderAnalisis(); break;
+            case 'konseling': renderKonseling(); break;
+          }
+        });
+      });
+
+      // Filter laporan
+      document.getElementById('btn-apply-filter')?.addEventListener('click', () => {
+        renderLaporan({
+          urgensi: document.getElementById('filter-urgensi').value,
+          status:  document.getElementById('filter-status-laporan').value,
+        });
+      });
+
+      // Modal close
+      const modal = document.getElementById('modal-laporan');
+      document.getElementById('btn-close-modal')?.addEventListener('click', () => modal.hidden = true);
+      document.getElementById('btn-modal-close-bottom')?.addEventListener('click', () => modal.hidden = true);
+      modal?.addEventListener('click', e => { if (e.target === modal) modal.hidden = true; });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal && !modal.hidden) modal.hidden = true; });
+
+      // Logout
+      document.getElementById('btn-logout')?.addEventListener('click', () => {
+        if (confirm('Keluar dari dashboard?')) {
+          showToastDashboard('👋 Sampai jumpa!', 'info');
+          setTimeout(() => window.location.href = '../index.html', 1000);
+        }
+      });
+
+      // Inisialisasi awal
+      renderOverview();
+    });
+  </script>
+</body>
+</html>

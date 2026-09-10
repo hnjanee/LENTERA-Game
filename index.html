@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LENTERA — Lepas Ejekan, Nyalakan Tutur Empati, Rawat Asa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body class="landing-page">
+
+  <!-- ░░ FLOATING BACKGROUND PARTICLES ░░ -->
+  <div class="bg-particles" aria-hidden="true">
+    <span class="particle particle--batik-1"></span>
+    <span class="particle particle--batik-2"></span>
+    <span class="particle particle--batik-3"></span>
+    <span class="particle particle--lantern-1">🏮</span>
+    <span class="particle particle--lantern-2">🏮</span>
+    <span class="particle particle--star-1">✦</span>
+    <span class="particle particle--star-2">✦</span>
+    <span class="particle particle--star-3">✧</span>
+  </div>
+
+  <!-- ░░ NAVBAR ░░ -->
+  <nav class="navbar" role="navigation" aria-label="Navigasi utama">
+    <div class="nav-inner container">
+      <a href="index.html" class="nav-logo" aria-label="LENTERA - Halaman Utama">
+        <span class="logo-icon" aria-hidden="true">🔦</span>
+        <span class="logo-text">LENTERA</span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#tentang" class="nav-link">Tentang</a></li>
+        <li><a href="#cara-main" class="nav-link">Cara Main</a></li>
+        <li><a href="#filosofi" class="nav-link">Filosofi</a></li>
+        <li><a href="dashboard/admin.html" class="nav-link nav-link--bk" target="_blank" rel="noopener">
+          <span aria-hidden="true">🎓</span> Dashboard BK
+        </a></li>
+      </ul>
+      <button class="nav-burger" aria-label="Buka menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ░░ HERO SECTION ░░ -->
+  <header class="hero" role="banner">
+    <div class="hero-inner container">
+      <div class="hero-content">
+        <p class="hero-tagline">
+          <span class="tagline-dot" aria-hidden="true">◆</span>
+          Platform Asesmen Kesehatan Mental Berbasis Game
+        </p>
+        <h1 class="hero-title">
+          <span class="title-light">LENTERA</span>
+        </h1>
+        <p class="hero-subtitle">
+          <em>Lepas Ejekan · Nyalakan Tutur Empati · Rawat Asa</em>
+        </p>
+        <p class="hero-desc">
+          Sebuah petualangan kecil di dunia isometrik Jawa untuk mengenali dirimu,
+          menghadapi kata-kata yang menyakitkan, dan mengubahnya menjadi kekuatan.
+          <strong>Lathi to Urup</strong> — dari luka menjadi cahaya.
+        </p>
+        <div class="hero-cta-group">
+          <a href="game.html" class="btn btn--primary btn--lg" id="btn-mulai-main">
+            <span aria-hidden="true">✨</span> Mulai Perjalanan
+          </a>
+          <a href="#cara-main" class="btn btn--ghost btn--lg">
+            Pelajari Dulu
+          </a>
+        </div>
+        <p class="hero-note">
+          <span aria-hidden="true">🔒</span>
+          Semua jawaban bersifat rahasia · Tidak ada jawaban benar atau salah
+        </p>
+      </div>
+
+      <!-- Isometric Game Preview -->
+      <div class="hero-visual" aria-label="Ilustrasi tampilan game isometrik LENTERA">
+        <div class="iso-scene" aria-hidden="true">
+          <div class="iso-ground"></div>
+          <div class="iso-building iso-building--joglo">
+            <div class="joglo-roof"></div>
+            <div class="joglo-body">
+              <div class="joglo-door"></div>
+            </div>
+            <div class="joglo-label">Balai Rasa</div>
+          </div>
+          <div class="iso-building iso-building--pasar">
+            <div class="pasar-roof"></div>
+            <div class="pasar-body"></div>
+            <div class="joglo-label">Pasar Interaksi</div>
+          </div>
+          <div class="iso-tree"></div>
+          <div class="iso-tree iso-tree--2"></div>
+          <div class="iso-lantern">🏮</div>
+          <div class="iso-lantern iso-lantern--2">🏮</div>
+          <div class="iso-avatar" title="Avatar pemain">
+            <div class="avatar-body"></div>
+            <div class="avatar-head"></div>
+            <div class="avatar-glow"></div>
+          </div>
+          <!-- Path dots -->
+          <div class="path-dot path-dot--1"></div>
+          <div class="path-dot path-dot--2"></div>
+          <div class="path-dot path-dot--3"></div>
+        </div>
+        <div class="visual-badge visual-badge--top">
+          <span>🏮</span> 4 Pos Petualangan
+        </div>
+        <div class="visual-badge visual-badge--bottom">
+          <span>🌿</span> Aman &amp; Rahasia
+        </div>
+      </div>
+    </div>
+    <!-- Hero wave divider -->
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="var(--color-bg-secondary)"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ░░ STATS STRIP ░░ -->
+  <section class="stats-strip" aria-label="Statistik platform">
+    <div class="container">
+      <ul class="stats-list" role="list">
+        <li class="stat-item">
+          <span class="stat-number" data-target="4">0</span>
+          <span class="stat-label">Pos Petualangan</span>
+        </li>
+        <li class="stat-divider" aria-hidden="true">◆</li>
+        <li class="stat-item">
+          <span class="stat-number" data-target="12">0</span>
+          <span class="stat-label">Skenario Kasus</span>
+        </li>
+        <li class="stat-divider" aria-hidden="true">◆</li>
+        <li class="stat-item">
+          <span class="stat-number" data-target="100">0</span>
+          <span class="stat-label">% Anonim &amp; Aman</span>
+        </li>
+        <li class="stat-divider" aria-hidden="true">◆</li>
+        <li class="stat-item">
+          <span class="stat-number">∞</span>
+          <span class="stat-label">Dukungan Guru BK</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ░░ TENTANG ░░ -->
+  <section class="section section--about" id="tentang" aria-labelledby="heading-tentang">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Tentang LENTERA</span>
+        <h2 class="section-title" id="heading-tentang">
+          Bukan sekadar game,<br>ini tentang kamu.
+        </h2>
+        <p class="section-desc">
+          LENTERA adalah ruang aman berbentuk game edukasi interaktif untuk mengenali
+          kondisi mentalmu dan merespons verbal bullying yang kerap bersembunyi di balik kata "candaan".
+        </p>
+      </div>
+      <div class="cards-grid">
+        <article class="feature-card" aria-label="Asesmen Terselubung">
+          <div class="card-icon" aria-hidden="true">🎭</div>
+          <h3 class="card-title">Asesmen Terselubung</h3>
+          <p class="card-text">
+            Kondisi mentalmu diukur lewat pilihan game — bukan kuesioner kaku.
+            Tidak ada yang terasa seperti tes psikologi.
+          </p>
+        </article>
+        <article class="feature-card" aria-label="Simulasi Nyata">
+          <div class="card-icon" aria-hidden="true">🗣️</div>
+          <h3 class="card-title">Simulasi Nyata</h3>
+          <p class="card-text">
+            Hadapi dialog roleplay kasus bullying berkedok candaan dan latih respons
+            asertif yang sehat.
+          </p>
+        </article>
+        <article class="feature-card" aria-label="Puzzle Transformasi">
+          <div class="card-icon" aria-hidden="true">🧩</div>
+          <h3 class="card-title">Puzzle Transformasi</h3>
+          <p class="card-text">
+            Ubah kata-kata ejekan menjadi kalimat afirmasi melalui mini-game puzzle kata
+            di Taman Urup.
+          </p>
+        </article>
+        <article class="feature-card" aria-label="Pelaporan Aman">
+          <div class="card-icon" aria-hidden="true">🔒</div>
+          <h3 class="card-title">Pelaporan Aman</h3>
+          <p class="card-text">
+            Ceritakan pengalaman bullying secara anonim. Laporanmu langsung masuk ke
+            dashboard Guru BK secara terenkripsi.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CARA MAIN ░░ -->
+  <section class="section section--howto" id="cara-main" aria-labelledby="heading-cara-main">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Alur Perjalanan</span>
+        <h2 class="section-title" id="heading-cara-main">4 Pos, 1 Perjalanan</h2>
+      </div>
+      <ol class="journey-steps" role="list">
+        <li class="step-card" aria-label="Pos 1 Balai Rasa">
+          <div class="step-number" aria-hidden="true">01</div>
+          <div class="step-icon" aria-hidden="true">🏛️</div>
+          <div class="step-content">
+            <span class="step-location">Pos Pertama</span>
+            <h3 class="step-title">Balai Rasa</h3>
+            <p class="step-desc">
+              Ciptakan avatarmu. Pilih cuaca hati, isi tas ransel, dan bereaksi
+              terhadap situasi — tanpa sadar kamu sedang memetakan kondisi mentalmu.
+            </p>
+            <ul class="step-items" role="list">
+              <li>Kustomisasi Avatar</li>
+              <li>Asesmen Mood Terselubung</li>
+              <li>Quick-Time Event Pertama</li>
+            </ul>
+          </div>
+        </li>
+        <li class="step-card" aria-label="Pos 2 Pasar Interaksi">
+          <div class="step-number" aria-hidden="true">02</div>
+          <div class="step-icon" aria-hidden="true">🏪</div>
+          <div class="step-content">
+            <span class="step-location">Pos Kedua</span>
+            <h3 class="step-title">Pasar Interaksi</h3>
+            <p class="step-desc">
+              Bertemu NPC yang melontarkan ejekan berkedok candaan. Pilih responsmu —
+              apakah kamu akan menghindar, melawan, atau menjadi asertif?
+            </p>
+            <ul class="step-items" role="list">
+              <li>3 Skenario Bullying</li>
+              <li>Dialog Multiple Choice</li>
+              <li>Pengukuran Resiliensi</li>
+            </ul>
+          </div>
+        </li>
+        <li class="step-card" aria-label="Pos 3 Taman Urup">
+          <div class="step-number" aria-hidden="true">03</div>
+          <div class="step-icon" aria-hidden="true">🏮</div>
+          <div class="step-content">
+            <span class="step-location">Pos Ketiga</span>
+            <h3 class="step-title">Taman Urup</h3>
+            <p class="step-desc">
+              Kata-kata ejekan hancur menjadi pecahan huruf. Susun ulang menjadi
+              kalimat afirmasi. Setiap lampion yang menyala adalah bukti kekuatanmu.
+            </p>
+            <ul class="step-items" role="list">
+              <li>Puzzle Drag &amp; Drop</li>
+              <li>Transformasi Kalimat</li>
+              <li>Animasi Lampion Urup</li>
+            </ul>
+          </div>
+        </li>
+        <li class="step-card" aria-label="Pos 4 Bilik Lentera">
+          <div class="step-number" aria-hidden="true">04</div>
+          <div class="step-icon" aria-hidden="true">📖</div>
+          <div class="step-content">
+            <span class="step-location">Pos Keempat</span>
+            <h3 class="step-title">Bilik Lentera</h3>
+            <p class="step-desc">
+              Ruang aman yang tenang. Ceritakan bebanmu di jurnal digital — bisa anonim
+              atau dengan nama. Guru BK akan menerima laporanmu secara terenkripsi.
+            </p>
+            <ul class="step-items" role="list">
+              <li>Jurnal Digital Aman</li>
+              <li>Opsi Anonim/Bernama</li>
+              <li>Koneksi Langsung ke BK</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ░░ FILOSOFI ░░ -->
+  <section class="section section--filosofi" id="filosofi" aria-labelledby="heading-filosofi">
+    <div class="container">
+      <div class="filosofi-layout">
+        <div class="filosofi-visual" aria-hidden="true">
+          <div class="lathi-urup-anim">
+            <div class="lathi-text">Lathi</div>
+            <div class="transform-arrow">→</div>
+            <div class="urup-text">Urup</div>
+          </div>
+          <div class="batik-ornament batik-ornament--1"></div>
+          <div class="batik-ornament batik-ornament--2"></div>
+        </div>
+        <div class="filosofi-content">
+          <span class="section-label">Filosofi Inti</span>
+          <h2 class="section-title" id="heading-filosofi">"Lathi to Urup"</h2>
+          <p class="filosofi-quote">
+            <em>"Kata-kata ibarat api — bisa membakar, tapi juga bisa menerangi."</em>
+          </p>
+          <p class="filosofi-text">
+            Dalam filosofi Jawa, <strong>Lathi</strong> berarti mulut atau kata-kata.
+            <strong>Urup</strong> berarti hidup atau nyala. LENTERA percaya bahwa kata-kata
+            menyakitkan yang kita terima tidak harus mematikan kita — kita bisa
+            mengubahnya menjadi bahan bakar untuk tumbuh.
+          </p>
+          <p class="filosofi-text">
+            Platform ini hadir dalam semangat <strong>Neo-Tradisional</strong> — menggabungkan
+            kearifan lokal Jawa dengan sensibilitas Gen Z yang jujur, terbuka, dan saling peduli.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CTA SECTION ░░ -->
+  <section class="section section--cta" aria-labelledby="heading-cta">
+    <div class="container">
+      <div class="cta-card">
+        <div class="cta-ornament" aria-hidden="true">🏮</div>
+        <h2 class="cta-title" id="heading-cta">
+          Siap menyalakan lenteramu?
+        </h2>
+        <p class="cta-desc">
+          Perjalanan 15 menit yang bisa mengubah cara kamu melihat dirimu sendiri.
+          Semua aman, semua rahasia, semua untukmu.
+        </p>
+        <a href="game.html" class="btn btn--primary btn--xl">
+          <span aria-hidden="true">🔦</span> Mulai Sekarang — Gratis
+        </a>
+        <p class="cta-note">Tidak perlu daftar akun · Selesai dalam ±15 menit</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span aria-hidden="true">🔦</span> LENTERA
+          </div>
+          <p class="footer-tagline">
+            Lepas Ejekan · Nyalakan Tutur Empati · Rawat Asa
+          </p>
+          <p class="footer-sub">Platform Asesmen Kesehatan Mental &amp; Pelaporan Bullying</p>
+        </div>
+        <nav class="footer-nav" aria-label="Navigasi footer">
+          <h3 class="footer-nav-title">Navigasi</h3>
+          <ul role="list">
+            <li><a href="#tentang">Tentang</a></li>
+            <li><a href="#cara-main">Cara Main</a></li>
+            <li><a href="#filosofi">Filosofi</a></li>
+            <li><a href="game.html">Mulai Main</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-nav" aria-label="Navigasi untuk pendidik">
+          <h3 class="footer-nav-title">Untuk Pendidik</h3>
+          <ul role="list">
+            <li><a href="dashboard/admin.html" target="_blank" rel="noopener">Dashboard BK</a></li>
+            <li><a href="#" aria-label="Panduan guru (segera hadir)">Panduan Guru</a></li>
+            <li><a href="#" aria-label="Integrasi sekolah (segera hadir)">Integrasi Sekolah</a></li>
+          </ul>
+        </nav>
+        <div class="footer-info">
+          <h3 class="footer-nav-title">Krisis?</h3>
+          <p>Jika kamu butuh bantuan segera:</p>
+          <a href="tel:119" class="crisis-link">📞 Into The Light: 119 ext 8</a>
+          <a href="tel:021-500-454" class="crisis-link">📞 Yayasan Pulih: (021) 788-42580</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 LENTERA · Dibuat dengan 💛 untuk kesejahteraan mental generasi muda Indonesia</p>
+        <p class="footer-disclaimer">Platform ini bukan pengganti layanan kesehatan mental profesional.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/state.js"></script>
+  <script>
+    // ── Navbar burger toggle ──
+    const burger = document.querySelector('.nav-burger');
+    const navLinks = document.querySelector('.nav-links');
+    burger?.addEventListener('click', () => {
+      const expanded = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', String(!expanded));
+      navLinks?.classList.toggle('nav-links--open');
+    });
+
+    // ── Animated counters ──
+    const observerOptions = { threshold: 0.5 };
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const target = parseInt(el.dataset.target, 10);
+        if (isNaN(target)) return;
+        let current = 0;
+        const step = Math.max(1, Math.floor(target / 40));
+        const timer = setInterval(() => {
+          current = Math.min(current + step, target);
+          el.textContent = current;
+          if (current >= target) clearInterval(timer);
+        }, 30);
+        counterObserver.unobserve(el);
+      });
+    }, observerOptions);
+    document.querySelectorAll('.stat-number[data-target]').forEach(el => counterObserver.observe(el));
+
+    // ── Smooth scroll for anchor links ──
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  </script>
+</body>
+</html>
