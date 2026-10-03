@@ -1,33 +1,36 @@
 /* ============================================================
-   LENTERA — main.css
+   CANDRANATA — main.css
    Global Design System: Neo-Tradisional Jawa Modern / Gen Z
+   Cipta Agung Nuntun Dharmaning Raga
    ============================================================ */
 
 /* ── 1. DESIGN TOKENS ── */
 :root {
-  /* Primary palette */
-  --color-primary:        #F4A62A;   /* Kuning Joglo — utama */
-  --color-primary-dark:   #D4891A;
-  --color-primary-light:  #FDD17A;
+  /* Primary palette — Biru Bulan Candranata */
+  --color-primary:        #5B8FD4;   /* Biru Bulan — utama */
+  --color-primary-dark:   #3A6BB5;
+  --color-primary-light:  #A8C8F0;
   --color-secondary:      #4A7C59;   /* Hijau Daun Jati */
   --color-secondary-dark: #335542;
   --color-accent:         #C0392B;   /* Merah Batik */
   --color-accent-soft:    #F08080;
-  --color-teal:           #2C9B8F;   /* Teal Lentera */
+  --color-teal:           #2C9B8F;   /* Teal Cahaya */
   --color-indigo:         #4C5FA1;   /* Biru Langit Malam */
+  --color-gold:           #F4A62A;   /* Emas Joglo */
+  --color-gold-dark:      #D4891A;
 
   /* Neutral / background */
-  --color-bg:             #FDFAF4;   /* Putih krem kertas */
-  --color-bg-secondary:   #F5EFE0;   /* Krem batik */
-  --color-bg-dark:        #1C1A14;   /* Coklat tua Joglo */
+  --color-bg:             #F0F4FF;   /* Biru malam pucat */
+  --color-bg-secondary:   #E8EEF8;   /* Biru bulan */
+  --color-bg-dark:        #0D1120;   /* Malam dalam */
   --color-bg-card:        #FFFFFF;
-  --color-surface:        #EDE7D5;
+  --color-surface:        #D8E4F5;
 
   /* Text */
-  --color-text:           #2B2417;
-  --color-text-muted:     #7A6E5F;
-  --color-text-light:     #AFA394;
-  --color-text-inverse:   #FDFAF4;
+  --color-text:           #1A2240;
+  --color-text-muted:     #4A5880;
+  --color-text-light:     #8A9BC0;
+  --color-text-inverse:   #F0F4FF;
 
   /* Semantic */
   --color-success:        #27AE60;
@@ -36,7 +39,7 @@
   --color-info:           #2980B9;
 
   /* Skor tipe mental */
-  --color-ksatria:        #F4A62A;   /* Ksatria Lentera */
+  --color-ksatria:        #5B8FD4;   /* Ksatria Candranata */
   --color-daun:           #7F8C8D;   /* Daun Terduduk */
 
   /* Typography */
@@ -87,7 +90,7 @@
   --shadow-md:  0 4px 16px rgba(43,36,23,0.10), 0 2px 6px rgba(43,36,23,0.06);
   --shadow-lg:  0 8px 32px rgba(43,36,23,0.12), 0 4px 12px rgba(43,36,23,0.08);
   --shadow-xl:  0 20px 60px rgba(43,36,23,0.15), 0 8px 24px rgba(43,36,23,0.10);
-  --shadow-glow-gold:  0 0 24px rgba(244,166,42,0.45);
+  --shadow-glow-gold:  0 0 24px rgba(91,143,212,0.5);
   --shadow-glow-green: 0 0 20px rgba(74,124,89,0.40);
 
   /* Transitions */
@@ -204,9 +207,9 @@ strong { font-weight: var(--weight-semi); }
 
 .btn--primary {
   background: var(--color-primary);
-  color: var(--color-bg-dark);
+  color: #fff;
   border-color: var(--color-primary);
-  box-shadow: 0 4px 14px rgba(244,166,42,0.35);
+  box-shadow: 0 4px 14px rgba(91,143,212,0.4);
 }
 .btn--primary:hover:not(:disabled) {
   background: var(--color-primary-dark);
@@ -284,7 +287,7 @@ strong { font-weight: var(--weight-semi); }
 .nav-link:hover { color: var(--color-primary-dark); }
 .nav-link--bk {
   background: var(--color-primary);
-  color: var(--color-bg-dark) !important;
+  color: #fff !important;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   font-weight: var(--weight-semi);
@@ -318,9 +321,9 @@ strong { font-weight: var(--weight-semi); }
   min-height: calc(100vh - 64px);
   background: linear-gradient(
     135deg,
-    var(--color-bg) 0%,
-    var(--color-bg-secondary) 60%,
-    #EAD9B5 100%
+    #0D1120 0%,
+    #1A2A4A 40%,
+    #0F1E35 100%
   );
   overflow: hidden;
 }
@@ -329,8 +332,9 @@ strong { font-weight: var(--weight-semi); }
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 20% 80%, rgba(244,166,42,0.12) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(74,124,89,0.10) 0%, transparent 40%);
+    radial-gradient(circle at 20% 80%, rgba(91,143,212,0.18) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(74,124,89,0.12) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 0%, rgba(91,143,212,0.08) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -361,14 +365,14 @@ strong { font-weight: var(--weight-semi); }
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(4rem, 10vw, 7rem);
+  font-size: clamp(var(--text-3xl), 8vw, 5.5rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.04em;
   margin-bottom: var(--space-3);
 }
 .title-light {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 50%, var(--color-accent) 100%);
+  background: linear-gradient(135deg, #A8C8F0 0%, #5B8FD4 50%, #3A6BB5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -376,13 +380,13 @@ strong { font-weight: var(--weight-semi); }
 
 .hero-subtitle {
   font-size: var(--text-md);
-  color: var(--color-text-muted);
+  color: rgba(168,200,240,0.75);
   margin-bottom: var(--space-5);
   letter-spacing: 0.02em;
 }
 .hero-desc {
   font-size: var(--text-base);
-  color: var(--color-text);
+  color: rgba(240,244,255,0.82);
   max-width: 46ch;
   margin-bottom: var(--space-8);
   line-height: 1.75;
@@ -396,7 +400,7 @@ strong { font-weight: var(--weight-semi); }
 }
 .hero-note {
   font-size: var(--text-sm);
-  color: var(--color-text-muted);
+  color: rgba(168,200,240,0.6);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -1090,4 +1094,251 @@ strong { font-weight: var(--weight-semi); }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+
+/* ============================================================
+   CANDRANATA — Tambahan: Section Bullying, Karakter Hero
+   ============================================================ */
+
+/* ── Hero override: warna teks gelap jadi terang ── */
+.hero .hero-tagline { color: rgba(168,200,240,0.9); }
+.hero .tagline-dot  { color: var(--color-primary-light); }
+.navbar { background: rgba(13,17,32,0.95); border-bottom-color: rgba(91,143,212,0.2); }
+.nav-link { color: rgba(240,244,255,0.7); }
+.nav-link:hover { color: var(--color-primary-light); }
+.nav-logo { color: var(--color-primary-light); }
+
+/* Stats strip */
+.stats-strip { background: rgba(13,17,32,0.8); border-color: rgba(91,143,212,0.15); }
+.stat-number { color: var(--color-primary-light); }
+.stat-label  { color: rgba(168,200,240,0.7); }
+
+/* Section about */
+.section--about { background: var(--color-bg-secondary); }
+.feature-card { border-color: var(--color-surface); }
+.feature-card:hover { border-color: var(--color-primary-light); }
+
+/* ── Karakter Avatar di Hero (OMORI-style) ── */
+.avatar-char {
+  position: relative;
+  width: 32px;
+  height: 50px;
+}
+.avatar-hair {
+  position: absolute;
+  top: -4px; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 14px;
+  background: #1A0A00;
+  border-radius: 8px 8px 0 0;
+  z-index: 2;
+}
+.avatar-face {
+  position: absolute;
+  top: 6px; left: 50%; transform: translateX(-50%);
+  width: 22px; height: 20px;
+  background: #F5CBA7;
+  border-radius: 50%;
+  border: 2px solid rgba(0,0,0,0.15);
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px;
+  z-index: 3;
+}
+.avatar-eye {
+  width: 4px; height: 5px;
+  background: #1A0A00;
+  border-radius: 50%;
+}
+.avatar-body-char {
+  position: absolute;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 22px;
+  background: var(--color-primary);
+  border-radius: 4px 4px 0 0;
+  z-index: 1;
+}
+
+/* Gedung sekolah di iso scene */
+.iso-building--sekolah {
+  right: 5%;
+  bottom: 40%;
+}
+.sekolah-roof {
+  width: 110px; height: 0;
+  border-left: 55px solid transparent;
+  border-right: 55px solid transparent;
+  border-bottom: 35px solid var(--color-primary-dark);
+}
+.sekolah-body {
+  width: 110px; height: 65px;
+  background: #E8EEF8;
+  border: 2px solid var(--color-primary);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding: 0 6px 4px; gap: 4px;
+  position: relative;
+}
+.sekolah-window {
+  width: 18px; height: 20px;
+  background: #A8C8F0;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 4px 4px 0 0;
+  position: absolute;
+  top: 8px;
+}
+.sekolah-window:nth-child(1) { left: 10px; }
+.sekolah-window:nth-child(2) { right: 10px; }
+.sekolah-door {
+  width: 20px; height: 28px;
+  background: var(--color-primary-dark);
+  border-radius: 4px 4px 0 0;
+  margin-top: auto;
+}
+
+/* ── SECTION BULLYING ── */
+.section--bullying {
+  background: linear-gradient(180deg, #0D1120 0%, #131B30 100%);
+  color: var(--color-text-inverse);
+}
+.section--bullying .section-label { color: rgba(168,200,240,0.8); }
+.section--bullying .section-title { color: var(--color-text-inverse); }
+.section--bullying .section-desc  { color: rgba(168,200,240,0.7); }
+
+.bullying-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.bullying-card {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(91,143,212,0.2);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: transform var(--transition-base), border-color var(--transition-base);
+}
+.bullying-card:hover { transform: translateY(-3px); border-color: rgba(91,143,212,0.4); }
+.bullying-icon { font-size: 2rem; margin-bottom: 12px; }
+.bullying-card h3 { font-size: var(--text-lg); font-weight: 700; color: var(--color-text-inverse); margin-bottom: 12px; }
+.bullying-card p  { font-size: var(--text-sm); color: rgba(168,200,240,0.75); line-height: 1.7; margin-bottom: 10px; }
+.bullying-note {
+  font-size: var(--text-sm);
+  color: rgba(240,168,168,0.8);
+  font-style: italic;
+  padding: 10px 14px;
+  background: rgba(231,76,60,0.08);
+  border-left: 3px solid rgba(231,76,60,0.4);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-top: 10px;
+}
+.bullying-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; }
+.bullying-list li { display: flex; align-items: flex-start; gap: 10px; font-size: var(--text-sm); color: rgba(168,200,240,0.8); line-height: 1.6; }
+.bully-tag {
+  display: inline-block; flex-shrink: 0;
+  font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: var(--radius-full);
+  margin-top: 1px;
+}
+.bully-tag--body     { background: rgba(231,76,60,0.2);  color: #F08080; }
+.bully-tag--achieve  { background: rgba(243,156,18,0.2); color: #F4C57A; }
+.bully-tag--social   { background: rgba(76,95,161,0.25); color: #A0B0FF; }
+.bully-tag--gaslight { background: rgba(155,89,182,0.2); color: #C39CE0; }
+.bully-tag--cyber    { background: rgba(44,155,143,0.2); color: #7ED8D0; }
+
+.dampak-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.dampak-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  background: rgba(91,143,212,0.06);
+  border: 1px solid rgba(91,143,212,0.15);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: rgba(168,200,240,0.8);
+}
+.dampak-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+.aksi-steps { display: flex; flex-direction: column; gap: 14px; }
+.aksi-step {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 12px 14px;
+  background: rgba(91,143,212,0.06);
+  border: 1px solid rgba(91,143,212,0.15);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: rgba(168,200,240,0.8);
+  line-height: 1.6;
+}
+.aksi-num {
+  width: 28px; height: 28px;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--text-sm); font-weight: 700;
+  flex-shrink: 0;
+}
+
+.bullying-stats {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+  background: rgba(91,143,212,0.08);
+  border: 1px solid rgba(91,143,212,0.15);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  margin-bottom: 40px;
+}
+.bully-stat-item { text-align: center; }
+.bully-stat-num {
+  display: block;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: var(--color-primary-light);
+  margin-bottom: 6px;
+}
+.bully-stat-label {
+  font-size: var(--text-sm);
+  color: rgba(168,200,240,0.65);
+  line-height: 1.5;
+}
+
+.bullying-cta { text-align: center; }
+.bullying-cta-note {
+  margin-top: 14px;
+  font-size: var(--text-sm);
+  color: rgba(168,200,240,0.55);
+}
+
+/* ── Filosofi override warna ── */
+.section--filosofi .filosofi-quote { color: var(--color-primary-light); }
+.section--filosofi .urup-text { color: var(--color-primary-light); }
+
+/* ── CTA card override ── */
+.cta-card {
+  background: linear-gradient(135deg, #1A2A4A 0%, #0D1A35 100%);
+  border: 1px solid rgba(91,143,212,0.25);
+}
+.cta-title   { color: var(--color-text-inverse); }
+.cta-desc    { color: rgba(168,200,240,0.75); }
+.cta-note    { color: rgba(168,200,240,0.45); }
+.cta-card .btn--primary {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+/* ── Footer override ── */
+.footer { background: #060B18; }
+.footer-logo { color: var(--color-primary-light); }
+.footer-tagline { color: rgba(168,200,240,0.55); }
+
+/* ── Stats override ── */
+.section--howto { background: var(--color-bg); }
+.step-card { border-color: var(--color-surface); }
+.step-items li::before { color: var(--color-primary); }
+
+/* ── Responsive bullying ── */
+@media (max-width: 900px) {
+  .bullying-grid  { grid-template-columns: 1fr; }
+  .bullying-stats { grid-template-columns: 1fr; gap: 16px; }
+  .dampak-grid    { grid-template-columns: 1fr; }
 }

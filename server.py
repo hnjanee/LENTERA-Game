@@ -1,5 +1,6 @@
 """
-LENTERA — Local Development Server
+CANDRANATA — Local Development Server
+Cipta Agung Nuntun Dharmaning Raga Aning Nalar Agung Tetep Asisih
 Jalankan: python server.py
 Akses   : http://lentera:8080
 """
@@ -14,7 +15,7 @@ HOST_NAME = "lentera"
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 class LenteraHandler(http.server.SimpleHTTPRequestHandler):
-    server_version = "LENTERA/1.0"
+    server_version = "CANDRANATA/1.0"
     sys_version    = ""
 
     def __init__(self, *args, **kwargs):
@@ -50,9 +51,9 @@ class LenteraServer(socketserver.TCPServer):
 if __name__ == "__main__":
     with LenteraServer(("0.0.0.0", PORT), LenteraHandler) as httpd:
         print()
-        print("\033[33m  🔦 ══════════════════════════════════════════\033[0m")
-        print("\033[33m       LENTERA  —  Lathi to Urup  🏮          \033[0m")
-        print("\033[33m  ══════════════════════════════════════════🔦 \033[0m")
+        print("  🌙 ══════════════════════════════════════════")
+        print("       CANDRANATA  —  Lathi to Urup  🌙       ")
+        print("  ══════════════════════════════════════════🌙 ")
         print()
         print(f"\033[1m  Server  :\033[0m  http://{HOST_NAME}:{PORT}")
         print()
@@ -67,4 +68,4 @@ if __name__ == "__main__":
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            print("\n\033[33m  🏮 LENTERA Server dihentikan. Sampai jumpa!\033[0m\n")
+            print("\n\033[36m  🌙 CANDRANATA Server dihentikan. Sampai jumpa!\033[0m\n")

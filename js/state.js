@@ -1,84 +1,59 @@
-/* ============================================================
-   LENTERA — state.js
+﻿/* ============================================================
+   LATHI — state.js
    Core State Management, Navigation Guard, & Utility Functions
-   ============================================================
-
-   ARSITEKTUR STATE:
-   ─────────────────
-   LenteraState       → Objek utama: init, navigate, reset
-   LenteraGame.state  → Snapshot data pemain & skor
-   LenteraNav         → Guard navigasi antar pos (no-skip enforcement)
-   LenteraUI          → Utility: toast, transition, HUD update
-   LenteraStore       → Persistence ke localStorage
-
-   SKEMA SKOR MENTAL:
-   ─────────────────
-   skor.resiliensi  (0–9)  : Gabungan pos1 (cuaca+qte) + pos2 (pilihan respons)
-   skor.isolasi     (0–3)  : Dari pos1 (baterai sosial)
-   skor.stres       string : Tipe stres dari pilihan tas (akademik/sosial/insecurity)
-   skor.pos2        []     : Array pilihan per skenario {tipe: 'asertif'|'pasif'|'reaktif'}
-
-   TIPE HASIL:
-   ─────────────────
-   'ksatria'  → total resiliensi >= 7, isolasi <= 2
-   'daun'     → total resiliensi < 7  atau isolasi >= 3
+   Cipta Agung Nuntun Dharmaning Raga Aning Nalar Agung Tetep Asisih
    ============================================================ */
 
 'use strict';
 
-// ── Konstanta ──────────────────────────────────────────────
-const STORAGE_KEY   = 'lentera_session_v1';
-const POS_ORDER     = ['loading', 'pos1', 'pos2', 'pos3', 'pos4', 'hasil'];
-const MAX_POS_INDEX = POS_ORDER.indexOf('hasil');
+const STORAGE_KEY = 'lathi_session_v1';
+const POS_ORDER   = ['loading', 'intro-bullying', 'pos1', 'pos2', 'pos3', 'pos4', 'hasil'];
 
-// ── State Awal ────────────────────────────────────────────
 function createInitialState() {
   return {
-    // Meta sesi
-    sessionId   : _generateId(),
-    startedAt   : new Date().toISOString(),
-    completedAt : null,
-    currentScreen: 'loading',
+    sessionId      : _generateId(),
+    startedAt      : new Date().toISOString(),
+    completedAt    : null,
+    currentScreen  : 'loading',
     currentPosIndex: 0,
 
-    // Data pemain
     player: {
-      nama     : '',
+      nama        : '',
+      sekolah     : '',   // 'SMA Al-Maahira IIBS Malang' | 'SMAN 3 Malang' | 'SMAN 4 Malang'
+      gender      : null,
       avatarConfig: {
-        cuaca : null,   // 'cerah' | 'kabut' | 'mendung'
-        tas   : null,   // 'buku' | 'hp' | 'kaca'
-        baterai: null,  // 'keramaian' | 'pojok' | 'pohon'
-        qte   : null,   // 'menunduk' | 'panik' | 'senyum'
+        gender  : null,
+        cuaca   : null,
+        tas     : null,
+        baterai : null,
+        qte     : null,
       },
     },
 
-    // Skor asesmen
     skor: {
-      resiliensi    : 0,   // akumulasi dari cuaca(1-3) + qte(1-3) + pos2(1-3 per skenario)
-      isolasi       : 0,   // dari baterai sosial (1-3)
-      stresType     : null,// 'akademik' | 'sosial' | 'insecurity'
-      pos2Responses : [],  // [{skenario: 1, pilihan: 'A', tipe: 'asertif', skor: 3}]
-      pos3Complete  : false,
+      resiliensi   : 0,
+      isolasi      : 0,
+      stresType    : null,
+      pos2Responses: [],
+      pos3Complete : false,
     },
 
-    // Laporan pos4
     laporan: {
-      isi       : '',
-      isAnonim  : true,
-      submitted : false,
-      skipped   : false,
+      isi      : '',
+      isAnonim : false,  // selalu false — wajib pakai nama
+      submitted: false,
+      skipped  : false,
     },
 
-    // Hasil akhir
     hasil: {
-      tipe       : null,   // 'ksatria' | 'daun'
-      totalSkor  : 0,
-      persentase : 0,
+      tipe         : null,
+      totalSkor    : 0,
+      persentase   : 0,
       kalkulasiDone: false,
     },
 
-    // Progress guard
     posCompleted: {
+      'intro-bullying': false,
       pos1: false,
       pos2: false,
       pos3: false,
@@ -87,115 +62,95 @@ function createInitialState() {
   };
 }
 
-// ── State singleton ───────────────────────────────────────
 let _state = createInitialState();
 
-// ── LenteraStore: localStorage persistence ────────────────
-const LenteraStore = {
-  save() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(_state));
-    } catch (e) {
-      console.warn('[LENTERA] Gagal menyimpan state:', e);
-    }
-  },
+// ── Bersihkan storage key lama saat pertama kali dimuat ──
+(function _cleanOldKeys() {
+  const oldKeys = [
+    'lentera_session_v1',
+    'candranata_session_v1',
+    'sadarin_session_v1',
+    'lentera_laporan_bk',
+    'candranata_laporan_bk',
+    'sadarin_laporan_bk',
+    'cn_session', 'ln_session'
+  ];
+  oldKeys.forEach(k => {
+    try { localStorage.removeItem(k); } catch(e) {}
+  });
+})();
 
+// ── Store ──────────────────────────────────────────────────
+const LathiStore = {
+  save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(_state)); }
+    catch (e) { console.warn('[LATHI] Gagal menyimpan state:', e); }
+  },
   load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      // Validasi: session tidak boleh lebih dari 24 jam
-      const start = new Date(parsed.startedAt).getTime();
-      const now   = Date.now();
-      if (now - start > 86400000) {
+      // Validasi struktur minimum
+      if (!parsed || !parsed.sessionId || !parsed.player || !parsed.posCompleted) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+      // Expired check (24 jam)
+      if (Date.now() - new Date(parsed.startedAt).getTime() > 86400000) {
         localStorage.removeItem(STORAGE_KEY);
         return null;
       }
       return parsed;
     } catch (e) {
-      console.warn('[LENTERA] Gagal memuat state:', e);
+      localStorage.removeItem(STORAGE_KEY);
       return null;
     }
   },
-
-  clear() {
-    localStorage.removeItem(STORAGE_KEY);
-  },
+  clear() { localStorage.removeItem(STORAGE_KEY); },
 };
 
-// ── LenteraNav: Guard navigasi ────────────────────────────
-const LenteraNav = {
-  /**
-   * Cek apakah pemain boleh pergi ke screen target.
-   * Pos harus diselesaikan secara berurutan.
-   * @param {string} targetScreen
-   * @returns {{ allowed: boolean, reason?: string }}
-   */
+// Aliases agar file lama tetap kompatibel
+const LenteraStore = LathiStore;
+
+// ── Navigation Guard ───────────────────────────────────────
+const LathiNav = {
   canNavigateTo(targetScreen) {
-    const targetIndex = POS_ORDER.indexOf(targetScreen);
-    if (targetIndex === -1) return { allowed: false, reason: 'Screen tidak dikenal.' };
-
-    // Selalu boleh ke loading
+    if (!POS_ORDER.includes(targetScreen)) return { allowed: false, reason: 'Screen tidak dikenal.' };
     if (targetScreen === 'loading') return { allowed: true };
-
-    // Cek apakah pos sebelumnya sudah selesai
-    const currentIndex = POS_ORDER.indexOf(_state.currentScreen);
-
-    // Boleh mundur hanya ke pos1
-    if (targetIndex < currentIndex && targetScreen !== 'pos1') {
-      return { allowed: false, reason: 'Tidak bisa kembali ke pos yang sudah dilewati.' };
-    }
-
-    // Guard: pos2 butuh pos1 selesai
-    if (targetScreen === 'pos2' && !_state.posCompleted.pos1) {
+    if (targetScreen === 'pos2' && !_state.posCompleted.pos1)
       return { allowed: false, reason: 'Selesaikan Pos 1 (Balai Rasa) terlebih dahulu.' };
-    }
-    if (targetScreen === 'pos3' && !_state.posCompleted.pos2) {
+    if (targetScreen === 'pos3' && !_state.posCompleted.pos2)
       return { allowed: false, reason: 'Selesaikan Pos 2 (Pasar Interaksi) terlebih dahulu.' };
-    }
-    if (targetScreen === 'pos4' && !_state.posCompleted.pos3) {
+    if (targetScreen === 'pos4' && !_state.posCompleted.pos3)
       return { allowed: false, reason: 'Selesaikan Pos 3 (Taman Urup) terlebih dahulu.' };
-    }
-    if (targetScreen === 'hasil' && !_state.posCompleted.pos4) {
-      return { allowed: false, reason: 'Selesaikan Pos 4 (Bilik Lentera) terlebih dahulu.' };
-    }
-
+    if (targetScreen === 'hasil' && !_state.posCompleted.pos4)
+      return { allowed: false, reason: 'Selesaikan Pos 4 (Bilik Cahaya) terlebih dahulu.' };
     return { allowed: true };
   },
 
-  /**
-   * Tandai pos sebagai selesai.
-   * @param {'pos1'|'pos2'|'pos3'|'pos4'} pos
-   */
   completePos(pos) {
-    if (_state.posCompleted.hasOwnProperty(pos)) {
+    if (Object.prototype.hasOwnProperty.call(_state.posCompleted, pos)) {
       _state.posCompleted[pos] = true;
-      LenteraStore.save();
-      LenteraUI.updateHUD();
-      console.info(`[LENTERA] ${pos} selesai ✓`);
+      LathiStore.save();
+      LathiUI.updateHUD();
     }
   },
 };
 
-// ── LenteraUI: Utility UI ─────────────────────────────────
-const LenteraUI = {
-  /**
-   * Tampilkan toast notifikasi.
-   * @param {string} message
-   * @param {'info'|'success'|'danger'} type
-   * @param {number} duration ms
-   */
+// Alias
+const LenteraNav = LathiNav;
+
+// ── UI Utilities ───────────────────────────────────────────
+const LathiUI = {
   toast(message, type = 'info', duration = 3500) {
     const container = document.getElementById('toast-container');
     if (!container) return;
-
     const toast = document.createElement('div');
     toast.className = `toast toast--${type}`;
     toast.textContent = message;
     toast.setAttribute('role', 'status');
     container.appendChild(toast);
-
     setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(20px)';
@@ -204,59 +159,41 @@ const LenteraUI = {
     }, duration);
   },
 
-  /**
-   * Transisi sinematik antar screen.
-   * @param {string} newScreenId  ID elemen screen tujuan
-   * @param {string} label        Teks yang tampil saat transisi
-   * @param {number} delay        Durasi transisi (ms)
-   * @returns {Promise<void>}
-   */
   transition(newScreenId, label = 'Memuat…', delay = 900) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const overlay = document.getElementById('scene-transition');
       const textEl  = document.getElementById('transition-text');
       if (!overlay) { resolve(); return; }
-
       if (textEl) textEl.textContent = label;
       overlay.classList.add('active');
-
       setTimeout(() => {
-        // Sembunyikan semua screen
         document.querySelectorAll('.game-screen').forEach(s => { s.hidden = true; });
-
-        // Tampilkan screen tujuan
         const target = document.getElementById(newScreenId);
         if (target) {
           target.hidden = false;
           target.classList.add('screen-enter');
           setTimeout(() => target.classList.remove('screen-enter'), 500);
         }
-
-        // Tutup overlay transisi
-        setTimeout(() => {
-          overlay.classList.remove('active');
-          resolve();
-        }, 300);
+        setTimeout(() => { overlay.classList.remove('active'); resolve(); }, 300);
       }, delay);
     });
   },
 
-  /** Update HUD: nama pemain, pos tracker, avatar preview */
   updateHUD() {
-    // Nama pemain
     const nameEl = document.getElementById('hud-player-name');
     if (nameEl) nameEl.textContent = _state.player.nama || '—';
 
-    // Pos tracker nodes
+    // Update mini avatar gender
+    _renderMiniAvatar();
+
+    // Pos tracker
     const nodes = document.querySelectorAll('.pos-node');
     nodes.forEach(node => {
       const posNum = node.dataset.pos;
       const posKey = `pos${posNum}`;
       node.classList.remove('pos-node--active', 'pos-node--complete', 'pos-node--locked');
-
       if (_state.posCompleted[posKey]) {
         node.classList.add('pos-node--complete');
-        node.querySelector('.pos-icon').setAttribute('aria-label', `Pos ${posNum} selesai`);
       } else if (_state.currentScreen === posKey) {
         node.classList.add('pos-node--active');
         node.setAttribute('aria-current', 'step');
@@ -265,17 +202,8 @@ const LenteraUI = {
         node.removeAttribute('aria-current');
       }
     });
-
-    // Avatar mini (cuaca aura)
-    const miniAvatar = document.getElementById('mini-avatar');
-    if (miniAvatar && _state.player.avatarConfig.cuaca) {
-      const cuaca = _state.player.avatarConfig.cuaca;
-      const colors = { cerah: '#87CEEB', kabut: '#B0BEC5', mendung: '#546E7A' };
-      miniAvatar.style.background = `radial-gradient(circle, ${colors[cuaca]}33 0%, transparent 70%)`;
-    }
   },
 
-  /** Update loading bar progress */
   setLoadingProgress(percent) {
     const fill = document.getElementById('loading-fill');
     const bar  = document.querySelector('.loading-bar');
@@ -284,152 +212,203 @@ const LenteraUI = {
   },
 };
 
-// ── LenteraGame: API Utama ────────────────────────────────
-const LenteraGame = {
-  /** Akses baca state (read-only dari luar) */
+// Alias
+const LenteraUI = LathiUI;
+
+// ── Mini Avatar Renderer ───────────────────────────────────
+function _renderMiniAvatar() {
+  const miniEl = document.getElementById('mini-avatar');
+  if (!miniEl) return;
+  const gender = _state.player.avatarConfig.gender || _state.player.gender;
+  if (!gender) return;
+  const src = gender === 'perempuan'
+    ? 'assets/images/char-perempuan.png'
+    : 'assets/images/char-laki.png';
+  miniEl.innerHTML = `
+    <img src="${src}" alt="Avatar"
+      style="height:36px;width:auto;image-rendering:pixelated;
+      filter:drop-shadow(0 1px 3px rgba(0,0,0,0.5));display:block;" />`;
+}
+
+// Render karakter di weather preview cards
+function _renderWeatherChars() {
+  const gender = _state.player.avatarConfig.gender || 'laki';
+  const src = gender === 'perempuan'
+    ? 'assets/images/char-perempuan.png'
+    : 'assets/images/char-laki.png';
+
+  // Cuaca preview — pakai gambar kecil
+  ['cerah','kabut','mendung'].forEach(cuaca => {
+    const el = document.getElementById(`weather-char-${cuaca}`);
+    if (!el) return;
+    // Filter CSS untuk beri efek mood
+    const filterMap = {
+      cerah  : 'brightness(1.1) drop-shadow(0 0 4px rgba(240,201,58,0.5))',
+      kabut  : 'brightness(0.85) saturate(0.7)',
+      mendung: 'brightness(0.7) saturate(0.5)',
+    };
+    el.innerHTML = `
+      <img src="${src}" alt="Karakter ${cuaca}"
+        style="height:52px;width:auto;image-rendering:pixelated;
+        filter:${filterMap[cuaca]};display:block;margin:0 auto;" />`;
+  });
+
+  // QTE player char — pakai gambar sesuai gender
+  const qteChar = document.getElementById('qte-char-player');
+  if (qteChar) {
+    qteChar.innerHTML = `
+      <img src="${src}" alt="Karakter pemain"
+        style="height:90px;width:auto;image-rendering:pixelated;
+        filter:drop-shadow(0 3px 6px rgba(0,0,0,0.5));" />`;
+  }
+}
+
+// ── Game API ───────────────────────────────────────────────
+const LathiGame = {
   get state() { return _state; },
 
-  /**
-   * Update skor resiliensi (akumulatif)
-   * @param {number} delta nilai tambah (1-3)
-   */
-  addResiliensi(delta) {
-    _state.skor.resiliensi = Math.min(9, _state.skor.resiliensi + delta);
-    LenteraStore.save();
-  },
-
-  /**
-   * Set skor isolasi
-   * @param {number} value 1-3
-   */
-  setIsolasi(value) {
-    _state.skor.isolasi = value;
-    LenteraStore.save();
-  },
-
-  /**
-   * Set tipe stres
-   * @param {'akademik'|'sosial'|'insecurity'} type
-   */
-  setStresType(type) {
-    _state.skor.stresType = type;
-    LenteraStore.save();
-  },
-
-  /**
-   * Rekam respons Pos 2
-   * @param {number} skenario 1-3
-   * @param {string} pilihan  'A'|'B'|'C'
-   * @param {string} tipe     'pasif'|'reaktif'|'asertif'
-   * @param {number} skor     1-3
-   */
-  recordPos2Response(skenario, pilihan, tipe, skor) {
-    _state.skor.pos2Responses.push({ skenario, pilihan, tipe, skor });
-    _state.skor.resiliensi = Math.min(9, _state.skor.resiliensi + skor);
-    LenteraStore.save();
-  },
-
-  /** Set nama pemain */
   setNama(nama) {
     _state.player.nama = nama.trim();
-    LenteraStore.save();
-    LenteraUI.updateHUD();
+    LathiStore.save();
+    LathiUI.updateHUD();
   },
 
-  /** Simpan konfigurasi avatar pos1 */
+  setSekolah(sekolah) {
+    _state.player.sekolah = sekolah.trim();
+    LathiStore.save();
+  },
+
+  setGender(gender) {
+    _state.player.gender = gender;
+    _state.player.avatarConfig.gender = gender;
+    LathiStore.save();
+    LathiUI.updateHUD();
+    _renderWeatherChars();
+  },
+
   setAvatarConfig(key, value) {
-    if (_state.player.avatarConfig.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(_state.player.avatarConfig, key)) {
       _state.player.avatarConfig[key] = value;
-      LenteraStore.save();
+      LathiStore.save();
     }
   },
 
-  /** Tandai pos3 selesai */
-  setPos3Complete() {
-    _state.skor.pos3Complete = true;
-    LenteraStore.save();
+  addResiliensi(delta) {
+    _state.skor.resiliensi = Math.min(15, _state.skor.resiliensi + delta);
+    LathiStore.save();
   },
 
-  /** Simpan data laporan pos4 */
-  setLaporan(isi, isAnonim) {
-    _state.laporan.isi      = isi;
-    _state.laporan.isAnonim = isAnonim;
+  setIsolasi(value) {
+    _state.skor.isolasi = value;
+    LathiStore.save();
+  },
+
+  setStresType(type) {
+    _state.skor.stresType = type;
+    LathiStore.save();
+  },
+
+  recordPos2Response(skenario, pilihan, tipe, skor) {
+    _state.skor.pos2Responses.push({ skenario, pilihan, tipe, skor });
+    _state.skor.resiliensi = Math.min(15, _state.skor.resiliensi + skor);
+    LathiStore.save();
+  },
+
+  setPos3Complete() {
+    _state.skor.pos3Complete = true;
+    LathiStore.save();
+  },
+
+  setLaporan(isi) {
+    _state.laporan.isi       = isi;
+    _state.laporan.isAnonim  = false;
     _state.laporan.submitted = isi.trim().length > 0;
     _state.laporan.skipped   = isi.trim().length === 0;
-    _state.completedAt = new Date().toISOString();
-    LenteraStore.save();
+    _state.completedAt       = new Date().toISOString();
+    LathiStore.save();
   },
 };
 
-// ── LenteraState: Bootstrap & Navigation ─────────────────
-const LenteraState = {
-  /**
-   * Inisialisasi game — muat state tersimpan atau mulai baru,
-   * lalu tampilkan loading screen sebelum masuk pos1.
-   */
+// Aliases untuk kompatibilitas file lama
+const LenteraGame = LathiGame;
+
+// ── Main State Controller ──────────────────────────────────
+const LathiState = {
   async init() {
-    // Coba muat sesi tersimpan
-    const saved = LenteraStore.load();
-    if (saved) {
-      _state = saved;
-      LenteraUI.toast('Sesi tersimpan dimuat kembali 🏮', 'info');
+    try {
+      const saved = LathiStore.load();
+      if (saved) {
+        _state = saved;
+      }
+      LathiUI.updateHUD();
+
+      // Render karakter sesuai gender tersimpan
+      if (_state.player.avatarConfig.gender) {
+        _renderWeatherChars();
+      }
+
+      // Loading bar animation
+      for (const pct of [10, 30, 55, 75, 95, 100]) {
+        LathiUI.setLoadingProgress(pct);
+        await _sleep(200);
+      }
+
+      // Tentukan target screen
+      let target = 'intro-bullying';
+      if (saved && saved.currentScreen && saved.currentScreen !== 'loading') {
+        target = saved.currentScreen;
+      }
+
+      await LathiUI.transition(`screen-${target}`, 'Memuat LATHI…', 600);
+      _state.currentScreen = target;
+      LathiStore.save();
+      LathiUI.updateHUD();
+      this._bootModule(target);
+    } catch(err) {
+      console.error('[LATHI] init error:', err);
+      // Reset paksa dan coba lagi dari awal
+      LathiStore.clear();
+      _state = createInitialState();
+      await LathiUI.transition('screen-intro-bullying', 'Memuat…', 400);
+      _state.currentScreen = 'intro-bullying';
+      this._bootModule('intro-bullying');
     }
-
-    LenteraUI.updateHUD();
-
-    // Animasi loading bar
-    const steps = [10, 30, 55, 75, 95, 100];
-    for (const pct of steps) {
-      LenteraUI.setLoadingProgress(pct);
-      await _sleep(220);
-    }
-
-    // Masuk ke screen yang tersimpan, atau pos1 jika sesi baru
-    const target = (saved && saved.currentScreen !== 'loading')
-      ? saved.currentScreen
-      : 'pos1';
-
-    await LenteraUI.transition(`screen-${target}`, 'Menyalakan Lentera…', 600);
-    _state.currentScreen = target;
-    LenteraStore.save();
-    LenteraUI.updateHUD();
-
-    // Aktifkan modul pos
-    this._bootModule(target);
   },
 
-  /**
-   * Navigasi ke screen/pos berikutnya dengan guard keamanan.
-   * @param {string} screen  'pos1'|'pos2'|'pos3'|'pos4'|'hasil'
-   * @param {string} label   Teks transisi
-   */
   async navigateTo(screen, label) {
-    const guard = LenteraNav.canNavigateTo(screen);
-    if (!guard.allowed) {
-      LenteraUI.toast(`⛔ ${guard.reason}`, 'danger');
-      console.warn('[LENTERA] Navigasi ditolak:', guard.reason);
-      return;
+    // Izinkan navigasi ke intro-bullying tanpa guard
+    if (screen !== 'intro-bullying') {
+      const guard = LathiNav.canNavigateTo(screen);
+      if (!guard.allowed) {
+        LathiUI.toast(`⛔ ${guard.reason}`, 'danger');
+        return;
+      }
+    }
+    const transLabel = label || _getTransitionLabel(screen);
+    await LathiUI.transition(`screen-${screen}`, transLabel);
+    _state.currentScreen = screen;
+    LathiStore.save();
+    LathiUI.updateHUD();
+
+    // Kirim data sesi ke Google Sheets saat sampai di hasil
+    if (screen === 'hasil') {
+      _kirimSesiKeSheets();
     }
 
-    const transLabel = label || _getTransitionLabel(screen);
-    await LenteraUI.transition(`screen-${screen}`, transLabel);
-    _state.currentScreen = screen;
-    LenteraStore.save();
-    LenteraUI.updateHUD();
     this._bootModule(screen);
   },
 
-  /** Reset total — hapus state dan reload */
   reset() {
-    LenteraStore.clear();
+    LathiStore.clear();
     _state = createInitialState();
-    console.info('[LENTERA] State direset.');
   },
 
-  /** Panggil modul init yang relevan setelah navigasi */
   _bootModule(screen) {
     try {
       switch (screen) {
+        case 'intro-bullying':
+          // Handled inline in game.html script
+          break;
         case 'pos1':
           if (typeof Pos1BalaiRasa !== 'undefined') Pos1BalaiRasa.init();
           break;
@@ -447,46 +426,81 @@ const LenteraState = {
           break;
       }
     } catch (e) {
-      console.error('[LENTERA] Error booting module:', screen, e);
+      console.error('[LATHI] Error booting module:', screen, e);
     }
   },
 };
 
-// ── Helper Functions ──────────────────────────────────────
-function _sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// Alias
+const LenteraState = LathiState;
+
+// ── Helpers ────────────────────────────────────────────────
+function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function _generateId() {
-  return `ln_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+  return `cn_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
 function _getTransitionLabel(screen) {
-  const labels = {
-    pos1  : 'Menuju Balai Rasa… 🏛️',
-    pos2  : 'Memasuki Pasar Interaksi… 🏪',
-    pos3  : 'Berjalan ke Taman Urup… 🏮',
-    pos4  : 'Menemukan Bilik Lentera… 📖',
-    hasil : 'Menghitung Perjalananmu… ✨',
-  };
-  return labels[screen] || 'Memuat…';
+  return {
+    'intro-bullying': 'Mempersiapkan perjalanan… 🌙',
+    pos1   : 'Menuju Balai Rasa… 🏛️',
+    pos2   : 'Memasuki Pasar Interaksi… 🏪',
+    pos3   : 'Berjalan ke Taman Urup… 🌙',
+    pos4   : 'Menemukan Bilik Cahaya… 📖',
+    hasil  : 'Menghitung perjalananmu… ✨',
+  }[screen] || 'Memuat…';
 }
 
-/**
- * Helper global: tampilkan toast dari mana saja
- * @param {string} msg
- * @param {'info'|'success'|'danger'} type
- */
-function showToast(msg, type = 'info') {
-  LenteraUI.toast(msg, type);
+function showToast(msg, type = 'info') { LathiUI.toast(msg, type); }
+
+// ── Kirim sesi ke Google Sheets ───────────────────────────
+const _SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxR2OsfuO1QiL8n8DpedpD1sKcggm_g-DriXz52fYYBgPPklfIoRXDP_vCRGo8x8W7Teg/exec';
+
+function _kirimSesiKeSheets() {
+  try {
+    const s = _state;
+    // Hitung tipe dan skor
+    const resiliensi = s.skor.resiliensi;
+    const isolasi    = s.skor.isolasi;
+    const pctResi    = (resiliensi / 9) * 70;
+    const pctIso     = ((3 - isolasi + 1) / 3) * 30;
+    const totalSkor  = Math.min(100, Math.round(pctResi + pctIso));
+    const tipe       = (resiliensi >= 7 && isolasi <= 1) ? 'ksatria' : 'daun';
+
+    const payload = {
+      type    : 'sesi',
+      id      : s.sessionId,
+      mulai   : s.startedAt,
+      nama    : s.player.nama,
+      sekolah : s.player.sekolah || '',
+      tipe    : tipe,
+      skor    : totalSkor,
+      stres   : s.skor.stresType || '',
+      laporan : s.laporan.submitted,
+    };
+
+    fetch(_SHEETS_URL, {
+      method : 'POST',
+      mode   : 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify(payload),
+    }).catch(e => console.warn('[LATHI] Gagal kirim sesi:', e));
+  } catch(e) {
+    console.warn('[LATHI] Gagal kirim sesi:', e);
+  }
 }
 
-// Expose ke global scope untuk dipakai modul lain
-window.LenteraState   = LenteraState;
-window.LenteraGame    = LenteraGame;
-window.LenteraNav     = LenteraNav;
-window.LenteraUI      = LenteraUI;
-window.LenteraStore   = LenteraStore;
-window.showToast      = showToast;
-
-console.info('[LENTERA] state.js dimuat ✓');
+// Expose globals
+window.LathiState = LathiState;
+window.LathiGame  = LathiGame;
+window.LathiNav   = LathiNav;
+window.LathiUI    = LathiUI;
+window.LathiStore = LathiStore;
+// Aliases untuk file JS lama
+window.LenteraState = LenteraState;
+window.LenteraGame  = LenteraGame;
+window.LenteraNav   = LenteraNav;
+window.LenteraUI    = LenteraUI;
+window.LenteraStore = LenteraStore;
+window.showToast    = showToast;

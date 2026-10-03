@@ -31,12 +31,12 @@ const HasilKartu = (() => {
     ksatria: {
       emblem    : '⚔️',
       label     : 'Tipe Mental',
-      nama      : 'Ksatria Lentera',
+      nama      : 'Ksatria Candranata',
       sub       : 'Tangguh, Asertif & Bercahaya',
       headerClass: 'kartu-header--ksatria',
       desc      : 'Kamu punya fondasi mental yang kuat. Kata-kata tajam tidak mudah menghancurkanmu — kamu punya kemampuan membalikkan narasi dan menjaga harga diri.',
-      ctaTeks   : '💪 Jadilah pelindung bagi teman yang sedang kesulitan. Kepekaan dan kekuatanmu bisa jadi lentera bagi orang lain.',
-      shareText : (nama) => `Aku adalah "${nama}" dengan tipe Ksatria Lentera ⚔️🏮 — tangguh dan asertif! Main LENTERA yuk!`,
+      ctaTeks   : '💪 Jadilah pelindung bagi teman yang sedang kesulitan. Kepekaan dan kekuatanmu bisa jadi cahaya bagi orang lain.',
+      shareText : (nama) => `Aku adalah "${nama}" dengan tipe Ksatria Candranata ⚔️🌙 — tangguh dan asertif! Main CANDRANATA yuk!`,
     },
     daun: {
       emblem    : '🍃',
@@ -46,7 +46,7 @@ const HasilKartu = (() => {
       headerClass: 'kartu-header--daun',
       desc      : 'Kamu sedang membawa beban yang cukup berat. Itu tidak berarti kamu lemah — itu berarti kamu manusia. Daun yang terduduk tetap terhubung dengan akarnya.',
       ctaTeks   : '🌿 Kamu tidak harus menanggung ini sendiri. Ada Guru BK yang siap mendengarmu — tanpa menghakimi, tanpa syarat.',
-      shareText : (nama) => `Aku adalah "${nama}" dengan tipe Daun Terduduk 🍃 — sedang tumbuh dari luka. Main LENTERA yuk!`,
+      shareText : (nama) => `Aku adalah "${nama}" dengan tipe Daun Terduduk 🍃 — sedang tumbuh dari luka. Main CANDRANATA yuk!`,
     },
   };
 
@@ -173,7 +173,7 @@ const HasilKartu = (() => {
       </div>
 
       <div class="kartu-footer">
-        LENTERA · Diterbitkan ${tgl} · Lathi to Urup 🏮
+        CANDRANATA · Diterbitkan ${tgl} · Lathi to Urup 🌙
       </div>
     `;
 
@@ -222,7 +222,7 @@ const HasilKartu = (() => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Kartu Profil LENTERA',
+          title: 'Kartu Profil CANDRANATA',
           text : text,
           url  : window.location.origin,
         });
@@ -268,7 +268,7 @@ const HasilKartu = (() => {
     }
 
     if (tipe === 'ksatria') {
-      showToast('⚔️ Ksatria Lentera! Kamu tangguh dan bercahaya.', 'success', 4000);
+      showToast('⚔️ Ksatria Candranata! Kamu tangguh dan bercahaya.', 'success', 4000);
     } else {
       showToast('🌱 Kamu sudah jauh. Daun pun butuh waktu untuk mekar.', 'info', 4000);
     }
@@ -301,4 +301,4 @@ const HasilKartu = (() => {
 })();
 
 window.HasilKartu = HasilKartu;
-console.info('[LENTERA] hasil.js dimuat ✓');
+console.info('[CANDRANATA] hasil.js dimuat ✓');

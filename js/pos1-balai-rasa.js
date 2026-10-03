@@ -1,65 +1,62 @@
 /* ============================================================
-   LENTERA — pos1-balai-rasa.js
+   CANDRANATA — pos1-balai-rasa.js
    Pos 1: Balai Rasa — Character Creation & Asesmen Terselubung
-   ============================================================
-
+   
    ALUR LANGKAH:
-   Step 0 (nama)     → Input nama pemain
-   Step 1 (cuaca)    → Pilih Cuaca Hati (skor resiliensi +1/+2/+3)
-   Step 2 (tas)      → Pilih Isi Tas (stres type: akademik/sosial/insecurity)
-   Step 3 (qte)      → Animasi Tersenggol NPC (skor resiliensi +1/+2/+3)
-   Step 4 (baterai)  → Isi Baterai Sosial (skor isolasi 1/2/3)
-   → Selesai: tandai pos1 complete, navigasi ke pos2
+   Step 0 (nama)    → Input nama pemain
+   Step 1 (gender)  → Pilih gender / karakter avatar
+   Step 2 (cuaca)   → Pilih Cuaca Hati (skor resiliensi +1/+2/+3)
+   Step 3 (tas)     → Pilih Isi Tas (stres type)
+   Step 4 (qte)     → QTE Tersenggol NPC (skor resiliensi +1/+2/+3)
+   Step 5 (baterai) → Baterai Sosial (skor isolasi 1/2/3)
    ============================================================ */
 
 'use strict';
 
 const Pos1BalaiRasa = (() => {
 
-  // ── State internal pos1 ──
   let currentStep = 'nama';
-  const steps = ['nama', 'cuaca', 'tas', 'qte', 'baterai'];
+  const steps = ['nama', 'gender', 'cuaca', 'tas', 'qte', 'baterai'];
 
-  // ── Init ─────────────────────────────────────────────────
+  // ── Init ──────────────────────────────────────────────────
   function init() {
     console.info('[Pos1] Inisialisasi Balai Rasa');
-    currentStep = 'nama';
 
-    // Jika sudah selesai pos1, lanjut langsung
     if (LenteraGame.state.posCompleted.pos1) {
-      console.info('[Pos1] Sudah selesai, skip ke Pos2');
       LenteraState.navigateTo('pos2');
       return;
     }
 
-    // Restore step jika sesi disimpan
+    // Restore step dari sesi tersimpan
     const avatar = LenteraGame.state.player.avatarConfig;
-    if (avatar.baterai)       currentStep = 'baterai';
-    else if (avatar.qte)      currentStep = 'qte';
-    else if (avatar.tas)      currentStep = 'tas';
-    else if (avatar.cuaca)    currentStep = 'cuaca';
-    else if (LenteraGame.state.player.nama) currentStep = 'cuaca';
+    if (avatar.baterai)     currentStep = 'baterai';
+    else if (avatar.qte)    currentStep = 'qte';
+    else if (avatar.tas)    currentStep = 'tas';
+    else if (avatar.cuaca)  currentStep = 'cuaca';
+    else if (avatar.gender) currentStep = 'cuaca';
+    else if (LenteraGame.state.player.nama) currentStep = 'gender';
+    else currentStep = 'nama';
 
     _showStep(currentStep);
     _bindAllHandlers();
   }
 
-  // ── Tampilkan step tertentu ───────────────────────────────
+  // ── Tampilkan step ────────────────────────────────────────
   function _showStep(stepName) {
     steps.forEach(s => {
       const el = document.getElementById(`pos1-step-${s}`);
       if (el) el.hidden = (s !== stepName);
     });
     currentStep = stepName;
-
-    // Focus management
-    const panel = document.querySelector(`#pos1-step-${stepName} .dialog-panel`);
-    if (panel) panel.focus?.() || panel.querySelector('input, button')?.focus();
+    // Auto-focus ke input pertama
+    const focusTarget = document.querySelector(`#pos1-step-${stepName} input, #pos1-step-${stepName} button.btn--primary`);
+    setTimeout(() => focusTarget?.focus(), 100);
   }
 
-  // ── Bind semua event handlers ─────────────────────────────
+  // ── Bind semua handler ────────────────────────────────────
   function _bindAllHandlers() {
     _bindNama();
+    _bindGender();
     _bindCuaca();
     _bindTas();
     _bindQte();
@@ -68,43 +65,36 @@ const Pos1BalaiRasa = (() => {
 
   // ── STEP 0: NAMA ──────────────────────────────────────────
   function _bindNama() {
-    const input  = document.getElementById('input-nama');
-    const btnLanjut = document.getElementById('btn-nama-lanjut');
-    if (!input || !btnLanjut) return;
+    // Clone elemen untuk hapus event listener lama
+    const oldInput  = document.getElementById('input-nama');
+    const oldBtn    = document.getElementById('btn-nama-lanjut');
+    if (!oldInput || !oldBtn) return;
 
-    // Restore nilai tersimpan
-    if (LenteraGame.state.player.nama) {
-      input.value = LenteraGame.state.player.nama;
-      btnLanjut.disabled = false;
-    }
+    const input  = oldInput.cloneNode(true);
+    const btn    = oldBtn.cloneNode(true);
+    oldInput.parentNode.replaceChild(input, oldInput);
+    oldBtn.parentNode.replaceChild(btn, oldBtn);
 
-    const onInput = () => {
-      const val = input.value.trim();
-      btnLanjut.disabled = val.length < 2;
-    };
+    // Restore nilai tersimpan & set status tombol
+    const savedNama = LenteraGame.state.player.nama || '';
+    input.value    = savedNama;
+    // PERBAIKAN BUG: tombol SELALU enabled saat init, validasi dilakukan saat klik
+    // Kalau ada nama tersimpan langsung enable, kalau tidak disable sampai ada input
+    btn.disabled   = savedNama.trim().length < 2;
 
-    // Remove old listeners (jika re-init)
-    input.replaceWith(input.cloneNode(true));
-    btnLanjut.replaceWith(btnLanjut.cloneNode(true));
+    // Enable tombol saat input berubah
+    input.addEventListener('input', () => {
+      btn.disabled = input.value.trim().length < 2;
+    });
 
-    const freshInput  = document.getElementById('input-nama');
-    const freshBtn    = document.getElementById('btn-nama-lanjut');
-
-    freshInput.addEventListener('input', onInput);
-    freshInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && freshInput.value.trim().length >= 2) {
-        _submitNama(freshInput.value);
+    // Enter key submit
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && input.value.trim().length >= 2) {
+        _submitNama(input.value);
       }
     });
 
-    if (LenteraGame.state.player.nama) {
-      freshInput.value = LenteraGame.state.player.nama;
-      freshBtn.disabled = false;
-    }
-
-    freshBtn.addEventListener('click', () => {
-      _submitNama(freshInput.value);
-    });
+    btn.addEventListener('click', () => _submitNama(input.value));
   }
 
   function _submitNama(rawValue) {
@@ -114,48 +104,72 @@ const Pos1BalaiRasa = (() => {
       return;
     }
     LenteraGame.setNama(nama);
-    _animateStepTransition(() => _showStep('cuaca'));
+    _animateTransition(() => _showStep('gender'));
   }
 
-  // ── STEP 1: CUACA HATI ─────────────────────────────────
+  // ── STEP 1: GENDER ────────────────────────────────────────
+  function _bindGender() {
+    const group    = document.getElementById('gender-group');
+    const btnBack  = document.getElementById('btn-gender-back');
+    const btnLanjut= document.getElementById('btn-gender-lanjut');
+    if (!group) return;
+
+    // Restore pilihan tersimpan
+    const saved = LenteraGame.state.player.avatarConfig.gender;
+    if (saved) {
+      const savedInput = group.querySelector(`input[value="${saved}"]`);
+      if (savedInput) savedInput.checked = true;
+      if (btnLanjut) btnLanjut.disabled = false;
+    }
+
+    group.addEventListener('change', e => {
+      if (e.target.type === 'radio' && btnLanjut) {
+        btnLanjut.disabled = false;
+      }
+    });
+
+    btnBack?.addEventListener('click', () => _animateTransition(() => _showStep('nama')));
+
+    btnLanjut?.addEventListener('click', () => {
+      const selected = group.querySelector('input[type="radio"]:checked');
+      if (!selected) return;
+      LenteraGame.setGender(selected.value);
+      LenteraGame.setAvatarConfig('gender', selected.value);
+      _animateTransition(() => _showStep('cuaca'));
+    });
+  }
+
+  // ── STEP 2: CUACA HATI ────────────────────────────────────
   function _bindCuaca() {
     const group    = document.getElementById('cuaca-group');
     const btnBack  = document.getElementById('btn-cuaca-back');
     const btnLanjut= document.getElementById('btn-cuaca-lanjut');
     if (!group) return;
 
-    // Restore pilihan tersimpan
     const saved = LenteraGame.state.player.avatarConfig.cuaca;
     if (saved) {
       const savedInput = group.querySelector(`input[value="${saved}"]`);
-      if (savedInput) {
-        savedInput.checked = true;
-        savedInput.closest('.choice-card').classList.add('selected');
-      }
+      if (savedInput) savedInput.checked = true;
       if (btnLanjut) btnLanjut.disabled = false;
     }
 
-    group.addEventListener('change', (e) => {
+    group.addEventListener('change', e => {
       if (e.target.type === 'radio' && btnLanjut) {
         btnLanjut.disabled = false;
         _updateSceneWeather(e.target.value);
       }
     });
 
-    btnBack?.addEventListener('click', () => _animateStepTransition(() => _showStep('nama')));
+    btnBack?.addEventListener('click', () => _animateTransition(() => _showStep('gender')));
 
     btnLanjut?.addEventListener('click', () => {
       const selected = group.querySelector('input[type="radio"]:checked');
       if (!selected) return;
-
-      const card        = selected.closest('[data-score-resiliensi]');
-      const skorResi    = parseInt(card?.dataset.scoreResiliensi || '2', 10);
-      const cuacaValue  = selected.value;
-
-      LenteraGame.setAvatarConfig('cuaca', cuacaValue);
+      const card     = selected.closest('[data-score-resiliensi]');
+      const skorResi = parseInt(card?.dataset.scoreResiliensi || '2', 10);
+      LenteraGame.setAvatarConfig('cuaca', selected.value);
       LenteraGame.addResiliensi(skorResi);
-
-      _animateStepTransition(() => _showStep('tas'));
+      _animateTransition(() => _showStep('tas'));
     });
   }
 
@@ -166,14 +180,13 @@ const Pos1BalaiRasa = (() => {
     scene.classList.add(`weather--${cuaca}`);
   }
 
-  // ── STEP 2: TAS RANSEL ────────────────────────────────────
+  // ── STEP 3: TAS RANSEL ────────────────────────────────────
   function _bindTas() {
     const group    = document.getElementById('tas-group');
     const btnBack  = document.getElementById('btn-tas-back');
     const btnLanjut= document.getElementById('btn-tas-lanjut');
     if (!group) return;
 
-    // Restore pilihan tersimpan
     const saved = LenteraGame.state.player.avatarConfig.tas;
     if (saved) {
       const savedInput = group.querySelector(`input[value="${saved}"]`);
@@ -181,47 +194,31 @@ const Pos1BalaiRasa = (() => {
       if (btnLanjut) btnLanjut.disabled = false;
     }
 
-    group.addEventListener('change', (e) => {
-      if (e.target.type === 'radio' && btnLanjut) {
-        btnLanjut.disabled = false;
-      }
+    group.addEventListener('change', e => {
+      if (e.target.type === 'radio' && btnLanjut) btnLanjut.disabled = false;
     });
 
-    btnBack?.addEventListener('click', () => _animateStepTransition(() => _showStep('cuaca')));
+    btnBack?.addEventListener('click', () => _animateTransition(() => _showStep('cuaca')));
 
     btnLanjut?.addEventListener('click', () => {
       const selected = group.querySelector('input[type="radio"]:checked');
       if (!selected) return;
-
-      const card      = selected.closest('[data-stres-type]');
-      const stresType = card?.dataset.stresType || 'akademik';
-      const tasValue  = selected.value;
-
-      LenteraGame.setAvatarConfig('tas', tasValue);
-      LenteraGame.setStresType(stresType);
-
-      // Animasi memasukkan item ke inventory
-      _playItemPickupAnimation(tasValue, () => {
-        _animateStepTransition(() => _showStep('qte'));
-      });
+      const card = selected.closest('[data-stres-type]');
+      LenteraGame.setAvatarConfig('tas', selected.value);
+      LenteraGame.setStresType(card?.dataset.stresType || 'akademik');
+      const emojis = { buku: '📚', hp: '📱', kaca: '🔍' };
+      showToast(`${emojis[selected.value] || '📦'} Dimasukkan ke tas!`, 'success', 1200);
+      setTimeout(() => _animateTransition(() => _showStep('qte')), 700);
     });
   }
 
-  function _playItemPickupAnimation(item, callback) {
-    const emojis = { buku: '📚', hp: '📱', kaca: '🔍' };
-    const toast  = emojis[item] || '📦';
-    showToast(`${toast} Dimasukkan ke tas!`, 'success', 1200);
-    setTimeout(callback, 700);
-  }
-
-  // ── STEP 3: QTE (Quick Time Event) ───────────────────────
+  // ── STEP 4: QTE ───────────────────────────────────────────
   function _bindQte() {
     const group    = document.getElementById('qte-group');
     const btnBack  = document.getElementById('btn-qte-back');
     const btnLanjut= document.getElementById('btn-qte-lanjut');
     if (!group) return;
 
-    // Restore pilihan tersimpan
     const saved = LenteraGame.state.player.avatarConfig.qte;
     if (saved) {
       const savedInput = group.querySelector(`input[value="${saved}"]`);
@@ -229,120 +226,90 @@ const Pos1BalaiRasa = (() => {
       if (btnLanjut) btnLanjut.disabled = false;
     }
 
-    // Trigger animasi senggolan saat masuk step
-    setTimeout(() => _playCollisionAnimation(), 400);
+    setTimeout(() => {
+      const spark = document.getElementById('qte-spark');
+      if (spark) spark.style.animation = 'pulse 0.4s ease-in-out 3';
+    }, 400);
 
-    group.addEventListener('change', (e) => {
-      if (e.target.type === 'radio' && btnLanjut) {
-        btnLanjut.disabled = false;
-      }
+    group.addEventListener('change', e => {
+      if (e.target.type === 'radio' && btnLanjut) btnLanjut.disabled = false;
     });
 
-    btnBack?.addEventListener('click', () => _animateStepTransition(() => _showStep('tas')));
+    btnBack?.addEventListener('click', () => _animateTransition(() => _showStep('tas')));
 
     btnLanjut?.addEventListener('click', () => {
       const selected = group.querySelector('input[type="radio"]:checked');
       if (!selected) return;
-
       const card     = selected.closest('[data-score-resiliensi]');
       const skorResi = parseInt(card?.dataset.scoreResiliensi || '2', 10);
-      const qteValue = selected.value;
-
-      LenteraGame.setAvatarConfig('qte', qteValue);
+      LenteraGame.setAvatarConfig('qte', selected.value);
       LenteraGame.addResiliensi(skorResi);
-
-      _animateStepTransition(() => _showStep('baterai'));
+      _animateTransition(() => _showStep('baterai'));
     });
   }
 
-  function _playCollisionAnimation() {
-    const spark = document.getElementById('qte-spark');
-    const npc   = document.getElementById('qte-npc');
-    if (spark) {
-      spark.style.animation = 'pulse 0.4s ease-in-out 3';
-    }
-    if (npc) {
-      npc.querySelector('.npc-display')?.classList.add('npc-display--rush');
-    }
-  }
-
-  // ── STEP 4: BATERAI SOSIAL ────────────────────────────────
+  // ── STEP 5: BATERAI SOSIAL ────────────────────────────────
   function _bindBaterai() {
     const group    = document.getElementById('baterai-group');
     const btnBack  = document.getElementById('btn-baterai-back');
     const btnLanjut= document.getElementById('btn-baterai-lanjut');
-    const energyFill = document.getElementById('energy-fill');
-    const energyBar  = document.getElementById('energy-bar');
+    const fillEl   = document.getElementById('energy-fill');
+    const barEl    = document.getElementById('energy-bar');
     if (!group) return;
 
-    // Restore pilihan tersimpan
     const saved = LenteraGame.state.player.avatarConfig.baterai;
     if (saved) {
       const savedInput = group.querySelector(`input[value="${saved}"]`);
       if (savedInput) savedInput.checked = true;
       if (btnLanjut) btnLanjut.disabled = false;
-      _updateEnergyBar(saved, energyFill, energyBar);
+      _setEnergyBar(saved, fillEl, barEl);
     }
 
-    group.addEventListener('change', (e) => {
+    group.addEventListener('change', e => {
       if (e.target.type === 'radio') {
         if (btnLanjut) btnLanjut.disabled = false;
-        _updateEnergyBar(e.target.value, energyFill, energyBar);
+        _setEnergyBar(e.target.value, fillEl, barEl);
       }
     });
 
-    btnBack?.addEventListener('click', () => _animateStepTransition(() => _showStep('qte')));
+    btnBack?.addEventListener('click', () => _animateTransition(() => _showStep('qte')));
 
     btnLanjut?.addEventListener('click', () => {
       const selected = group.querySelector('input[type="radio"]:checked');
       if (!selected) return;
-
-      const card      = selected.closest('[data-score-isolasi]');
-      const skorIso   = parseInt(card?.dataset.scoreIsolasi || '1', 10);
-      const batValue  = selected.value;
-
-      LenteraGame.setAvatarConfig('baterai', batValue);
+      const card    = selected.closest('[data-score-isolasi]');
+      const skorIso = parseInt(card?.dataset.scoreIsolasi || '1', 10);
+      LenteraGame.setAvatarConfig('baterai', selected.value);
       LenteraGame.setIsolasi(skorIso);
-
-      // Pos 1 selesai!
       _finishPos1();
     });
   }
 
-  function _updateEnergyBar(bateraiValue, fillEl, barEl) {
+  function _setEnergyBar(val, fillEl, barEl) {
     if (!fillEl) return;
-    // keramaian = penuh (100%), pojok = 55%, pohon = 20%
-    const pctMap = { keramaian: 100, pojok: 55, pohon: 20 };
-    const pct    = pctMap[bateraiValue] || 0;
+    const pct = { keramaian: 100, pojok: 55, pohon: 20 }[val] || 0;
     fillEl.style.width = `${pct}%`;
     if (barEl) barEl.setAttribute('aria-valuenow', pct);
   }
 
-  // ── Selesaikan Pos 1 ─────────────────────────────────────
+  // ── Selesaikan Pos 1 ──────────────────────────────────────
   async function _finishPos1() {
-    // Tampilkan animasi ringkasan
     showToast('✅ Avatar siap! Menuju Pasar Interaksi…', 'success', 2000);
-
-    // Delay kecil supaya pemain bisa membaca toast
     await _sleep(1000);
-
-    // Tandai selesai
     LenteraNav.completePos('pos1');
-
-    // Navigasi ke pos2
-    LenteraState.navigateTo('pos2', 'Menuju Pasar Interaksi… 🏪');
+    LenteraState.navigateTo('pos2', 'Memasuki Pasar Interaksi… 🏪');
   }
 
-  // ── Utility ──────────────────────────────────────────────
-  function _animateStepTransition(callback) {
+  // ── Utilities ─────────────────────────────────────────────
+  function _animateTransition(callback) {
     const overlay = document.getElementById('pos1-overlay');
     if (overlay) {
-      overlay.style.opacity = '0';
-      overlay.style.transform = 'translateY(10px)';
+      overlay.style.opacity    = '0';
+      overlay.style.transform  = 'translateY(8px)';
       overlay.style.transition = 'opacity 180ms ease, transform 180ms ease';
       setTimeout(() => {
         callback();
-        overlay.style.opacity = '1';
+        overlay.style.opacity   = '1';
         overlay.style.transform = 'translateY(0)';
       }, 200);
     } else {
@@ -350,14 +317,11 @@ const Pos1BalaiRasa = (() => {
     }
   }
 
-  function _sleep(ms) {
-    return new Promise(r => setTimeout(r, ms));
-  }
+  function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  // ── Public API ────────────────────────────────────────────
   return { init };
 
 })();
 
 window.Pos1BalaiRasa = Pos1BalaiRasa;
-console.info('[LENTERA] pos1-balai-rasa.js dimuat ✓');
+console.info('[CANDRANATA] pos1-balai-rasa.js dimuat ✓');

@@ -1,9 +1,10 @@
 @echo off
-title LENTERA Server
-color 0E
+title CANDRANATA Server
+color 0B
 echo.
 echo  ==========================================
-echo    LENTERA Server - Lathi to Urup
+echo    CANDRANATA Server - Lathi to Urup
+echo    Cipta Agung Nuntun Dharmaning Raga
 echo  ==========================================
 echo.
 echo  Membuka browser...

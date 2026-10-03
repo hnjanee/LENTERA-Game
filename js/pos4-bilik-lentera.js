@@ -1,33 +1,18 @@
 /* ============================================================
-   LENTERA — pos4-bilik-lentera.js
-   Pos 4: Bilik Lentera — Ruang Aman & Sistem Pelaporan
-   ============================================================
+   LATHI � pos4-bilik-lentera.js
+   Pos 4: Bilik Cahaya � Ruang Aman & Sistem Pelaporan
 
-   ALUR:
-   1. Pemain mengetik laporan di textarea (opsional)
-   2. Pilih kirim sebagai Anonim atau dengan Nama
-   3. Klik "Kirim ke Guru BK" atau tombol Skip
-   4. Simulasi pengiriman terenkripsi → toast konfirmasi
-   5. Tandai pos4 selesai → navigasi ke hasil
-
-   KEAMANAN DATA (simulasi):
-   - Dalam implementasi nyata, data dikirim via HTTPS ke backend
-   - Field nama hanya disertakan jika isAnonim = false
-   - sessionId selalu disertakan untuk tracking admin
-   - Payload disimulasikan dengan console.log (mock API call)
+   Laporan selalu dikirim dengan nama pemain (tidak ada anonim).
+   Data tersimpan di localStorage dengan key lathi_laporan_bk.
    ============================================================ */
 
 'use strict';
 
 const Pos4BilikLentera = (() => {
 
-  // ── State internal ────────────────────────────────────────
   let isSubmitting = false;
 
-  // ── Init ──────────────────────────────────────────────────
   function init() {
-    console.info('[Pos4] Inisialisasi Bilik Lentera');
-
     if (LenteraGame.state.posCompleted.pos4) {
       LenteraState.navigateTo('hasil');
       return;
@@ -37,24 +22,29 @@ const Pos4BilikLentera = (() => {
     const savedLaporan = LenteraGame.state.laporan;
     if (savedLaporan.isi) {
       const textarea = document.getElementById('journal-text');
-      if (textarea) textarea.value = savedLaporan.isi;
-      _updateCharCount();
-      _updateSubmitBtn();
+      if (textarea) {
+        textarea.value = savedLaporan.isi;
+        _updateCharCount();
+        _updateSubmitBtn();
+      }
+    }
+
+    // Tampilkan nama pemain di header jurnal
+    const namaEl = document.getElementById('journal-nama-pemain');
+    if (namaEl) {
+      namaEl.textContent = LenteraGame.state.player.nama || '';
     }
 
     _bindHandlers();
-    _playAmbientEffect();
   }
 
-  // ── Bind semua handler ────────────────────────────────────
   function _bindHandlers() {
     _bindTextarea();
-    _bindAnonOptions();
     _bindKirimBtn();
     _bindSkipBtn();
   }
 
-  // ── Textarea: live counter & enable button ────────────────
+  // -- Textarea ----------------------------------------------
   function _bindTextarea() {
     const textarea = document.getElementById('journal-text');
     if (!textarea) return;
@@ -62,23 +52,22 @@ const Pos4BilikLentera = (() => {
     textarea.addEventListener('input', () => {
       _updateCharCount();
       _updateSubmitBtn();
-      LenteraGame.setLaporan(textarea.value, _getAnonValue());
     });
 
-    // Autosave setiap 2 detik (debounce)
-    let autosaveTimer = null;
+    // Autosave
+    let timer = null;
     textarea.addEventListener('input', () => {
-      clearTimeout(autosaveTimer);
-      autosaveTimer = setTimeout(() => {
-        LenteraGame.setLaporan(textarea.value, _getAnonValue());
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        LenteraGame.setLaporan(textarea.value);
         _showAutosaveIndicator();
       }, 2000);
     });
   }
 
   function _updateCharCount() {
-    const textarea   = document.getElementById('journal-text');
-    const countEl    = document.getElementById('journal-char-current');
+    const textarea = document.getElementById('journal-text');
+    const countEl  = document.getElementById('journal-char-current');
     if (!textarea || !countEl) return;
     const len = textarea.value.length;
     countEl.textContent = len;
@@ -89,235 +78,217 @@ const Pos4BilikLentera = (() => {
     const textarea = document.getElementById('journal-text');
     const btn      = document.getElementById('btn-kirim-laporan');
     if (!textarea || !btn) return;
-    const hasContent = textarea.value.trim().length > 0;
-    btn.disabled     = !hasContent || isSubmitting;
-  }
-
-  function _getAnonValue() {
-    const checked = document.querySelector('input[name="anon"]:checked');
-    return checked ? checked.value === 'anonim' : true;
+    btn.disabled = textarea.value.trim().length === 0 || isSubmitting;
   }
 
   function _showAutosaveIndicator() {
     const hint = document.getElementById('journal-hint');
     if (!hint) return;
-    const originalText = hint.innerHTML;
-    hint.innerHTML = '<span>💾</span> Tersimpan otomatis';
+    const orig = hint.innerHTML;
+    hint.innerHTML = '<span>✅</span> Tersimpan otomatis';
     hint.style.color = 'var(--color-success)';
-    setTimeout(() => {
-      hint.innerHTML = originalText;
-      hint.style.color = '';
-    }, 2000);
+    setTimeout(() => { hint.innerHTML = orig; hint.style.color = ''; }, 2000);
   }
 
-  // ── Opsi Anonim ──────────────────────────────────────────
-  function _bindAnonOptions() {
-    document.querySelectorAll('input[name="anon"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        const textarea = document.getElementById('journal-text');
-        if (textarea) LenteraGame.setLaporan(textarea.value, _getAnonValue());
-      });
-    });
-  }
-
-  // ── Tombol Kirim ─────────────────────────────────────────
+  // -- Kirim Laporan -----------------------------------------
   function _bindKirimBtn() {
     const btn = document.getElementById('btn-kirim-laporan');
-    if (!btn) return;
-
-    btn.addEventListener('click', async () => {
+    if (btn) btn.onclick = async function() {
       if (isSubmitting) return;
       const textarea = document.getElementById('journal-text');
-      const isi      = textarea?.value?.trim() || '';
+      const isi = textarea?.value?.trim() || '';
       if (!isi) return;
-
-      await _submitLaporan(isi, _getAnonValue());
-    });
+      await _submitLaporan(isi);
+    };
   }
 
-  // ── Proses Pengiriman Laporan ─────────────────────────────
-  async function _submitLaporan(isi, isAnonim) {
+  async function _submitLaporan(isi) {
     isSubmitting = true;
     _setLoadingState(true);
 
-    // Simpan ke game state
-    LenteraGame.setLaporan(isi, isAnonim);
+    LenteraGame.setLaporan(isi);
 
-    // Buat payload
     const state   = LenteraGame.state;
-    const payload = _buildPayload(state, isi, isAnonim);
-
-    // Simulasi enkripsi & pengiriman (mock)
-    console.info('[Pos4] 🔒 Mengirim laporan terenkripsi…', {
-      sessionId : payload.sessionId,
-      isAnonim  : payload.isAnonim,
-      namaField : isAnonim ? '[ANONIM]' : payload.namaPemain,
-      panjangIsi: isi.length,
-      skor      : payload.skor,
-      timestamp : payload.timestamp,
-    });
-
-    // Simulasi delay API
-    await _sleep(1800);
-
-    // Dalam implementasi nyata: fetch('https://api.sekolah.id/bk/laporan', { method:'POST', ... })
-    _simulasiKirimKeBK(payload);
-
-    // Berhasil
-    isSubmitting = false;
-    _setLoadingState(false);
-    _showSuksesKirim(isAnonim);
-  }
-
-  function _buildPayload(state, isi, isAnonim) {
-    return {
-      sessionId   : state.sessionId,
-      timestamp   : new Date().toISOString(),
-      isAnonim    : isAnonim,
-      namaPemain  : isAnonim ? null : state.player.nama,
-      isiLaporan  : isi,
+    const payload = {
+      sessionId  : state.sessionId,
+      timestamp  : new Date().toISOString(),
+      isAnonim   : false,
+      namaPemain : state.player.nama,
+      sekolah    : state.player.sekolah || '',
+      gender     : state.player.avatarConfig?.gender || '',
+      isiLaporan : isi,
       skor: {
         resiliensi : state.skor.resiliensi,
         isolasi    : state.skor.isolasi,
         stresType  : state.skor.stresType,
         pos2       : state.skor.pos2Responses,
       },
-      avatarConfig: state.player.avatarConfig,
     };
-  }
+    await _sleep(1500);
 
-  function _simulasiKirimKeBK(payload) {
-    // Simpan ke localStorage sebagai simulasi "terkirim ke BK"
-    // Dalam produksi: ini dikirim ke server backend
-    const laporanKey = 'lentera_laporan_bk';
-    let existing = [];
+    // Simpan ke localStorage
     try {
-      existing = JSON.parse(localStorage.getItem(laporanKey) || '[]');
-    } catch (e) { existing = []; }
-    existing.push(payload);
-    try {
-      localStorage.setItem(laporanKey, JSON.stringify(existing));
+      const key      = 'lathi_laporan_bk';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      const idxDuplikat = existing.findIndex(
+        l => l.sessionId === payload.sessionId && l.jenisLaporan !== 'konseling'
+      );
+      if (idxDuplikat >= 0) {
+        existing[idxDuplikat] = { ...existing[idxDuplikat], ...payload };
+      } else {
+        existing.push(payload);
+      }
+      localStorage.setItem(key, JSON.stringify(existing));
     } catch (e) {
-      console.warn('[Pos4] Gagal menyimpan laporan lokal:', e);
+      console.warn('[Pos4] Gagal simpan laporan lokal:', e);
     }
-    console.info('[Pos4] ✅ Laporan berhasil "dikirim" ke sistem BK');
+
+    // Kirim ke Google Sheets
+    _kirimKeSheets({ ...payload, type: 'laporan', _urgensi: _hitungUrgensiLokal(isi) });
+
+    isSubmitting = false;
+    _setLoadingState(false);
+    _showSuksesKirim();
   }
 
-  // ── Tampilkan sukses kirim ────────────────────────────────
-  function _showSuksesKirim(isAnonim) {
+  function _showSuksesKirim() {
     const container = document.getElementById('journal-container');
     if (!container) return;
 
-    const anonInfo = isAnonim
-      ? 'Laporan dikirim secara <strong>anonim</strong> — Guru BK tidak tahu siapa kamu, tapi mereka tahu kamu butuh didengar.'
-      : 'Laporan dikirim <strong>dengan namamu</strong> — Guru BK akan menghubungimu secara personal dalam waktu dekat.';
+    const nama = LenteraGame.state.player.nama;
 
-    // Ganti konten container dengan konfirmasi
     container.innerHTML = `
-      <div class="kirim-sukses" role="status" aria-live="polite">
-        <div class="sukses-icon" aria-hidden="true">📨</div>
-        <h2 class="dialog-title" style="color: var(--color-text-inverse); text-align:center; margin-bottom:12px;">
-          Bebanmu sudah sampai.
+      <div style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:16px;
+          animation:float 2s ease-in-out infinite,pulse 2s ease-in-out infinite;">📨</div>
+        <h2 style="color:#1A0A0A;margin-bottom:12px;font-size:1rem;font-weight:800;">
+          Pesanmu sudah sampai, ${_esc(nama)}.
         </h2>
-        <p style="color:rgba(253,250,244,0.7); text-align:center; font-size:15px; line-height:1.7; margin-bottom:20px;">
-          ${anonInfo}
+        <p style="color:#3A1A0A;font-size:11px;line-height:1.9;margin-bottom:10px;">
+          Guru BK akan membaca ceritamu dan menghubungimu secara personal.
         </p>
-        <p style="color:rgba(253,250,244,0.6); text-align:center; font-size:13px; margin-bottom:28px;">
-          Butuh waktu untuk berani cerita itu besar sekali. Kamu sudah melakukan hal yang luar biasa hari ini. 🌿
+        <p style="color:#5A3A1A;font-size:10px;line-height:1.8;margin-bottom:28px;">
+          Butuh keberanian untuk cerita. Kamu sudah berani hari ini.
         </p>
-        <button class="btn btn--primary btn--lg" id="btn-lihat-hasil" style="width:100%;justify-content:center;">
-          Lihat Kartu Lenteramu ✨
+        <button class="btn btn--primary btn--lg" id="btn-lihat-hasil"
+          style="width:100%;justify-content:center;">
+          Lihat Kartu LATHI-mu
         </button>
-      </div>
-    `;
-
-    // Styling sukses
-    const style = document.createElement('style');
-    style.textContent = `
-      .kirim-sukses { text-align:center; }
-      .sukses-icon {
-        font-size: 3.5rem; margin-bottom: 16px;
-        animation: float 2s ease-in-out infinite, pulse 2s ease-in-out infinite;
-        display: block;
-      }
-    `;
-    if (!document.getElementById('sukses-style')) {
-      style.id = 'sukses-style';
-      document.head.appendChild(style);
-    }
+      </div>`;
 
     document.getElementById('btn-lihat-hasil')?.addEventListener('click', _finishPos4);
-
-    showToast('📨 Laporan terkirim ke Guru BK. Kamu berani!', 'success', 4000);
+    showToast('Laporan terkirim ke Guru BK!', 'success', 4000);
   }
 
-  // ── Tombol Skip ───────────────────────────────────────────
+  // -- Skip -------------------------------------------------
   function _bindSkipBtn() {
     const btn = document.getElementById('btn-skip-cerita');
-    if (!btn) return;
+    if (btn) btn.onclick = function() {
+      LenteraGame.setLaporan('');
 
-    btn.addEventListener('click', async () => {
-      // Simpan sebagai skipped
-      LenteraGame.setLaporan('', true);
-
-      // Tampilkan pesan empati sebelum lanjut
+      // Simpan ke dashboard meski tidak ada isi laporan
+      try {
+        const state   = LenteraGame.state;
+        const payload = {
+          sessionId   : state.sessionId,
+          timestamp   : new Date().toISOString(),
+          isAnonim    : false,
+          namaPemain  : state.player.nama,
+          sekolah     : state.player.sekolah || '',
+          gender      : state.player.avatarConfig?.gender || '',
+          jenisLaporan: 'skip',
+          isiLaporan  : '',
+          skor: {
+            resiliensi : state.skor.resiliensi,
+            isolasi    : state.skor.isolasi,
+            stresType  : state.skor.stresType,
+            pos2       : state.skor.pos2Responses,
+          },
+        };
+        const key      = 'lathi_laporan_bk';
+        const existing = JSON.parse(localStorage.getItem(key) || '[]');
+        const idx      = existing.findIndex(l => l.sessionId === payload.sessionId && l.jenisLaporan !== 'konseling');
+        if (idx >= 0) {
+          existing[idx] = { ...existing[idx], ...payload };
+        } else {
+          existing.push(payload);
+        }
+        localStorage.setItem(key, JSON.stringify(existing));
+      } catch(e) {
+        console.warn('[Pos4] Gagal simpan skip:', e);
+      }
       const container = document.getElementById('journal-container');
       if (container) {
         container.innerHTML = `
-          <div class="kirim-sukses" role="status" aria-live="polite">
-            <div class="sukses-icon" aria-hidden="true">🌿</div>
-            <h2 class="dialog-title" style="color:var(--color-text-inverse);text-align:center;margin-bottom:12px;">
-              Oke, tidak apa-apa.
+          <div style="text-align:center;">
+            <div style="font-size:3rem;margin-bottom:16px;animation:float 2s ease-in-out infinite;">🌿</div>
+            <h2 style="color:#1A0A0A;margin-bottom:12px;font-size:1rem;font-weight:800;">
+              Tidak apa-apa.
             </h2>
-            <p style="color:rgba(253,250,244,0.7);text-align:center;font-size:15px;line-height:1.7;margin-bottom:28px;">
-              Bercerita itu butuh keberanian dan kesiapan. Kamu tidak harus melakukannya sekarang.
-              Bilik Lentera ini akan selalu ada untukmu kapan pun kamu siap. 🌿
+            <p style="color:#3A1A0A;font-size:10px;line-height:1.8;margin-bottom:28px;">
+              Cerita butuh waktu dan kesiapan. Kamu bisa kembali kapan saja ketika sudah siap.
             </p>
-            <button class="btn btn--primary btn--lg" id="btn-lihat-hasil" style="width:100%;justify-content:center;">
-              Lihat Kartu Lenteramu ✨
+            <button class="btn btn--primary btn--lg" id="btn-lihat-hasil"
+              style="width:100%;justify-content:center;">
+              Lihat Kartu LATHI-mu
             </button>
-          </div>
-        `;
-        document.getElementById('btn-lihat-hasil')?.addEventListener('click', _finishPos4);
+          </div>`;
+        document.getElementById('btn-lihat-hasil').onclick = _finishPos4;
       }
-    });
+    };
   }
 
-  // ── Selesaikan Pos 4 ─────────────────────────────────────
   function _finishPos4() {
     LenteraNav.completePos('pos4');
-    LenteraState.navigateTo('hasil', 'Menghitung perjalananmu… ✨');
+    LenteraState.navigateTo('hasil', 'Menghitung perjalananmu...');
   }
 
-  // ── Loading state visual ──────────────────────────────────
   function _setLoadingState(loading) {
     const btn      = document.getElementById('btn-kirim-laporan');
     const textarea = document.getElementById('journal-text');
     if (btn) {
       btn.disabled  = loading;
       btn.innerHTML = loading
-        ? '<span aria-hidden="true">📡</span> Mengirim...'
-        : '<span aria-hidden="true">📨</span> Kirim ke Guru BK';
+        ? '<span>⏳</span> Mengirim...'
+        : '<span>📨</span> Kirim ke Guru BK';
     }
     if (textarea) textarea.disabled = loading;
   }
 
-  // ── Efek ambiance: suara gemericik air (simulasi) ─────────
-  function _playAmbientEffect() {
-    // Dalam implementasi nyata, mainkan audio ambiance
-    // const audio = new Audio('assets/sounds/water-stream.mp3');
-    // audio.loop = true; audio.volume = 0.2; audio.play().catch(() => {});
-    console.info('[Pos4] 🎵 Ambient bilik lentera aktif (simulasi)');
+  function _esc(str) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(str || ''));
+    return d.innerHTML;
   }
 
-  function _sleep(ms) {
-    return new Promise(r => setTimeout(r, ms));
+  function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ── Kirim ke Google Sheets ────────────────────────────────
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxR2OsfuO1QiL8n8DpedpD1sKcggm_g-DriXz52fYYBgPPklfIoRXDP_vCRGo8x8W7Teg/exec';
+
+  function _kirimKeSheets(data) {
+    try {
+      fetch(SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }).catch(e => console.warn('[LATHI] Gagal kirim ke Sheets:', e));
+    } catch(e) {
+      console.warn('[LATHI] Gagal kirim ke Sheets:', e);
+    }
   }
 
-  // ── Public API ────────────────────────────────────────────
+  function _hitungUrgensiLokal(isi) {
+    const s = (isi || '').toLowerCase();
+    if (['mati','bunuh diri','tidak mau hidup','dipukul','kekerasan'].some(k => s.includes(k))) return 'kritis';
+    if (['takut sekolah','dikucilkan','dibully','malu sekali'].some(k => s.includes(k))) return 'tinggi';
+    if (s.length > 100) return 'sedang';
+    return 'normal';
+  }
+
   return { init };
 
 })();
 
 window.Pos4BilikLentera = Pos4BilikLentera;
-console.info('[LENTERA] pos4-bilik-lentera.js dimuat ✓');
