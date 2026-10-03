@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test Rumah</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #1a1a1a; display: flex; gap: 20px; padding: 20px; flex-wrap: wrap; }
+.label { color: white; font-size: 11px; margin-bottom: 4px; font-family: monospace; }
+
+/* Tiruan pos-scene */
+.scene {
+  position: relative;
+  width: 400px;
+  height: 300px;
+  overflow: hidden;
+  border: 2px solid #555;
+}
+.sky { position: absolute; inset: 0; background: #87CEEB; }
+.ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, #C8E6C0 0%, #81C784 100%);
+}
+
+/* Rumah yang BENAR: bottom = tinggi ground = 45% */
+.house {
+  position: absolute;
+  bottom: 45%;  /* ← tepat di puncak ground */
+  right: 8%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
+</head>
+<body>
+
+<div>
+  <div class="label">bottom: 45% (tinggi ground)</div>
+  <div class="scene">
+    <div class="sky"></div>
+    <div class="ground"></div>
+    <div class="house">
+      <!-- Bendera -->
+      <div style="width:2px;height:18px;background:#888;align-self:flex-start;margin-left:54px;position:relative;">
+        <div style="position:absolute;top:0;left:2px;width:12px;height:8px;background:#E74C3C;"></div>
+      </div>
+      <!-- Atap -->
+      <div style="width:0;height:0;border-left:55px solid transparent;border-right:55px solid transparent;border-bottom:34px solid #8B5E3C;"></div>
+      <!-- Strip atap -->
+      <div style="width:110px;height:4px;background:repeating-linear-gradient(90deg,#C9960C 0,#C9960C 4px,#7B4F2E 4px,#7B4F2E 8px);"></div>
+      <!-- Badan -->
+      <div style="width:110px;height:58px;background:#FDF6EC;border:2.5px solid #8B5E3C;border-top:none;position:relative;">
+        <div style="position:absolute;top:8px;left:6px;width:18px;height:18px;background:#A8C8F0;border:2px solid #8B5E3C;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:18px;height:18px;background:#A8C8F0;border:2px solid #8B5E3C;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;top:8px;right:6px;width:18px;height:18px;background:#A8C8F0;border:2px solid #8B5E3C;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:20px;height:28px;background:#7B4F2E;border-radius:10px 10px 0 0;border:2px solid #5C3A1E;border-bottom:none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="label">Cara FIX: transform translateY(100%)</div>
+  <div class="scene">
+    <div class="sky"></div>
+    <div class="ground"></div>
+    <!-- Taruh di atas ground, pakai bottom+transform -->
+    <div style="position:absolute; bottom:45%; right:8%;
+      display:flex; flex-direction:column; align-items:center;
+      transform: translateY(0);">
+      <div style="width:2px;height:18px;background:#888;align-self:flex-start;margin-left:54px;position:relative;">
+        <div style="position:absolute;top:0;left:2px;width:12px;height:8px;background:#E74C3C;"></div>
+      </div>
+      <div style="width:0;height:0;border-left:55px solid transparent;border-right:55px solid transparent;border-bottom:34px solid #8B5E3C;"></div>
+      <div style="width:110px;height:4px;background:repeating-linear-gradient(90deg,#C9960C 0,#C9960C 4px,#7B4F2E 4px,#7B4F2E 8px);"></div>
+      <div style="width:110px;height:58px;background:#FDF6EC;border:2.5px solid #8B5E3C;border-top:none;position:relative;">
+        <div style="position:absolute;top:8px;left:6px;width:18px;height:18px;background:#A8C8F0;border:2px solid #8B5E3C;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:18px;height:18px;background:#A8C8F0;border:2px solid #8B5E3C;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;top:8px;right:6px;width:18px;height:18px;background:#A8C8F0;border:2px solid #8B5E3C;border-radius:3px 3px 0 0;"></div>
+        <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:20px;height:28px;background:#7B4F2E;border-radius:10px 10px 0 0;border:2px solid #5C3A1E;border-bottom:none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

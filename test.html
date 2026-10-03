@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><title>LATHI - Debug Test</title></head>
+<body style="font-family:monospace;padding:20px;background:#111;color:#eee;">
+<h2>LATHI JS Diagnostic</h2>
+<div id="log" style="white-space:pre-wrap;font-size:13px;line-height:1.8;"></div>
+<script>
+const log = document.getElementById('log');
+function ok(msg)  { log.innerHTML += '<span style="color:#4fc">[OK]  ' + msg + '</span>\n'; }
+function err(msg) { log.innerHTML += '<span style="color:#f55">[ERR] ' + msg + '</span>\n'; }
+function info(msg){ log.innerHTML += '<span style="color:#fa0">[---] ' + msg + '</span>\n'; }
+
+info('Memuat state.js...');
+</script>
+<script src="js/state.js" onerror="document.getElementById('log').innerHTML+='<span style=color:#f55>[ERR] GAGAL load state.js</span>\n'"></script>
+<script>
+if (typeof LathiState !== 'undefined')  ok('LathiState ada');
+else err('LathiState TIDAK ADA');
+
+if (typeof LenteraState !== 'undefined') ok('LenteraState (alias) ada');
+else err('LenteraState (alias) TIDAK ADA');
+
+if (typeof LathiGame !== 'undefined')  ok('LathiGame ada');
+else err('LathiGame TIDAK ADA');
+
+if (typeof showToast !== 'undefined')  ok('showToast ada');
+else err('showToast TIDAK ADA');
+
+info('Memuat pos1-balai-rasa.js...');
+</script>
+<script src="js/pos1-balai-rasa.js" onerror="document.getElementById('log').innerHTML+='<span style=color:#f55>[ERR] GAGAL load pos1-balai-rasa.js</span>\n'"></script>
+<script>
+if (typeof Pos1BalaiRasa !== 'undefined') ok('Pos1BalaiRasa ada');
+else err('Pos1BalaiRasa TIDAK ADA');
+info('Memuat pos2-pasar-interaksi.js...');
+</script>
+<script src="js/pos2-pasar-interaksi.js" onerror="document.getElementById('log').innerHTML+='<span style=color:#f55>[ERR] GAGAL load pos2</span>\n'"></script>
+<script>
+if (typeof Pos2PasarInteraksi !== 'undefined') ok('Pos2PasarInteraksi ada');
+else err('Pos2PasarInteraksi TIDAK ADA');
+info('Memuat pos3-taman-urup.js...');
+</script>
+<script src="js/pos3-taman-urup.js" onerror="document.getElementById('log').innerHTML+='<span style=color:#f55>[ERR] GAGAL load pos3</span>\n'"></script>
+<script>
+if (typeof Pos3TamanUrup !== 'undefined') ok('Pos3TamanUrup ada');
+else err('Pos3TamanUrup TIDAK ADA');
+info('Memuat pos4-bilik-lentera.js...');
+</script>
+<script src="js/pos4-bilik-lentera.js" onerror="document.getElementById('log').innerHTML+='<span style=color:#f55>[ERR] GAGAL load pos4</span>\n'"></script>
+<script>
+if (typeof Pos4BilikLentera !== 'undefined') ok('Pos4BilikLentera ada');
+else err('Pos4BilikLentera TIDAK ADA');
+info('Memuat hasil.js...');
+</script>
+<script src="js/hasil.js" onerror="document.getElementById('log').innerHTML+='<span style=color:#f55>[ERR] GAGAL load hasil.js</span>\n'"></script>
+<script>
+if (typeof HasilKartu !== 'undefined') ok('HasilKartu ada');
+else err('HasilKartu TIDAK ADA');
+
+info('--- Semua file dimuat ---');
+info('Test init()...');
+try {
+  // Buat elemen loading minimal
+  document.body.innerHTML += '<div id="loading-fill"></div><div id="toast-container"></div><div id="scene-transition"><p id="transition-text"></p></div>';
+  // Test apakah init bisa dipanggil tanpa error
+  if (typeof LathiState !== 'undefined') {
+    ok('LathiState.init() siap dipanggil');
+    ok('Cek localStorage key: ' + localStorage.getItem('lathi_session_v1'));
+  }
+} catch(e) {
+  err('Error: ' + e.message);
+}
+</script>
+</body>
+</html>
