@@ -1,50 +1,54 @@
-/* ============================================================
-   CANDRANATA — main.css
+﻿/* ============================================================
+   LATHI — main.css
    Global Design System: Neo-Tradisional Jawa Modern / Gen Z
    Cipta Agung Nuntun Dharmaning Raga
    ============================================================ */
 
-/* ── 1. DESIGN TOKENS ── */
+/* ── FONT Press Start 2P ── */
+
+
+/* ── 1. DESIGN TOKENS — Tema Jawa Coklat ── */
 :root {
-  /* Primary palette — Biru Bulan Candranata */
-  --color-primary:        #5B8FD4;   /* Biru Bulan — utama */
-  --color-primary-dark:   #3A6BB5;
-  --color-primary-light:  #A8C8F0;
-  --color-secondary:      #4A7C59;   /* Hijau Daun Jati */
-  --color-secondary-dark: #335542;
-  --color-accent:         #C0392B;   /* Merah Batik */
-  --color-accent-soft:    #F08080;
-  --color-teal:           #2C9B8F;   /* Teal Cahaya */
-  --color-indigo:         #4C5FA1;   /* Biru Langit Malam */
-  --color-gold:           #F4A62A;   /* Emas Joglo */
-  --color-gold-dark:      #D4891A;
+  /* ── Palet Jawa Coklat Tua-Muda ── */
+  --color-primary:        #C1440C;   /* Merah Bata Batik */
+  --color-primary-dark:   #8B2500;   /* Merah Bata Tua */
+  --color-primary-light:  #E8714A;   /* Merah Bata Muda */
+  --color-secondary:      #1A4A4A;   /* Teal Gelap Kain */
+  --color-secondary-dark: #0D2E2E;
+  --color-accent:         #7A1A1A;   /* Maroon Tua */
+  --color-accent-soft:    #E8A080;
+  --color-teal:           #1A4A4A;
+  --color-indigo:         #4C5FA1;
+  --color-gold:           #D4881A;   /* Emas Kain */
+  --color-gold-dark:      #8B5014;
+  --color-gold-light:     #F0D9A0;   /* Krem Gading */
 
-  /* Neutral / background */
-  --color-bg:             #F0F4FF;   /* Biru malam pucat */
-  --color-bg-secondary:   #E8EEF8;   /* Biru bulan */
-  --color-bg-dark:        #0D1120;   /* Malam dalam */
-  --color-bg-card:        #FFFFFF;
-  --color-surface:        #D8E4F5;
+  /* ── Background Jawa ── */
+  --color-bg:             #FDF4E3;   /* Krem Gading Terang */
+  --color-bg-secondary:   #F5E8C8;   /* Krem Batik Hangat */
+  --color-bg-dark:        #1A0A0A;   /* Maroon Sangat Tua */
+  --color-bg-card:        #FFFBF0;   /* Putih Gading */
+  --color-surface:        #E8CDAA;   /* Krem Pasir */
 
-  /* Text */
-  --color-text:           #1A2240;
-  --color-text-muted:     #4A5880;
-  --color-text-light:     #8A9BC0;
-  --color-text-inverse:   #F0F4FF;
+  /* ── Text ── */
+  --color-text:           #1A0A0A;   /* Maroon Sangat Tua */
+  --color-text-muted:     #7A3A1A;   /* Merah Bata Muted */
+  --color-text-light:     #C08060;   /* Merah Bata Light */
+  --color-text-inverse:   #FDF4E3;
 
-  /* Semantic */
-  --color-success:        #27AE60;
-  --color-warning:        #F39C12;
-  --color-danger:         #E74C3C;
-  --color-info:           #2980B9;
+  /* ── Semantic ── */
+  --color-success:        #2D7A4F;
+  --color-warning:        #C9960C;
+  --color-danger:         #C0392B;
+  --color-info:           #5B8FD4;
 
   /* Skor tipe mental */
-  --color-ksatria:        #5B8FD4;   /* Ksatria Candranata */
-  --color-daun:           #7F8C8D;   /* Daun Terduduk */
+  --color-ksatria:        #8B5E3C;
+  --color-daun:           #7A5C3E;
 
   /* Typography */
-  --font-body:   'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-display:'Playfair Display', Georgia, serif;
+  --font-body:   'Press Start 2P', 'Press Start 2P', monospace;
+  --font-display:'Press Start 2P', monospace;
 
   --text-xs:    0.75rem;
   --text-sm:    0.875rem;
@@ -90,7 +94,7 @@
   --shadow-md:  0 4px 16px rgba(43,36,23,0.10), 0 2px 6px rgba(43,36,23,0.06);
   --shadow-lg:  0 8px 32px rgba(43,36,23,0.12), 0 4px 12px rgba(43,36,23,0.08);
   --shadow-xl:  0 20px 60px rgba(43,36,23,0.15), 0 8px 24px rgba(43,36,23,0.10);
-  --shadow-glow-gold:  0 0 24px rgba(91,143,212,0.5);
+  --shadow-glow-gold:  0 0 24px rgba(139,94,60,0.5);
   --shadow-glow-green: 0 0 20px rgba(74,124,89,0.40);
 
   /* Transitions */
@@ -125,7 +129,7 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: 'Press Start 2P', monospace;
   font-size: var(--text-base);
   color: var(--color-text);
   background-color: var(--color-bg);
@@ -209,7 +213,7 @@ strong { font-weight: var(--weight-semi); }
   background: var(--color-primary);
   color: #fff;
   border-color: var(--color-primary);
-  box-shadow: 0 4px 14px rgba(91,143,212,0.4);
+  box-shadow: 0 4px 14px rgba(139,94,60,0.4);
 }
 .btn--primary:hover:not(:disabled) {
   background: var(--color-primary-dark);
@@ -259,6 +263,7 @@ strong { font-weight: var(--weight-semi); }
   justify-content: space-between;
   height: 64px;
   gap: var(--space-4);
+  position: relative;
 }
 .nav-logo {
   display: flex;
@@ -273,7 +278,15 @@ strong { font-weight: var(--weight-semi); }
 .nav-links {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-8);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 .nav-link {
   font-size: var(--text-sm);
@@ -332,9 +345,9 @@ strong { font-weight: var(--weight-semi); }
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 20% 80%, rgba(91,143,212,0.18) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(139,94,60,0.18) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(74,124,89,0.12) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 0%, rgba(91,143,212,0.08) 0%, transparent 60%);
+    radial-gradient(ellipse at 50% 0%, rgba(139,94,60,0.08) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -364,7 +377,7 @@ strong { font-weight: var(--weight-semi); }
 .tagline-dot { color: var(--color-primary); font-size: 0.6rem; }
 
 .hero-title {
-  font-family: var(--font-display);
+  font-family: 'Press Start 2P', monospace;
   font-size: clamp(var(--text-3xl), 8vw, 5.5rem);
   font-weight: 700;
   line-height: 1;
@@ -372,10 +385,11 @@ strong { font-weight: var(--weight-semi); }
   margin-bottom: var(--space-3);
 }
 .title-light {
-  background: linear-gradient(135deg, #A8C8F0 0%, #5B8FD4 50%, #3A6BB5 100%);
+  background: linear-gradient(135deg, #F0C93A 0%, #C9960C 40%, #8B5E3C 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 0 20px rgba(201,150,12,0.35));
 }
 
 .hero-subtitle {
@@ -639,7 +653,7 @@ strong { font-weight: var(--weight-semi); }
   font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
   color: var(--color-text);
   margin-bottom: var(--space-4);
-  font-family: var(--font-display);
+  font-family: 'Press Start 2P', monospace;
 }
 .section-desc {
   font-size: var(--text-md);
@@ -749,8 +763,8 @@ strong { font-weight: var(--weight-semi); }
   content: '◆';
   position: absolute;
   left: 0;
-  font-size: 0.4rem;
-  top: 0.4em;
+  font-size: 0.6em;
+  top: 0.35em;
   color: var(--color-primary);
 }
 
@@ -779,7 +793,7 @@ strong { font-weight: var(--weight-semi); }
   display: flex;
   align-items: center;
   gap: var(--space-6);
-  font-family: var(--font-display);
+  font-family: 'Press Start 2P', monospace;
   font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
   font-style: italic;
 }
@@ -816,7 +830,7 @@ strong { font-weight: var(--weight-semi); }
 }
 
 .filosofi-quote {
-  font-family: var(--font-display);
+  font-family: 'Press Start 2P', monospace;
   font-size: var(--text-xl);
   font-style: italic;
   color: var(--color-primary-light);
@@ -854,7 +868,7 @@ strong { font-weight: var(--weight-semi); }
 }
 .cta-ornament { font-size: 3rem; margin-bottom: var(--space-4); animation: float 4s ease-in-out infinite; }
 .cta-title {
-  font-family: var(--font-display);
+  font-family: 'Press Start 2P', monospace;
   font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
   color: var(--color-bg-dark);
   margin-bottom: var(--space-4);
@@ -946,7 +960,7 @@ strong { font-weight: var(--weight-semi); }
 .text-input, .journal-textarea {
   width: 100%;
   padding: var(--space-4);
-  font-family: var(--font-body);
+  font-family: 'Press Start 2P', monospace;
   font-size: var(--text-base);
   color: var(--color-text);
   background: var(--color-bg);
@@ -1056,7 +1070,8 @@ strong { font-weight: var(--weight-semi); }
   .hero-desc  { max-width: 100%; }
   .hero-cta-group { justify-content: center; }
   .hero-note  { justify-content: center; }
-  .hero-visual { display: none; }
+  /* hero-visual tetap tampil — tapi full width di bawah */
+  .hero-visual { display: block; margin: 0 auto; max-width: 480px; }
   .filosofi-layout { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
@@ -1098,19 +1113,19 @@ strong { font-weight: var(--weight-semi); }
 
 
 /* ============================================================
-   CANDRANATA — Tambahan: Section Bullying, Karakter Hero
+   LATHI — Tambahan: Section Bullying, Karakter Hero
    ============================================================ */
 
 /* ── Hero override: warna teks gelap jadi terang ── */
 .hero .hero-tagline { color: rgba(168,200,240,0.9); }
 .hero .tagline-dot  { color: var(--color-primary-light); }
-.navbar { background: rgba(13,17,32,0.95); border-bottom-color: rgba(91,143,212,0.2); }
+.navbar { background: rgba(44,24,16,0.96); border-bottom-color: rgba(139,94,60,0.2); }
 .nav-link { color: rgba(240,244,255,0.7); }
 .nav-link:hover { color: var(--color-primary-light); }
 .nav-logo { color: var(--color-primary-light); }
 
 /* Stats strip */
-.stats-strip { background: rgba(13,17,32,0.8); border-color: rgba(91,143,212,0.15); }
+.stats-strip { background: rgba(13,17,32,0.8); border-color: rgba(139,94,60,0.15); }
 .stat-number { color: var(--color-primary-light); }
 .stat-label  { color: rgba(168,200,240,0.7); }
 
@@ -1211,12 +1226,12 @@ strong { font-weight: var(--weight-semi); }
 }
 .bullying-card {
   background: rgba(255,255,255,0.04);
-  border: 1.5px solid rgba(91,143,212,0.2);
+  border: 1.5px solid rgba(139,94,60,0.2);
   border-radius: var(--radius-lg);
   padding: 28px;
   transition: transform var(--transition-base), border-color var(--transition-base);
 }
-.bullying-card:hover { transform: translateY(-3px); border-color: rgba(91,143,212,0.4); }
+.bullying-card:hover { transform: translateY(-3px); border-color: rgba(139,94,60,0.4); }
 .bullying-icon { font-size: 2rem; margin-bottom: 12px; }
 .bullying-card h3 { font-size: var(--text-lg); font-weight: 700; color: var(--color-text-inverse); margin-bottom: 12px; }
 .bullying-card p  { font-size: var(--text-sm); color: rgba(168,200,240,0.75); line-height: 1.7; margin-bottom: 10px; }
@@ -1232,11 +1247,12 @@ strong { font-weight: var(--weight-semi); }
 }
 .bullying-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; }
 .bullying-list li { display: flex; align-items: flex-start; gap: 10px; font-size: var(--text-sm); color: rgba(168,200,240,0.8); line-height: 1.6; }
+.bully-desc { flex: 1; display: block; word-break: break-word; text-align: left; }
 .bully-tag {
   display: inline-block; flex-shrink: 0;
   font-size: 10px; font-weight: 700;
   padding: 3px 10px; border-radius: var(--radius-full);
-  margin-top: 1px;
+  margin-top: 1px; min-width: 110px; text-align: center;
 }
 .bully-tag--body     { background: rgba(231,76,60,0.2);  color: #F08080; }
 .bully-tag--achieve  { background: rgba(243,156,18,0.2); color: #F4C57A; }
@@ -1250,8 +1266,8 @@ strong { font-weight: var(--weight-semi); }
 .dampak-item {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 12px;
-  background: rgba(91,143,212,0.06);
-  border: 1px solid rgba(91,143,212,0.15);
+  background: rgba(139,94,60,0.06);
+  border: 1px solid rgba(139,94,60,0.15);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
   color: rgba(168,200,240,0.8);
@@ -1262,8 +1278,8 @@ strong { font-weight: var(--weight-semi); }
 .aksi-step {
   display: flex; gap: 14px; align-items: flex-start;
   padding: 12px 14px;
-  background: rgba(91,143,212,0.06);
-  border: 1px solid rgba(91,143,212,0.15);
+  background: rgba(139,94,60,0.06);
+  border: 1px solid rgba(139,94,60,0.15);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
   color: rgba(168,200,240,0.8);
@@ -1281,8 +1297,8 @@ strong { font-weight: var(--weight-semi); }
 
 .bullying-stats {
   display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
-  background: rgba(91,143,212,0.08);
-  border: 1px solid rgba(91,143,212,0.15);
+  background: rgba(139,94,60,0.08);
+  border: 1px solid rgba(139,94,60,0.15);
   border-radius: var(--radius-xl);
   padding: 28px;
   margin-bottom: 40px;
@@ -1315,7 +1331,7 @@ strong { font-weight: var(--weight-semi); }
 /* ── CTA card override ── */
 .cta-card {
   background: linear-gradient(135deg, #1A2A4A 0%, #0D1A35 100%);
-  border: 1px solid rgba(91,143,212,0.25);
+  border: 1px solid rgba(139,94,60,0.25);
 }
 .cta-title   { color: var(--color-text-inverse); }
 .cta-desc    { color: rgba(168,200,240,0.75); }
@@ -1342,3 +1358,711 @@ strong { font-weight: var(--weight-semi); }
   .bullying-stats { grid-template-columns: 1fr; gap: 16px; }
   .dampak-grid    { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   LATHI — main.css Tambahan: Tema Jawa Landing Page
+   ============================================================ */
+
+/* ── Warna Jawa di landing ── */
+:root {
+  --sogan:       #7B4B2A;
+  --sogan-light: #C48B5A;
+  --troso:       #1B2A6B;
+  --parang:      #8B0000;
+  --emas-joglo:  #C9960C;
+  --emas-muda:   #F0C93A;
+}
+
+/* ── Hero: nuansa langit malam Jawa ── */
+.hero-tagline {
+  background: rgba(201,150,12,0.12);
+  border: 1px solid rgba(201,150,12,0.2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Iso scene: background langit malam -->  */
+.iso-scene {
+  background: linear-gradient(
+    180deg,
+    #060B18 0%,
+    #0D1525 40%,
+    #1A3D10 70%,
+    #0D2A08 100%
+  );
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 40px rgba(201,150,12,0.15), var(--shadow-xl);
+  border: 1px solid rgba(201,150,12,0.1);
+}
+.iso-ground {
+  background: linear-gradient(180deg, #1A3D10 0%, #0D2A08 100%) !important;
+}
+
+/* ── Section headers: aksen batik ── */
+.section-label {
+  position: relative;
+  padding: 0 var(--space-3);
+}
+.section-label::before,
+.section-label::after {
+  content: '◆';
+  font-size: 0.55rem;
+  color: var(--emas-joglo);
+  margin: 0 var(--space-2);
+  opacity: 0.7;
+}
+
+/* ── Feature cards: border aksen emas ── */
+.feature-card {
+  border-top: 3px solid transparent;
+  background-image: linear-gradient(var(--color-bg-card), var(--color-bg-card)),
+    linear-gradient(90deg, var(--emas-joglo), var(--color-primary), var(--emas-joglo));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  border-top-color: transparent;
+}
+.feature-card::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--emas-joglo) 0px, var(--emas-joglo) 4px,
+    var(--sogan) 4px, var(--sogan) 8px,
+    var(--parang) 8px, var(--parang) 10px,
+    var(--sogan) 10px, var(--sogan) 14px
+  );
+  margin: calc(-1 * var(--space-8)) calc(-1 * var(--space-8)) var(--space-5);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  opacity: 0.8;
+}
+
+/* ── Step cards: ornamen nomor emas ── */
+.step-number {
+  color: rgba(201,150,12,0.15);
+  font-size: var(--text-4xl);
+}
+.step-card::after {
+  content: '✦';
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  font-size: 0.7rem;
+  color: var(--emas-joglo);
+  opacity: 0.3;
+}
+
+/* ── Filosofi: visual border gold ── */
+.filosofi-visual {
+  min-height: 320px;
+  border: 1px solid rgba(201,150,12,0.12);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: rgba(201,150,12,0.03);
+}
+
+/* Lathi-Urup animasi dengan nuansa Jawa */
+.lathi-text  { color: rgba(240,168,168,0.75); }
+.urup-text   { color: var(--emas-muda); }
+.transform-arrow { color: var(--emas-joglo); }
+
+/* ── Filosofi content: quote style Jawa ── */
+.filosofi-quote {
+  border-left-color: var(--emas-joglo);
+  background: rgba(201,150,12,0.06);
+  padding: var(--space-4) var(--space-6);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.filosofi-text strong { color: var(--emas-muda); }
+
+/* ── CTA card: ornamen batik border ── */
+.cta-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--emas-joglo) 0px, var(--emas-joglo) 4px,
+    var(--sogan) 4px, var(--sogan) 8px,
+    var(--troso) 8px, var(--troso) 12px,
+    var(--sogan) 12px, var(--sogan) 16px
+  );
+  opacity: 0.4;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+/* ── Footer: sentuhan sogan ── */
+.footer-logo::after {
+  content: ' ✦ Lathi to Urup';
+  font-size: var(--text-xs);
+  color: rgba(201,150,12,0.4);
+  font-weight: var(--weight-normal);
+  letter-spacing: 0.08em;
+}
+
+/* ── Navbar: ornamen emas ── */
+.navbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(201,150,12,0.4) 0px, rgba(201,150,12,0.4) 3px,
+    transparent 3px, transparent 8px
+  );
+  pointer-events: none;
+}
+
+/* ── Stats strip: border batik ── */
+.stats-strip {
+  border-top: 3px solid transparent;
+  border-image: repeating-linear-gradient(
+    90deg,
+    var(--emas-joglo) 0px, var(--emas-joglo) 4px,
+    rgba(201,150,12,0.2) 4px, rgba(201,150,12,0.2) 8px
+  ) 3;
+}
+
+/* ── Bullying section: ornamen Jawa ── */
+.bullying-card {
+  position: relative;
+}
+.bullying-card::after {
+  content: '◆';
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-4);
+  font-size: 0.5rem;
+  color: rgba(201,150,12,0.3);
+}
+
+/* ── Visual badges hero: gaya joglo ── */
+.visual-badge {
+  background: rgba(13,21,37,0.9) !important;
+  border: 1px solid rgba(201,150,12,0.3) !important;
+  color: rgba(168,200,240,0.9);
+}
+.visual-badge span { color: var(--emas-muda); }
+
+/* ── Aksara ornamen animasi di hero ── */
+@keyframes aksara-drift {
+  0%   { opacity: 0.05; transform: translateY(0) rotate(0deg); }
+  50%  { opacity: 0.1;  transform: translateY(-6px) rotate(2deg); }
+  100% { opacity: 0.05; transform: translateY(0) rotate(0deg); }
+}
+
+/* ── Particle override: ganti jadi motif Jawa ── */
+.particle--lantern-1 { opacity: 0.15 !important; }
+.particle--lantern-2 { opacity: 0.12 !important; }
+
+/* ── Journey steps: icon bingkai emas ── */
+.step-icon {
+  background: rgba(201,150,12,0.1);
+  border: 1px solid rgba(201,150,12,0.2);
+  border-radius: var(--radius-sm);
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--space-3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .feature-card::before { margin: calc(-1 * var(--space-5)) calc(-1 * var(--space-5)) var(--space-4); }
+}
+
+/* ============================================================
+   LATHI — Vibes Jawa Lebih Kuat (Landing Page)
+   ============================================================ */
+
+/* ── Hero: langit malam dengan motif batik lebih terasa ── */
+.hero {
+  background: linear-gradient(
+    160deg,
+    #2C1810 0%,
+    #3D2512 35%,
+    #4A2E18 65%,
+    #2C1810 100%
+  ) !important;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 15% 85%, rgba(201,150,12,0.12) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 15%, rgba(74,124,89,0.10) 0%, transparent 40%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(201,150,12,0.03) 40px,
+      rgba(201,150,12,0.03) 41px
+    );
+  pointer-events: none;
+}
+
+/* Tagline hero — warna sogan emas */
+.hero-tagline {
+  background: rgba(139,94,60,0.15) !important;
+  border-color: rgba(201,150,12,0.3) !important;
+  color: rgba(240,201,58,0.9) !important;
+}
+
+/* Subtitle — warna emas muda */
+.hero-subtitle { color: rgba(212,168,100,0.85) !important; }
+.hero-desc strong { color: #F0C93A; }
+
+/* ── Navbar: border emas Jawa ── */
+.navbar::after {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(201,150,12,0.5) 0px, rgba(201,150,12,0.5) 3px,
+    transparent 3px, transparent 9px
+  ) !important;
+}
+
+/* ── Section headers: ornamen emas ── */
+.section-label::before,
+.section-label::after { color: var(--emas-joglo, #C9960C) !important; }
+
+/* ── Filosofi: glow emas di animasi ── */
+.urup-text   { color: #F0C93A !important; text-shadow: 0 0 20px rgba(201,150,12,0.6); }
+.lathi-text  { color: rgba(240,120,80,0.7) !important; }
+.transform-arrow { color: #C9960C !important; font-size: var(--text-3xl) !important; }
+
+/* ── Feature cards: top border batik lebih tebal dan berwarna ── */
+.feature-card::before {
+  height: 4px !important;
+  background: repeating-linear-gradient(
+    90deg,
+    #C9960C 0px, #C9960C 5px,
+    #7B4B2A 5px, #7B4B2A 10px,
+    #8B0000 10px, #8B0000 13px,
+    #7B4B2A 13px, #7B4B2A 18px
+  ) !important;
+  opacity: 1 !important;
+}
+
+/* ── Step cards: nomor berwarna emas ── */
+.step-number { color: rgba(201,150,12,0.18) !important; font-size: 4rem; }
+.step-icon {
+  background: rgba(201,150,12,0.12) !important;
+  border-color: rgba(201,150,12,0.25) !important;
+}
+.step-items li::before { color: #C9960C !important; }
+
+/* ── CTA card: ornamen Jawa ── */
+.cta-card {
+  background: linear-gradient(135deg, #0D1A35 0%, #1A2A4A 50%, #0D1535 100%) !important;
+  border: 1.5px solid rgba(201,150,12,0.3) !important;
+}
+.cta-title { color: #F0C93A !important; }
+.cta-desc  { color: rgba(240,201,58,0.65) !important; }
+.cta-card .btn--primary {
+  background: #C9960C !important;
+  color: #0D1120 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 6px 20px rgba(201,150,12,0.5) !important;
+}
+.cta-card .btn--primary:hover {
+  background: #F0C93A !important;
+  box-shadow: 0 8px 28px rgba(201,150,12,0.6) !important;
+}
+.cta-ornament { filter: drop-shadow(0 0 14px rgba(201,150,12,0.7)); }
+
+/* ── Batik border bawah stats strip ── */
+.stats-strip {
+  border-top: 3px solid transparent !important;
+  border-image: repeating-linear-gradient(
+    90deg,
+    #C9960C 0px, #C9960C 5px,
+    rgba(201,150,12,0.15) 5px, rgba(201,150,12,0.15) 10px
+  ) 3 !important;
+}
+.stat-number { color: #F0C93A !important; }
+
+/* ── Bullying cards: ornamen pojok emas ── */
+.bullying-card::after { color: rgba(201,150,12,0.4) !important; }
+
+/* ── Visual badge hero: warna emas ── */
+.visual-badge span { color: #F0C93A !important; }
+
+/* ── Footer logo emas ── */
+.footer-logo { color: #F0C93A !important; }
+.footer-tagline { color: rgba(240,201,58,0.5) !important; }
+
+/* ── Iso scene: border emas Jawa ── */
+.iso-scene {
+  border: 1px solid rgba(201,150,12,0.2) !important;
+  box-shadow: 0 0 40px rgba(201,150,12,0.15), var(--shadow-xl) !important;
+}
+
+/* ── Ornamen "gunungan" di hero section ── */
+.hero::before {
+  content: '';
+  position: absolute;
+  bottom: 15%;
+  left: 3%;
+  width: 30px;
+  height: 50px;
+  clip-path: polygon(50% 0%, 85% 25%, 100% 55%, 80% 80%, 50% 100%, 20% 80%, 0% 55%, 15% 25%);
+  background: radial-gradient(ellipse, rgba(201,150,12,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Batik parang samar di background filosofi ── */
+.section--filosofi::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 20px,
+    rgba(201,150,12,0.04) 20px,
+    rgba(201,150,12,0.04) 21px
+  );
+  pointer-events: none;
+}
+.section--filosofi { position: relative; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .hero-title { font-size: clamp(3rem, 14vw, 5rem) !important; }
+}
+
+/* ============================================================
+   LATHI — Revisi: Bullying section, warna variasi Jawa,
+   Pixel Art font, cuaca hati elemen
+   ============================================================ */
+
+/* ── Task 6: Section Bullying — ganti biru ke Jawa coklat-merah ── */
+.section--bullying {
+  background: linear-gradient(180deg,
+    #2C1810 0%,
+    #3D1A08 40%,
+    #4A1E0A 100%
+  ) !important;
+  color: #FDF6EC !important;
+  position: relative;
+  overflow: hidden;
+}
+/* Motif batik parang samar di background bullying */
+.section--bullying::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 14px,
+    rgba(201,150,12,0.04) 14px, rgba(201,150,12,0.04) 15px
+  );
+  pointer-events: none;
+}
+.section--bullying .section-label { color: #F0C93A !important; }
+.section--bullying .section-title  { color: #FDF6EC !important; }
+.section--bullying .section-desc   { color: rgba(253,220,170,0.8) !important; }
+.bullying-card {
+  background: rgba(60,25,10,0.7) !important;
+  border: 1.5px solid rgba(201,150,12,0.25) !important;
+}
+.bullying-card h3 { color: #FDF6EC !important; }
+.bullying-card p  { color: rgba(253,210,160,0.85) !important; }
+.bullying-note {
+  color: rgba(240,160,130,0.9) !important;
+  border-left-color: rgba(192,57,43,0.6) !important;
+  background: rgba(192,57,43,0.08) !important;
+}
+.bullying-list li { color: rgba(253,210,160,0.85) !important; }
+.dampak-item {
+  background: rgba(80,35,10,0.5) !important;
+  border-color: rgba(201,150,12,0.15) !important;
+  color: rgba(253,210,160,0.85) !important;
+}
+.aksi-step {
+  background: rgba(80,35,10,0.5) !important;
+  border-color: rgba(201,150,12,0.2) !important;
+  color: rgba(253,210,160,0.85) !important;
+}
+.bullying-stats {
+  background: rgba(60,25,10,0.5) !important;
+  border-color: rgba(201,150,12,0.2) !important;
+}
+.bully-stat-num   { color: #F0C93A !important; }
+.bully-stat-label { color: rgba(253,200,140,0.7) !important; }
+.bullying-cta-note { color: rgba(253,200,140,0.55) !important; }
+
+/* ── Task 7: Variasikan warna Jawa — tidak monoton ── */
+/* Section About: latar krem hangat */
+.section--about {
+  background: linear-gradient(180deg, #F5EFE0 0%, #EDE0C8 100%) !important;
+}
+.feature-card {
+  border-color: #C4956A !important;
+  background: #FDF6EC !important;
+}
+.feature-card:hover { border-color: #C9960C !important; }
+
+/* Section How-to: sedikit lebih gelap dari about */
+.section--howto {
+  background: linear-gradient(180deg, #EDE0C8 0%, #E5D4B0 100%) !important;
+}
+.step-card {
+  background: #FDF6EC !important;
+  border-color: #C4956A !important;
+}
+.step-card:hover { border-color: #C9960C !important; }
+.step-number { color: rgba(139,94,60,0.15) !important; }
+
+/* Filosofi: coklat tua kuat */
+.section--filosofi {
+  background: linear-gradient(180deg, #2C1810 0%, #3D2512 100%) !important;
+}
+/* CTA: merah batik hangat */
+.section--cta { background: linear-gradient(180deg, #3D1A08 0%, #2C1408 100%) !important; }
+.cta-card {
+  background: linear-gradient(135deg, #5C2A10 0%, #3D1A08 100%) !important;
+  border: 2px solid rgba(192,57,43,0.4) !important;
+}
+.cta-ornament { font-size: 2.5rem !important; }
+
+/* Stats strip: hijau daun jati */
+.stats-strip {
+  background: linear-gradient(90deg, #2D5A1B 0%, #335542 100%) !important;
+}
+.stat-number { color: #F0C93A !important; }
+.stat-label  { color: rgba(220,255,220,0.8) !important; }
+
+/* Navbar: tetap coklat tua */
+.navbar { background: rgba(44,24,16,0.97) !important; }
+
+/* Pixel art font di judul-judul penting */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+.hero-title .title-light {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(1.4rem, 4vw, 2.8rem) !important;
+  line-height: 1.4 !important;
+  background: linear-gradient(135deg, #F0C93A 0%, #C9960C 45%, #8B5E3C 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  text-shadow: none !important;
+  filter: drop-shadow(3px 3px 0 rgba(92,58,30,0.5));
+}
+.hero-subtitle em {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 13px !important;
+  line-height: 1.8 !important;
+  color: rgba(240,201,58,0.8) !important;
+  font-style: normal !important;
+}
+.section-title {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: clamp(0.9rem, 2.5vw, 1.4rem) !important;
+  line-height: 1.6 !important;
+  letter-spacing: -0.01em;
+}
+.footer-logo {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.85rem !important;
+}
+.nav-logo .logo-text {
+  font-family: 'Press Start 2P', monospace !important;
+  font-size: 0.7rem !important;
+}
+
+/* ── Task 11: Cuaca hati — tambah elemen visual ── */
+/* Bungkus weather-preview lebih kaya */
+.weather-preview {
+  width: 100%;
+  height: 80px !important;
+  border-radius: 4px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  image-rendering: pixelated;
+  border: 2px solid rgba(139,94,60,0.3);
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.2);
+}
+.weather-preview--cerah {
+  background: linear-gradient(
+    180deg,
+    #87CEEB 0%, #B8E6FF 45%,
+    #90C060 45%, #60A040 100%
+  ) !important;
+}
+/* Matahari pixel di cerah */
+.weather-preview--cerah::before {
+  content: '☀️';
+  position: absolute;
+  top: 6px; right: 8px;
+  font-size: 1.3rem;
+  filter: drop-shadow(0 0 6px rgba(255,220,0,0.8));
+  animation: float 3s ease-in-out infinite;
+}
+/* Awan pixel di cerah */
+.weather-preview--cerah::after {
+  content: '☁️';
+  position: absolute;
+  top: 8px; left: 6px;
+  font-size: 1rem;
+  animation: float 4s ease-in-out infinite reverse;
+}
+
+.weather-preview--kabut {
+  background: linear-gradient(
+    180deg,
+    #B0BEC5 0%, #CFD8DC 40%,
+    #8A9A7A 40%, #6A7A5A 100%
+  ) !important;
+}
+/* Kabut di bawah */
+.weather-preview--kabut::before {
+  content: '🌫️';
+  position: absolute;
+  bottom: 18px; left: 50%; transform: translateX(-50%);
+  font-size: 1.4rem;
+  opacity: 0.75;
+  animation: float 5s ease-in-out infinite;
+}
+
+.weather-preview--mendung {
+  background: linear-gradient(
+    180deg,
+    #455A64 0%, #607D8B 40%,
+    #4A6040 40%, #3A4A30 100%
+  ) !important;
+}
+/* Hujan pixel */
+.weather-preview--mendung::before {
+  content: '🌧️';
+  position: absolute;
+  top: 6px; left: 50%; transform: translateX(-50%);
+  font-size: 1.4rem;
+  animation: float 2s ease-in-out infinite;
+}
+.weather-preview--mendung::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0px, transparent 8px,
+    rgba(100,160,220,0.15) 8px, rgba(100,160,220,0.15) 9px
+  );
+}
+
+/* Char wrap di cuaca */
+.weather-char-wrap {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.weather-char-wrap img {
+  height: 44px !important;
+  width: auto !important;
+  image-rendering: pixelated !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)) !important;
+  mix-blend-mode: normal !important;
+}
+
+/* ── Responsive Pixel Art font ── */
+@media (max-width: 640px) {
+  .hero-title .title-light { font-size: 1.3rem !important; }
+  .section-title { font-size: 0.75rem !important; }
+  .hero-subtitle em { font-size: 9px !important; }
+}
+
+/* ── Press Start 2P: font global ── */
+
+
+*, *::before, *::after {
+  font-family: 'Press Start 2P', monospace !important;
+  -webkit-font-smoothing: auto;
+}
+
+/* ── Ukuran fine-tune: tombol dan elemen yang terlalu besar ── */
+.btn        { font-size: 10px !important; padding: 0.6em 1.2em !important; }
+.btn--lg    { font-size: 11px !important; padding: 0.7em 1.5em !important; }
+.btn--xl    { font-size: 12px !important; padding: 0.75em 1.8em !important; }
+.btn--sm    { font-size: 9px  !important; padding: 0.5em 1em  !important; }
+
+/* Nav */
+.nav-link           { font-size: 10px !important; }
+.nav-logo .logo-text{ font-size: 10px !important; }
+.nav-link--bk       { font-size: 10px !important; }
+
+/* Hero */
+.hero-tagline       { font-size: 8px  !important; letter-spacing: 0.12em !important; }
+.hero-subtitle em   { font-size: 13px !important; line-height: 2 !important; }
+.hero-note          { font-size: 8px  !important; }
+.hero-desc          { font-size: 11px !important; line-height: 1.9 !important; }
+
+/* Section label kecil */
+.section-label      { font-size: 8px  !important; letter-spacing: 0.12em !important; }
+
+/* Footer */
+.footer-logo        { font-size: 10px !important; }
+.footer-tagline     { font-size: 9px  !important; }
+.footer-nav a       { font-size: 9px  !important; line-height: 2 !important; }
+.footer-nav-title   { font-size: 8px  !important; }
+.footer-bottom p    { font-size: 8px  !important; }
+.crisis-link        { font-size: 9px  !important; }
+
+/* Stats */
+.stat-label         { font-size: 9px  !important; }
+.stat-number        { font-size: clamp(1.4rem, 3vw, 2rem) !important; }
+
+/* CTA note */
+.cta-note           { font-size: 8px  !important; }
+
+/* ── Section pages: Tentang LATHI, Edukasi Bullying, Cara Main, Filosofi ── */
+.section-title          { font-size: clamp(0.85rem, 2vw, 1.1rem) !important; line-height: 1.6 !important; }
+.section-desc           { font-size: 10px !important; line-height: 1.9 !important; }
+.section-label          { font-size: 8px  !important; letter-spacing: 0.12em !important; }
+
+/* Tentang LATHI — feature cards */
+.card-title             { font-size: 11px !important; line-height: 1.6 !important; }
+.card-text              { font-size: 10px !important; line-height: 1.9 !important; }
+
+/* Edukasi Bullying */
+.bullying-card h3       { font-size: 11px !important; }
+.bullying-card p        { font-size: 10px !important; line-height: 1.9 !important; }
+.bullying-note          { font-size: 10px !important; }
+.bullying-list li       { display: grid !important; grid-template-columns: 135px 1fr !important; gap: 10px !important; align-items: start !important; font-size: 10px !important; line-height: 1.9 !important; }
+.bullying-list .bully-desc { display: block; text-align: left; word-break: break-word; }
+.bully-tag              { font-size: 8px  !important; width: 100% !important; text-align: center !important; flex-shrink: 0 !important; }
+.dampak-item            { font-size: 10px !important; }
+.aksi-step              { font-size: 10px !important; line-height: 1.9 !important; }
+.aksi-num               { font-size: 10px !important; }
+.bully-stat-num         { font-size: clamp(1rem, 2.5vw, 1.4rem) !important; }
+.bully-stat-label       { font-size: 9px  !important; }
+.bullying-cta-note      { font-size: 9px  !important; }
+
+/* Cara Main — step cards */
+.step-location          { font-size: 8px  !important; letter-spacing: 0.1em !important; }
+.step-title             { font-size: 11px !important; }
+.step-desc              { font-size: 10px !important; line-height: 1.9 !important; }
+.step-items li          { font-size: 9px  !important; line-height: 1.9 !important; }
+.step-number            { font-size: clamp(1.5rem, 3vw, 2.2rem) !important; }
+
+/* Filosofi */
+.filosofi-quote         { font-size: 11px !important; line-height: 1.9 !important; }
+.filosofi-text          { font-size: 10px !important; line-height: 1.9 !important; }
+.lathi-urup-anim        { font-size: clamp(1rem, 2.5vw, 1.4rem) !important; }
+
+/* ── Global font size turun: semua diperkecil ── */
+html { font-size: 12px !important; }
+body { font-size: 12px !important; line-height: 1.8 !important; }
+
+/* ── CTA title: kecilkan ── */
+.cta-title { font-size: clamp(1.1rem, 2.5vw, 1.5rem) !important; line-height: 1.6 !important; }

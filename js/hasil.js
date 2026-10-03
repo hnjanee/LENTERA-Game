@@ -1,24 +1,26 @@
-/* ============================================================
-   LENTERA — hasil.js
-   Kalkulasi Skor Mental & Render Kartu Profil Mental
+﻿/* ============================================================
+   LATHI — hasil.js
+   Kalkulasi Skor & Render Kartu LATHI
    ============================================================
 
    ALGORITMA KALKULASI:
    ─────────────────────────────────────────────────────────
    INPUT:
-     skor.resiliensi  → max 9 poin  (cuaca 1-3 + qte 1-3 + pos2 3×3=9... cap di 9)
+     skor.resiliensi  → max 9 poin
      skor.isolasi     → 1-3 poin
      skor.stresType   → 'akademik' | 'sosial' | 'insecurity'
-     skor.pos2        → array respons (tipe: asertif/reaktif/pasif/dll)
-     laporan.submitted→ boolean
+     skor.pos2Responses → array { skenario, pilihan, tipe, skor }
+                          tipe: 'asertif' | 'reaktif' | 'pasif' | 'internalisasi' | 'menarikdiri'
+     laporan.submitted  → boolean
 
-   TIPE KARTU:
+   TIPE KARTU (4 kategori):
    ─────────────────────────────────────────────────────────
-   'ksatria'  → resiliensi >= 7  DAN isolasi <= 1
-   'daun'     → resiliensi < 7   ATAU isolasi >= 2
+   'air-mengalir'  → asertif >= 3  ATAU (asertif >= 2 DAN laporan.submitted)
+   'bambu-lentur'  → asertif terbanyak (tie-break C > B > A)
+   'duri-perisai'  → reaktif terbanyak
+   'daun-terduduk' → pasif/internalisasi/menarikdiri terbanyak
 
-   SPECIAL TRIGGER untuk tombol konseling:
-   → tipe === 'daun' ATAU laporan.submitted === true
+   Tombol konseling → tipe === 'daun-terduduk' ATAU laporan.submitted
    ─────────────────────────────────────────────────────────
 */
 
@@ -28,32 +30,58 @@ const HasilKartu = (() => {
 
   // ── Data Tipe Kartu ────────────────────────────────────────
   const TIPE_DATA = {
-    ksatria: {
-      emblem    : '⚔️',
-      label     : 'Tipe Mental',
-      nama      : 'Ksatria Candranata',
-      sub       : 'Tangguh, Asertif & Bercahaya',
-      headerClass: 'kartu-header--ksatria',
-      desc      : 'Kamu punya fondasi mental yang kuat. Kata-kata tajam tidak mudah menghancurkanmu — kamu punya kemampuan membalikkan narasi dan menjaga harga diri.',
-      ctaTeks   : '💪 Jadilah pelindung bagi teman yang sedang kesulitan. Kepekaan dan kekuatanmu bisa jadi cahaya bagi orang lain.',
-      shareText : (nama) => `Aku adalah "${nama}" dengan tipe Ksatria Candranata ⚔️🌙 — tangguh dan asertif! Main CANDRANATA yuk!`,
+    'daun-terduduk': {
+      emblem      : '🍂',
+      label       : 'Kartu LATHI',
+      nama        : 'Daun Terduduk',
+      sub         : 'Lembut, Damai, Sedang Bertumbuh',
+      headerClass : 'kartu-header--daun-terduduk',
+      tagline     : 'Laksana daun yang gugur perlahan, kamu memilih mengalah dan mengikuti arus demi menjaga kedamaian.',
+      karakteristik: 'Kamu sosok yang lembut, menyukai ketenangan, dan tidak suka memperpanjang masalah. Namun, kamu sering menyimpan beban emosional sendirian demi menghindari konflik.',
+      refleksi    : 'Terlalu sering diam dan menunduk bisa membuat orang lain lupa bahwa kamu juga punya batas rasa. Mengalah tidak selalu berarti lemah, tetapi menyuarakan kebenaran adalah bentuk penghargaan atas dirimu sendiri.',
+      pesan       : 'Lathi-mu (ucapanmu) berharga. Jangan takut untuk berkata tidak atau meminta bantuan saat kamu terluka.',
+      shareText   : (nama) => `Aku adalah "${nama}" dengan kartu LATHI 🍂 Daun Terduduk. Yuk main LATHI!`,
     },
-    daun: {
-      emblem    : '🍃',
-      label     : 'Tipe Mental',
-      nama      : 'Daun Terduduk',
-      sub       : 'Sedang Lelah, Tapi Masih Tumbuh',
-      headerClass: 'kartu-header--daun',
-      desc      : 'Kamu sedang membawa beban yang cukup berat. Itu tidak berarti kamu lemah — itu berarti kamu manusia. Daun yang terduduk tetap terhubung dengan akarnya.',
-      ctaTeks   : '🌿 Kamu tidak harus menanggung ini sendiri. Ada Guru BK yang siap mendengarmu — tanpa menghakimi, tanpa syarat.',
-      shareText : (nama) => `Aku adalah "${nama}" dengan tipe Daun Terduduk 🍃 — sedang tumbuh dari luka. Main CANDRANATA yuk!`,
+    'duri-perisai': {
+      emblem      : '🏜️',
+      label       : 'Kartu LATHI',
+      nama        : 'Duri Perisai',
+      sub         : 'Pemberani, Tegas, Berapi-api',
+      headerClass : 'kartu-header--duri-perisai',
+      tagline     : 'Laksana duri yang tajam, kamu langsung memasang perisai keras agar tidak ada seorang pun yang bisa merendahkanmu.',
+      karakteristik: 'Kamu sosok yang pemberani, tegas, dan punya benteng diri yang kuat. Kamu tidak akan tinggal diam jika ada yang mengganggu ketenanganmu.',
+      refleksi    : 'Keberanianmu membela diri adalah hal hebat. Namun, ketajaman lathi (ucapan) yang dibalas dengan api terkadang bisa memperbesar konflik dan melukai hubungan sosialmu sendiri.',
+      pesan       : 'Kekuatan sejati bukan tentang seberapa keras kamu membalas, melainkan seberapa bijak kamu mengendalikan emosi tanpa harus melukai balik.',
+      shareText   : (nama) => `Aku adalah "${nama}" dengan kartu LATHI 🏜️ Duri Perisai. Yuk main LATHI!`,
+    },
+    'bambu-lentur': {
+      emblem      : '🎋',
+      label       : 'Kartu LATHI',
+      nama        : 'Bambu Lentur',
+      sub         : 'Tenang, Asertif & Bercahaya',
+      headerClass : 'kartu-header--bambu-lentur',
+      tagline     : 'Laksana bambu yang meliuk ditiup angin kencang, kamu tidak patah oleh tekanan dan tetap berdiri kokoh.',
+      karakteristik: 'Kamu memiliki kecerdasan emosional yang tinggi dan ketenangan luar biasa. Kamu mampu menetapkan batasan tanpa perlu terpancing emosi.',
+      refleksi    : 'Kamu paham betul bahwa lathi (ucapan) negatif orang lain tidak menentukan nilai dirimu. Kamu mampu mematikan niat buruk orang lain dengan kebaikan dan ketegasan yang elegan.',
+      pesan       : 'Pertahankan ketenangan ini. Jadilah inspirasi dan pelindung bagi orang-orang di sekitarmu yang belum menemukan keberanian mereka.',
+      shareText   : (nama) => `Aku adalah "${nama}" dengan kartu LATHI 🎋 Bambu Lentur. Yuk main LATHI!`,
+    },
+    'air-mengalir': {
+      emblem      : '🌊',
+      label       : 'Kartu LATHI',
+      nama        : 'Air Mengalir',
+      sub         : 'Empati Tinggi, Pembela Kebaikan',
+      headerClass : 'kartu-header--air-mengalir',
+      tagline     : 'Laksana air murni yang membersihkan dan menenangkan, kehadiranmu membawa rasa aman bagi siapapun di sekitarmu.',
+      karakteristik: 'Kamu memiliki empati yang sangat kuat dan keberanian moral (moral courage). Kamu tidak bisa diam melihat ketidakadilan terjadi pada orang lain.',
+      refleksi    : 'Sikapmu yang berani bersuara untuk membela sesama membuat dunia di sekitarmu menjadi tempat yang lebih aman.',
+      pesan       : 'Dunia membutuhkan lebih banyak suara (lathi) seperti milikmu. Tetaplah menjadi pembela kebaikan.',
+      shareText   : (nama) => `Aku adalah "${nama}" dengan kartu LATHI 🌊 Air Mengalir. Yuk main LATHI!`,
     },
   };
 
   // ── Render utama ──────────────────────────────────────────
   function render() {
-    console.info('[Hasil] Menghitung & merender Kartu Profil Mental');
-
     const state = LenteraGame.state;
 
     // Hitung kalau belum
@@ -61,8 +89,11 @@ const HasilKartu = (() => {
       _kalkulasi(state);
     }
 
+    // Simpan sesi ke list permanen supaya dashboard bisa baca
+    _simpanSesi(state);
+
     const tipe   = state.hasil.tipe;
-    const tipeInfo = TIPE_DATA[tipe] || TIPE_DATA.daun;
+    const tipeInfo = TIPE_DATA[tipe] || TIPE_DATA['daun-terduduk'];
 
     _renderKartu(state, tipeInfo);
     _renderActions(state, tipeInfo);
@@ -71,36 +102,77 @@ const HasilKartu = (() => {
     setTimeout(() => _playCompletionAnimation(tipe), 600);
   }
 
+  // ── Simpan sesi ke list permanen ──────────────────────────
+  function _simpanSesi(state) {
+    try {
+      const key      = 'lathi_sesi_list';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      const idx      = existing.findIndex(s => s.sessionId === state.sessionId);
+      const entry = {
+        sessionId : state.sessionId,
+        startedAt : state.startedAt,
+        completedAt: new Date().toISOString(),
+        nama      : state.player.nama,
+        sekolah   : state.player.sekolah || '',
+        gender    : state.player.avatarConfig?.gender || '',
+        tipe      : state.hasil.tipe,
+        skor      : state.hasil.totalSkor || 0,
+        stres     : state.skor.stresType || null,
+        laporan   : state.laporan.submitted || false,
+      };
+      if (idx >= 0) {
+        existing[idx] = entry;
+      } else {
+        existing.push(entry);
+      }
+      localStorage.setItem(key, JSON.stringify(existing));
+    } catch(e) {
+      console.warn('[LATHI] Gagal simpan sesi:', e);
+    }
+  }
+
   // ── Algoritma kalkulasi ────────────────────────────────────
   function _kalkulasi(state) {
     const resiliensi = state.skor.resiliensi;
     const isolasi    = state.skor.isolasi;
+    const responses  = state.skor.pos2Responses;
 
-    // Hitung total skor (0-100%)
-    const maxResi  = 9;   // cuaca(3) + qte(3) + pos2 3 skenario × 3 = 9, tapi cap
+    // Hitung total skor (0-100%) — rumus lama tetap dipakai untuk bar skor
+    const maxResi  = 15;
     const maxIso   = 3;
-
-    // Persentase resiliensi (kontribusi 70%) + kebalikan isolasi (30%)
     const pctResi  = (resiliensi / maxResi) * 70;
-    const pctIso   = ((maxIso - isolasi + 1) / maxIso) * 30; // rendah isolasi = bagus
+    const pctIso   = ((maxIso - isolasi + 1) / maxIso) * 30;
     const total    = Math.min(100, Math.round(pctResi + pctIso));
 
-    // Tentukan tipe
+    // Hitung jumlah per kelompok respons
+    const asertifCount = responses.filter(r => r.tipe === 'asertif').length;
+    const reaktifCount = responses.filter(r => r.tipe === 'reaktif').length;
+    const pasifCount   = responses.filter(
+      r => r.tipe === 'pasif' || r.tipe === 'internalisasi' || r.tipe === 'menarikdiri'
+    ).length;
+
+    // Tentukan tipe kartu LATHI
     let tipe;
-    if (resiliensi >= 7 && isolasi <= 1) {
-      tipe = 'ksatria';
+    // BONUS: Air Mengalir — semua 3 asertif, ATAU 2+ asertif DAN sudah kirim laporan
+    if (asertifCount >= 3 || (asertifCount >= 2 && state.laporan.submitted)) {
+      tipe = 'air-mengalir';
     } else {
-      tipe = 'daun';
+      // Mayoritas menang; tie-break: asertif > reaktif > pasif
+      if (asertifCount >= reaktifCount && asertifCount >= pasifCount) {
+        tipe = 'bambu-lentur';
+      } else if (reaktifCount > asertifCount && reaktifCount >= pasifCount) {
+        tipe = 'duri-perisai';
+      } else {
+        tipe = 'daun-terduduk';
+      }
     }
 
-    // Simpan ke state
     state.hasil.tipe          = tipe;
     state.hasil.totalSkor     = total;
     state.hasil.persentase    = total;
     state.hasil.kalkulasiDone = true;
 
     LenteraStore.save();
-    console.info(`[Hasil] Tipe: ${tipe} | Resiliensi: ${resiliensi}/9 | Isolasi: ${isolasi}/3 | Total: ${total}%`);
   }
 
   // ── Render kartu HTML ──────────────────────────────────────
@@ -108,12 +180,15 @@ const HasilKartu = (() => {
     const kartu    = document.getElementById('kartu-profil');
     if (!kartu) return;
 
+    const tipe     = state.hasil.tipe;
     const nama     = state.player.nama || 'Petualang';
-    const pctResi  = Math.round((state.skor.resiliensi / 9) * 100);
+    const pctResi  = Math.round((state.skor.resiliensi / 15) * 100);
     const pctIso   = Math.round(((3 - state.skor.isolasi + 1) / 3) * 100);
-    const pctStres = _getStresScore(state.skor.stresType);
     const asertifCount = state.skor.pos2Responses.filter(r => r.tipe === 'asertif').length;
     const pos2Label    = `${asertifCount}/3 Respons Asertif`;
+    // Kepedulian Sosial: asertif (maks 3 × 28 = 84%) + laporan submitted (16%)
+    const pctPeduli = Math.min(100, Math.round((asertifCount / 3) * 84) + (state.laporan.submitted ? 16 : 0));
+    const peduliLabel = pctPeduli >= 80 ? 'Sangat Tinggi' : pctPeduli >= 50 ? 'Tinggi' : pctPeduli >= 28 ? 'Sedang' : 'Perlu Ditumbuhkan';
 
     // Tanggal
     const tgl = new Intl.DateTimeFormat('id-ID', {
@@ -134,11 +209,27 @@ const HasilKartu = (() => {
           <span aria-hidden="true">✨</span> ${_escapHtml(nama)} <span aria-hidden="true">✨</span>
         </p>
 
+        <div class="kartu-tagline">${tipeInfo.tagline}</div>
+
+        <div class="kartu-karakteristik">
+          <p class="kartu-karak-label">Karakteristik</p>
+          <p class="kartu-karak-text">${tipeInfo.karakteristik}</p>
+        </div>
+
+        <div class="kartu-refleksi">
+          <p class="kartu-refleksi-label">Refleksi LATHI</p>
+          <p class="kartu-refleksi-text">${tipeInfo.refleksi}</p>
+        </div>
+
+        <div class="kartu-pesan">
+          <p class="kartu-pesan-text">${tipeInfo.pesan}</p>
+        </div>
+
         <div class="kartu-scores" role="group" aria-label="Skor detail">
           <div class="score-item">
             <p class="score-label">Resiliensi</p>
             <div class="score-bar" role="progressbar" aria-label="Skor resiliensi ${pctResi}%" aria-valuenow="${pctResi}" aria-valuemin="0" aria-valuemax="100">
-              <div class="score-fill score-fill--resiliensi" style="width:0%" data-target="${pctResi}"></div>
+              <div class="score-fill score-fill--${tipe}" style="width:0%" data-target="${pctResi}"></div>
             </div>
             <p class="score-value">${pctResi}%</p>
           </div>
@@ -150,30 +241,24 @@ const HasilKartu = (() => {
             <p class="score-value">${pctIso}%</p>
           </div>
           <div class="score-item">
-            <p class="score-label">Manajemen Stres</p>
-            <div class="score-bar" role="progressbar" aria-label="Skor manajemen stres ${pctStres}%" aria-valuenow="${pctStres}" aria-valuemin="0" aria-valuemax="100">
-              <div class="score-fill score-fill--stres" style="width:0%" data-target="${pctStres}"></div>
+            <p class="score-label">Kepedulian Sosial</p>
+            <div class="score-bar" role="progressbar" aria-label="Kepedulian sosial ${pctPeduli}%" aria-valuenow="${pctPeduli}" aria-valuemin="0" aria-valuemax="100">
+              <div class="score-fill score-fill--peduli" style="width:0%" data-target="${pctPeduli}"></div>
             </div>
-            <p class="score-value">${_getStresLabel(state.skor.stresType)}</p>
+            <p class="score-value">${peduliLabel}</p>
           </div>
           <div class="score-item">
             <p class="score-label">Asertivitas</p>
             <div class="score-bar" role="progressbar" aria-label="Asertivitas ${pos2Label}" aria-valuenow="${asertifCount * 33}" aria-valuemin="0" aria-valuemax="100">
-              <div class="score-fill score-fill--resiliensi" style="width:0%" data-target="${asertifCount * 33}"></div>
+              <div class="score-fill score-fill--${tipe}" style="width:0%" data-target="${asertifCount * 33}"></div>
             </div>
             <p class="score-value">${pos2Label}</p>
           </div>
         </div>
-
-        <p class="kartu-desc">${tipeInfo.desc}</p>
-
-        <div class="kartu-cta-text">
-          ${tipeInfo.ctaTeks}
-        </div>
       </div>
 
       <div class="kartu-footer">
-        CANDRANATA · Diterbitkan ${tgl} · Lathi to Urup 🌙
+        LATHI · Diterbitkan ${tgl} · Lathi to Urup 🌙
       </div>
     `;
 
@@ -201,9 +286,9 @@ const HasilKartu = (() => {
       shareBtn.addEventListener('click', () => _handleShare(shareText));
     }
 
-    // Tombol konseling (hanya untuk tipe 'daun' atau yang mengisi laporan)
+    // Tombol konseling (untuk tipe 'daun-terduduk' atau yang mengisi laporan)
     const konselingBtn = document.getElementById('btn-konseling');
-    const showKonseling = state.hasil.tipe === 'daun' || state.laporan.submitted;
+    const showKonseling = state.hasil.tipe === 'daun-terduduk' || state.laporan.submitted;
     if (konselingBtn) {
       konselingBtn.hidden = !showKonseling;
       if (showKonseling) {
@@ -222,7 +307,7 @@ const HasilKartu = (() => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Kartu Profil CANDRANATA',
+          title: 'Kartu Profil LATHI',
           text : text,
           url  : window.location.origin,
         });
@@ -245,16 +330,80 @@ const HasilKartu = (() => {
     }
   }
 
-  // ── Link konseling BK ─────────────────────────────────────
+  // ── Link konseling BK, kirim pesan, tampilkan konfirmasi di halaman ──
   function _openKonselingLink() {
-    // Dalam implementasi nyata: mengarah ke booking system BK
-    // Contoh: window.open('https://bk.sekolah.id/jadwal', '_blank');
-    showToast('🗓️ Membuka sistem jadwal konseling BK… (demo)', 'info', 3000);
-    console.info('[Hasil] Redirect ke sistem konseling BK');
-    // Simulasi buka tab baru
-    setTimeout(() => {
-      alert('Demo: Di sini akan terbuka halaman penjadwalan sesi konseling dengan Guru BK melalui Zoom/Chat. Semua percakapan bersifat rahasia dan profesional. 💛');
-    }, 500);
+    const state = LenteraGame.state;
+
+    try {
+      const konselingKey = 'lathi_laporan_bk';
+      const existing = JSON.parse(localStorage.getItem(konselingKey) || '[]');
+
+      // Konseling selalu buat entri baru yang terpisah dari laporan Pos 4
+      // Cek hanya apakah sudah ada entri konseling sebelumnya untuk session ini
+      const sudahKonseling = existing.some(
+        l => l.sessionId === state.sessionId && l.jenisLaporan === 'konseling'
+      );
+
+      if (!sudahKonseling) {
+        existing.push({
+          sessionId   : state.sessionId,
+          timestamp   : new Date().toISOString(),
+          isAnonim    : false,
+          namaPemain  : state.player.nama,
+          sekolah     : state.player.sekolah || '',
+          gender      : state.player.avatarConfig?.gender || '',
+          jenisLaporan: 'konseling',
+          isiLaporan  : `${state.player.nama} dari ${state.player.sekolah || 'sekolah tidak diketahui'} meminta sesi ngobrol dengan Guru BK.`,
+          skor: {
+            resiliensi : state.skor.resiliensi,
+            isolasi    : state.skor.isolasi,
+            stresType  : state.skor.stresType,
+            pos2       : state.skor.pos2Responses,
+          },
+          _status : 'belum_dibaca',
+          _urgensi: state.hasil.tipe === 'daun-terduduk' ? 'tinggi' : 'sedang',
+        });
+        localStorage.setItem(konselingKey, JSON.stringify(existing));
+      }
+    } catch(e) {}
+
+    // Tampilkan konfirmasi di halaman (bukan redirect)
+    const konselingBtn = document.getElementById('btn-konseling');
+    if (konselingBtn) {
+      konselingBtn.disabled   = true;
+      konselingBtn.innerHTML  = '✅ Permintaan Terkirim ke Guru BK!';
+      konselingBtn.style.background = '#2D7A4F';
+      konselingBtn.style.animation  = 'none';
+    }
+
+    // Tampilkan pesan konfirmasi di bawah kartu
+    const actions = document.getElementById('hasil-actions');
+    if (actions && !document.getElementById('konseling-confirm-msg')) {
+      const msg = document.createElement('div');
+      msg.id = 'konseling-confirm-msg';
+      msg.style.cssText = `
+        background: rgba(45,122,79,0.15);
+        border: 1.5px solid rgba(45,122,79,0.4);
+        border-radius: 12px;
+        padding: 14px 18px;
+        text-align: center;
+        color: #7ED4A0;
+        font-size: 14px;
+        line-height: 1.65;
+        width: 100%;
+        animation: slideInUp 300ms ease forwards;
+      `;
+      msg.innerHTML = `
+        <div style="font-size:1.6rem;margin-bottom:8px;">✅</div>
+        <strong style="color:#A0E8C0;display:block;margin-bottom:6px;">
+          Permintaan konseling berhasil dikirim!
+        </strong>
+        Guru BK di <strong>${LenteraGame.state.player.sekolah || 'sekolahmu'}</strong>
+        akan segera menghubungimu untuk menjadwalkan sesi ngobrol santai.
+        Kamu sudah berani melangkah maju.
+      `;
+      actions.appendChild(msg);
+    }
   }
 
   // ── Animasi completion ────────────────────────────────────
@@ -267,28 +416,16 @@ const HasilKartu = (() => {
       bgParticles.style.gap      = '60px';
     }
 
-    if (tipe === 'ksatria') {
-      showToast('⚔️ Ksatria Candranata! Kamu tangguh dan bercahaya.', 'success', 4000);
-    } else {
-      showToast('🌱 Kamu sudah jauh. Daun pun butuh waktu untuk mekar.', 'info', 4000);
-    }
+    const toastMap = {
+      'air-mengalir' : '🌊 Air Mengalir! Kamu adalah suara kebaikan.',
+      'bambu-lentur' : '🎋 Bambu Lentur! Tenang, asertif, dan bercahaya.',
+      'duri-perisai' : '🏜️ Duri Perisai! Pemberani dan berapi-api.',
+      'daun-terduduk': '🍂 Daun Terduduk. Kamu sedang bertumbuh.',
+    };
+    showToast(toastMap[tipe] || '✨ Perjalananmu selesai!', 'success', 4000);
   }
 
   // ── Helpers ───────────────────────────────────────────────
-  function _getStresScore(stresType) {
-    const map = { akademik: 60, sosial: 50, insecurity: 45, null: 55 };
-    return map[stresType] ?? 55;
-  }
-
-  function _getStresLabel(stresType) {
-    const map = {
-      akademik   : '📚 Akademik',
-      sosial     : '📱 Sosial',
-      insecurity : '🔍 Insecurity',
-    };
-    return map[stresType] || '—';
-  }
-
   function _escapHtml(str) {
     const div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
@@ -301,4 +438,3 @@ const HasilKartu = (() => {
 })();
 
 window.HasilKartu = HasilKartu;
-console.info('[CANDRANATA] hasil.js dimuat ✓');

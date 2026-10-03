@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    LENTERA — pos3-taman-urup.js
    Pos 3: Taman Urup — Mini-Game Puzzle Kata Drag & Drop
    ============================================================
@@ -20,31 +20,40 @@
 
 const Pos3TamanUrup = (() => {
 
-  // ── Data Puzzle ───────────────────────────────────────────
+  // ── Data Puzzle — DIPERMUDAH ─────────────────────────────
+  // Setiap puzzle: hanya 5-6 kata total, 1-2 kata pengecoh (decoy)
+  // Kata afirmasi disusun pendek agar urutan mudah dipahami
+  // Petunjuk arah diberikan lewat konteks yang jelas
   const PUZZLES = [
     {
       id      : 1,
-      konteks : '💬 "Eh, kamu kan gampang baper sih. Sensitif banget deh."',
-      kata    : ['Perasaanku', 'Valid', 'Dan', 'Berhak', 'Dihargai', 'Lemah', 'Lebay'],
-      correct : [0, 1, 2, 3, 4], // Perasaanku Valid Dan Berhak Dihargai
-      afirmasi: 'Perasaanku Valid Dan Berhak Dihargai',
-      lampionMsg: '🏮 Lampion menyala! Perasaanmu nyata dan valid.',
+      konteks : '💬 Kamu dibilang: "Kamu baper banget sih, lebay deh!"',
+      hint    : 'Susun kata berikut jadi kalimat yang menguatkan dirimu:',
+      // Jawaban: AKU BOLEH MERASA SEDIH
+      kata    : ['AKU', 'BOLEH', 'MERASA', 'SEDIH', 'LEBAY', 'BAPER'],
+      correct : [0, 1, 2, 3],
+      afirmasi: 'AKU BOLEH MERASA SEDIH',
+      lampionMsg: 'Lampion menyala! Merasa sedih itu manusiawi, bukan kelemahan.',
     },
     {
       id      : 2,
-      konteks : '💬 "Tumben bagus, paling cuma hoki doang. Jangan gede rasa deh."',
-      kata    : ['Kerja', 'Kerasku', 'Nyata', 'Dan', 'Layak', 'Dirayakan', 'Kebetulan'],
-      correct : [0, 1, 2, 3, 4, 5], // Kerja Kerasku Nyata Dan Layak Dirayakan
-      afirmasi: 'Kerja Kerasku Nyata Dan Layak Dirayakan',
-      lampionMsg: '🏮 Lampion menyala! Setiap usahamu bernilai.',
+      konteks : '💬 Kamu dibilang: "Bagus sih, tapi paling cuma hoki doang."',
+      hint    : 'Susun kata berikut jadi kalimat yang menguatkan dirimu:',
+      // Jawaban: USAHAKU NYATA DAN BERHARGA
+      kata    : ['USAHAKU', 'NYATA', 'DAN', 'BERHARGA', 'HOKI', 'KEBETULAN'],
+      correct : [0, 1, 2, 3],
+      afirmasi: 'USAHAKU NYATA DAN BERHARGA',
+      lampionMsg: 'Lampion menyala! Kerja kerasmu bukan kebetulan.',
     },
     {
       id      : 3,
-      konteks : '💬 "Kamu ga usah ikut, ntar ngerusak suasana. Joke doang!"',
-      kata    : ['Aku', 'Berharga', 'Dan', 'Layak', 'Diterima', 'Apa Adanya', 'Dikucilkan'],
-      correct : [0, 1, 2, 3, 4, 5], // Aku Berharga Dan Layak Diterima Apa Adanya
-      afirmasi: 'Aku Berharga Dan Layak Diterima Apa Adanya',
-      lampionMsg: '🏮 Lampion menyala! Kamu berharga persis seperti apa adanya.',
+      konteks : '💬 Kamu dibilang: "Kamu ga usah ikut, ntar ngerusak suasana."',
+      hint    : 'Susun kata berikut jadi kalimat yang menguatkan dirimu:',
+      // Jawaban: AKU LAYAK DITERIMA
+      kata    : ['AKU', 'LAYAK', 'DITERIMA', 'GANGGU', 'NGERUSAK'],
+      correct : [0, 1, 2],
+      afirmasi: 'AKU LAYAK DITERIMA',
+      lampionMsg: 'Lampion menyala! Kamu berharga dan layak ada di sini.',
     },
   ];
 
@@ -62,8 +71,6 @@ const Pos3TamanUrup = (() => {
 
   // ── Init ──────────────────────────────────────────────────
   function init() {
-    console.info('[Pos3] Inisialisasi Taman Urup');
-
     if (LenteraGame.state.posCompleted.pos3) {
       LenteraState.navigateTo('pos4');
       return;
@@ -78,11 +85,11 @@ const Pos3TamanUrup = (() => {
 
   function _bindIntro() {
     const btn = document.getElementById('btn-pos3-mulai');
-    btn?.addEventListener('click', () => {
+    if (btn) btn.onclick = function() {
       document.getElementById('pos3-intro').hidden = true;
       document.getElementById('puzzle-area').hidden = false;
       _loadPuzzle(currentPuzzleIndex);
-    });
+    };
   }
 
   // ── Muat puzzle ───────────────────────────────────────────
@@ -95,33 +102,35 @@ const Pos3TamanUrup = (() => {
     const puzzle = PUZZLES[index];
     droppedWords = [];
 
-    // Update header
     document.getElementById('puzzle-current').textContent = index + 1;
     document.getElementById('puzzle-total').textContent   = PUZZLES.length;
-    document.getElementById('puzzle-context').textContent = puzzle.konteks;
 
-    // Reset drop zone
+    // Tampilkan konteks + hint
+    const ctx = document.getElementById('puzzle-context');
+    if (ctx) {
+      ctx.innerHTML = `
+        <div style="margin-bottom:6px;font-style:italic;color:rgba(253,250,244,0.65);font-size:13px;">
+          ${puzzle.konteks}
+        </div>
+        <div style="font-size:12px;color:rgba(240,201,58,0.8);font-weight:600;">
+          ${puzzle.hint || 'Susun kata berikut menjadi kalimat yang menguatkan:'}
+        </div>`;
+    }
+
     const dropZone    = document.getElementById('drop-zone');
     const placeholder = document.getElementById('drop-placeholder');
     dropZone.innerHTML = '';
     dropZone.appendChild(placeholder);
     placeholder.hidden = false;
 
-    // Sembunyikan feedback
     const feedback = document.getElementById('puzzle-feedback');
     feedback.hidden = true;
 
-    // Disable tombol cek
     const btnCheck = document.getElementById('btn-puzzle-check');
     if (btnCheck) btnCheck.disabled = true;
 
-    // Render word bank (dikocok, kecuali kata yang benar agar tidak trivial)
     _renderWordBank(puzzle);
-
-    // Bind tombol
     _bindPuzzleButtons(puzzle);
-
-    // Bind drop zone
     _bindDropZone();
   }
 
@@ -130,14 +139,30 @@ const Pos3TamanUrup = (() => {
     const bank = document.getElementById('word-bank');
     bank.innerHTML = '';
 
-    // Acak urutan kata
+    // Label panduan
+    const label = document.createElement('div');
+    label.style.cssText = 'width:100%;font-size:11px;color:rgba(253,250,244,0.45);margin-bottom:6px;text-align:center;';
+    label.textContent = 'Klik atau seret kata ke kotak di atas';
+    bank.appendChild(label);
+
+    // Acak urutan
     const indices = [...Array(puzzle.kata.length).keys()];
     _shuffle(indices);
+
+    const correctSet = new Set(puzzle.correct);
 
     indices.forEach((wordIndex, displayOrder) => {
       const kata  = puzzle.kata[wordIndex];
       const block = _createWordBlock(wordIndex, kata, 'bank');
       block.style.animationDelay = `${displayOrder * 60}ms`;
+
+      // Decoy: warna lebih redup agar pemain tahu ini mungkin pengecoh
+      if (!correctSet.has(wordIndex)) {
+        block.style.opacity     = '0.6';
+        block.style.borderStyle = 'dashed';
+        block.title             = 'Kata pengecoh — mungkin tidak dipakai';
+      }
+
       bank.appendChild(block);
     });
   }
@@ -146,12 +171,20 @@ const Pos3TamanUrup = (() => {
   function _createWordBlock(wordIndex, kata, source) {
     const block = document.createElement('div');
     block.className  = `word-block${source === 'zone' ? ' dropped' : ''}`;
-    block.textContent = kata;
     block.dataset.wordIndex = wordIndex;
     block.dataset.source    = source;
     block.setAttribute('draggable', 'true');
     block.setAttribute('role', 'button');
     block.setAttribute('tabindex', '0');
+
+    // Jika di zone, tampilkan nomor urut posisi
+    if (source === 'zone') {
+      const pos = droppedWords.length; // posisi ke-berapa (0-indexed)
+      block.innerHTML = `<span class="word-num">${pos + 1}</span><span class="word-text">${kata}</span>`;
+    } else {
+      block.textContent = kata;
+    }
+
     block.setAttribute('aria-label', `Kata: ${kata}. Tekan Enter untuk memindahkan.`);
 
     // Mouse drag events
@@ -355,6 +388,9 @@ const Pos3TamanUrup = (() => {
     // Click pada kata di zone = kembalikan ke bank
     block.addEventListener('click', () => _moveToBank(wordIndex));
 
+    // Refresh nomor urut semua blok di zone
+    _refreshZoneNumbers();
+
     // Update tombol cek
     const btnCheck = document.getElementById('btn-puzzle-check');
     if (btnCheck) btnCheck.disabled = droppedWords.length === 0;
@@ -384,9 +420,21 @@ const Pos3TamanUrup = (() => {
     const block  = _createWordBlock(wordIndex, kata, 'bank');
     bank.appendChild(block);
 
+    // Refresh nomor urut di zone setelah removal
+    _refreshZoneNumbers();
+
     // Update tombol cek
     const btnCheck = document.getElementById('btn-puzzle-check');
     if (btnCheck) btnCheck.disabled = droppedWords.length === 0;
+  }
+
+  // ── Refresh nomor urut blok di drop zone ─────────────────
+  function _refreshZoneNumbers() {
+    const blocks = document.querySelectorAll('#drop-zone .word-block');
+    blocks.forEach((b, i) => {
+      const numEl = b.querySelector('.word-num');
+      if (numEl) numEl.textContent = i + 1;
+    });
   }
 
   // ── Cek Jawaban ───────────────────────────────────────────
@@ -417,10 +465,10 @@ const Pos3TamanUrup = (() => {
 
   // ── Tampilkan Feedback Puzzle ─────────────────────────────
   function _showPuzzleFeedback(isCorrect, puzzle) {
-    const feedbackEl   = document.getElementById('puzzle-feedback');
-    const iconEl       = document.getElementById('feedback-icon');
-    const textEl       = document.getElementById('feedback-text');
-    const btnNext      = document.getElementById('btn-puzzle-next');
+    const feedbackEl = document.getElementById('puzzle-feedback');
+    const iconEl     = document.getElementById('feedback-icon');
+    const textEl     = document.getElementById('feedback-text');
+    const btnNext    = document.getElementById('btn-puzzle-next');
 
     feedbackEl.hidden = false;
 
@@ -429,43 +477,36 @@ const Pos3TamanUrup = (() => {
       textEl.textContent = puzzle.lampionMsg;
       feedbackEl.style.background = 'rgba(39,174,96,0.3)';
       completedPuzzles++;
-
-      // Nyalakan lampion
       _lightLantern(puzzle.id);
-
-      // Animasi lampion scene
       _triggerLanternAnim();
-
     } else {
       iconEl.textContent = '🌱';
-
       const hasDecoy = PUZZLES[currentPuzzleIndex].kata
         .map((_, i) => i)
         .filter(i => !new Set(puzzle.correct).has(i))
         .some(i => droppedWords.includes(i));
 
       if (hasDecoy) {
-        textEl.textContent = 'Ada kata yang tidak cocok di sana. Coba perhatikan lagi kata-katanya — mana yang paling memberimu kekuatan?';
+        textEl.textContent = 'Ada kata pengecoh yang masuk. Coba hapus kata yang bergaris putus-putus.';
       } else {
-        textEl.textContent = 'Hampir! Coba susun urutannya lagi. Kalimat ini punya ritme tersendiri ✨';
+        textEl.textContent = 'Urutannya belum pas. Coba susun ulang dari kata pertama.';
       }
       feedbackEl.style.background = 'rgba(243,156,18,0.2)';
     }
 
-    // Bind tombol next di dalam feedback
     if (btnNext) {
       const newBtn = btnNext.cloneNode(true);
       btnNext.parentNode.replaceChild(newBtn, btnNext);
 
       if (isCorrect) {
         const isLast = currentPuzzleIndex >= PUZZLES.length - 1;
-        newBtn.textContent = isLast ? 'Lihat Hasil ✨' : 'Puzzle Berikutnya →';
+        newBtn.textContent = isLast ? 'Selesai' : 'Puzzle Selanjutnya';
         newBtn.addEventListener('click', () => {
           currentPuzzleIndex++;
           _loadPuzzle(currentPuzzleIndex);
         });
       } else {
-        newBtn.textContent = 'Coba Lagi ↺';
+        newBtn.textContent = 'Coba Lagi';
         newBtn.addEventListener('click', () => {
           feedbackEl.hidden = true;
           droppedWords = [];
@@ -518,12 +559,11 @@ const Pos3TamanUrup = (() => {
     LenteraGame.setPos3Complete();
 
     const btn = document.getElementById('btn-goto-pos4');
-    btn?.addEventListener('click', () => {
+    if (btn) btn.onclick = function() {
       LenteraNav.completePos('pos3');
-      LenteraState.navigateTo('pos4', 'Menuju Bilik Lentera… 📖');
-    });
-
-    showToast('🏮 Semua lampion menyala! Taman Urup bercahaya.', 'success', 3000);
+      LenteraState.navigateTo('pos4', 'Menuju Bilik Cahaya');
+    };
+    showToast('Semua lampion menyala!', 'success', 3000);
   }
 
   // ── Utility ──────────────────────────────────────────────
@@ -541,4 +581,3 @@ const Pos3TamanUrup = (() => {
 })();
 
 window.Pos3TamanUrup = Pos3TamanUrup;
-console.info('[LENTERA] pos3-taman-urup.js dimuat ✓');

@@ -1,15 +1,29 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CANDRANATA — Cipta Agung Nuntun Dharmaning Raga</title>
+  <title>LATHI - Literasi Aksi Terintegrasi Hentikan Intimidasi</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Merriweather:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    * { font-family: 'Press Start 2P', monospace !important; }
+
+    /* Teks konten pakai Playfair Display */
+    p, li, em, strong,
+    span:not(.section-label):not(.step-location):not(.stat-label):not(.stat-number):not(.bully-tag):not(.bully-stat-num),
+    .card-text, .section-desc, .hero-desc, .hero-note, .step-desc, .step-items li,
+    .bullying-list .bully-desc, .dampak-item span:last-child, .aksi-step div,
+    .bullying-cta-note, .bully-stat-label, .filosofi-text, .filosofi-quote,
+    .footer-tagline, .footer-sub, .footer-disclaimer, .footer-bottom p,
+    .cta-desc, .cta-note, .hero-subtitle,
+    .bullying-note, .bullying-card p {
+      font-family: 'Merriweather', serif !important;
+      font-size: 1.4rem !important;
+      line-height: 1.9 !important;
+    }
+  </style>
 </head>
 <body class="landing-page">
 
@@ -28,19 +42,21 @@
   <!-- ░░ NAVBAR ░░ -->
   <nav class="navbar" role="navigation" aria-label="Navigasi utama">
     <div class="nav-inner container">
-      <a href="index.html" class="nav-logo" aria-label="CANDRANATA - Halaman Utama">
-        <span class="logo-icon" aria-hidden="true">🌙</span>
-        <span class="logo-text">CANDRANATA</span>
+      <a href="index.html" class="nav-logo" aria-label="LATHI - Halaman Utama">
+        <img src="assets/images/judul-LATHI.png" alt="LATHI"
+          style="height:32px;width:auto;image-rendering:pixelated;" />
       </a>
       <ul class="nav-links" role="list">
-        <li><a href="#tentang" class="nav-link">Tentang</a></li>
-        <li><a href="#bullying-info" class="nav-link">Tentang Bullying</a></li>
+        <li><a href="#tentang" class="nav-link">Tentang LATHI</a></li>
+        <li><a href="#bullying-info" class="nav-link">Edukasi Bullying</a></li>
         <li><a href="#cara-main" class="nav-link">Cara Main</a></li>
         <li><a href="#filosofi" class="nav-link">Filosofi</a></li>
-        <li><a href="dashboard/admin.html" class="nav-link nav-link--bk" target="_blank" rel="noopener">
-          <span aria-hidden="true">🎓</span> Dashboard BK
-        </a></li>
       </ul>
+      <div class="nav-right">
+        <a href="dashboard/admin.html" class="nav-link nav-link--bk" target="_blank" rel="noopener">
+          <span aria-hidden="true">🎓</span> Dashboard BK
+        </a>
+      </div>
       <button class="nav-burger" aria-label="Buka menu" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
@@ -56,21 +72,21 @@
           Platform Asesmen Kesehatan Mental Berbasis Game
         </p>
         <h1 class="hero-title">
-          <span class="title-light">CANDRANATA</span>
+          <img src="assets/images/judul-LATHI.png" alt="LATHI"
+            style="max-height:80px;width:auto;image-rendering:pixelated;display:block;" />
         </h1>
         <p class="hero-subtitle">
-          <em>Cipta Agung Nuntun Dharmaning Raga Aning Nalar Agung Tetep Asisih</em>
+          <em>Literasi Aksi Terintegrasi Hentikan Intimidasi</em>
         </p>
         <p class="hero-desc">
-          Pikiran luhur yang menuntun laku raga menuju akal budi yang terang
-          dan senantiasa berpegang pada kebaikan.
-          <strong>Lathi to Urup</strong> — dari luka menjadi cahaya.
+          Web Game Edukasi Interaktif: Berani Speak Up dan Patahkan Normalisasi Bullying Berkedok "Cuma Bercanda".
+          <br><em style="font-size:0.9em;opacity:0.8;font-style:italic;">Ajining diri dumunung aneng lathi, kehormatan sejati bermuara pada ucapan.</em>
         </p>
         <div class="hero-cta-group">
           <a href="game.html" class="btn btn--primary btn--lg" id="btn-mulai-main">
             <span aria-hidden="true">✨</span> Mulai Perjalanan
           </a>
-          <a href="#bullying-info" class="btn btn--ghost btn--lg">
+          <a href="#bullying-info" class="btn btn--primary btn--lg">
             Kenali Bullying
           </a>
         </div>
@@ -80,54 +96,35 @@
         </p>
       </div>
 
-      <!-- Isometric Game Preview -->
-      <div class="hero-visual" aria-label="Ilustrasi tampilan game isometrik CANDRANATA">
-        <div class="iso-scene" aria-hidden="true">
-          <div class="iso-ground"></div>
-          <!-- Gedung Sekolah -->
-          <div class="iso-building iso-building--sekolah">
-            <div class="sekolah-roof"></div>
-            <div class="sekolah-body">
-              <div class="sekolah-window"></div>
-              <div class="sekolah-window"></div>
-              <div class="sekolah-door"></div>
-            </div>
-            <div class="joglo-label">Sekolah</div>
+      <!-- Hero Visual, Gambar Ilustrasi Game -->
+      <div class="hero-visual" aria-label="Ilustrasi siswi yang dibully oleh sekelompok teman di sekolah">
+        <div style="position:relative;width:100%;max-width:560px;">
+          <img
+            src="assets/images/hero-bullying.jpe"
+            alt="Ilustrasi bullying di sekolah, seorang siswi duduk sendirian sementara sekelompok teman menggosipkannya"
+            style="width:100%;border-radius:16px;display:block;
+              aspect-ratio:16/9;object-fit:cover;
+              box-shadow:0 24px 64px rgba(44,24,16,0.6), 0 0 0 3px rgba(201,150,12,0.25);"
+          />
+          <div style="position:absolute;top:14px;right:-10px;
+            background:rgba(44,24,16,0.9);border:1.5px solid rgba(201,150,12,0.4);
+            border-radius:999px;padding:7px 16px;
+            font-size:12px;font-weight:700;color:rgba(240,201,58,0.95);
+            display:flex;align-items:center;gap:7px;
+            backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+            <span>🏮</span> 4 Pos Petualangan
           </div>
-          <div class="iso-building iso-building--joglo">
-            <div class="joglo-roof"></div>
-            <div class="joglo-body">
-              <div class="joglo-door"></div>
-            </div>
-            <div class="joglo-label">Balai Rasa</div>
+          <div style="position:absolute;bottom:14px;left:-10px;
+            background:rgba(44,24,16,0.9);border:1.5px solid rgba(201,150,12,0.4);
+            border-radius:999px;padding:7px 16px;
+            font-size:12px;font-weight:700;color:rgba(240,201,58,0.95);
+            display:flex;align-items:center;gap:7px;
+            backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+            <span>🌿</span> Aman &amp; Rahasia
           </div>
-          <div class="iso-tree"></div>
-          <div class="iso-tree iso-tree--2"></div>
-          <div class="iso-lantern">🌙</div>
-          <div class="iso-lantern iso-lantern--2">✨</div>
-          <!-- Avatar karakter OMORI-style -->
-          <div class="iso-avatar" title="Avatar pemain">
-            <div class="avatar-char">
-              <div class="avatar-hair"></div>
-              <div class="avatar-face">
-                <div class="avatar-eye avatar-eye--l"></div>
-                <div class="avatar-eye avatar-eye--r"></div>
-              </div>
-              <div class="avatar-body-char"></div>
-            </div>
-            <div class="avatar-glow"></div>
-          </div>
-          <div class="path-dot path-dot--1"></div>
-          <div class="path-dot path-dot--2"></div>
-          <div class="path-dot path-dot--3"></div>
-        </div>
-        <div class="visual-badge visual-badge--top">
-          <span>🌙</span> 4 Pos Petualangan
-        </div>
-        <div class="visual-badge visual-badge--bottom">
-          <span>🌿</span> Aman &amp; Rahasia
         </div>
       </div>
+
     </div>
     <div class="hero-wave" aria-hidden="true">
       <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
@@ -173,7 +170,7 @@
         </h2>
         <p class="section-desc">
           Bullying tidak selalu berbentuk kekerasan fisik. Yang paling sering terjadi
-          justru tersembunyi di balik kata-kata — dan itulah yang paling sulit dikenali.
+          justru tersembunyi di balik kata-kata, dan itulah yang paling sulit dikenali.
         </p>
       </div>
 
@@ -183,12 +180,12 @@
           <div class="bullying-icon" aria-hidden="true">💬</div>
           <h3>Apa itu Verbal Bullying?</h3>
           <p>
-            Verbal bullying adalah tindakan menyakiti orang lain menggunakan kata-kata —
-            baik langsung maupun lewat pesan digital. Ini termasuk ejekan, penghinaan,
-            meremehkan, mengancam, atau mengucilkan seseorang dari kelompok.
+            Verbal bullying adalah <strong>tindakan menyakiti orang lain</strong> menggunakan kata-kata,
+            baik langsung maupun lewat pesan digital. Ini termasuk <strong>ejekan, penghinaan,
+            meremehkan, mengancam, atau mengucilkan seseorang dari kelompok.</strong>
           </p>
           <p class="bullying-note">
-            Yang membuat berbahaya: pelaku sering berdalih <em>"cuma bercanda"</em>
+            Yang membuat berbahaya: pelaku sering berdalih <strong><em>"cuma bercanda"</em></strong>
             sehingga korban merasa tidak berhak merasa sakit hati.
           </p>
         </div>
@@ -200,23 +197,23 @@
           <ul class="bullying-list">
             <li>
               <span class="bully-tag bully-tag--body">Body Shaming</span>
-              Mengomentari berat badan, warna kulit, tinggi, atau penampilan fisik
+              <span class="bully-desc">Mengomentari berat badan, warna kulit, tinggi, atau penampilan fisik</span>
             </li>
             <li>
               <span class="bully-tag bully-tag--achieve">Meremehkan</span>
-              "Kamu cuma hoki", "Nggak mungkin bisa", "Ngapain ikut-ikutan"
+              <span class="bully-desc">"Kamu cuma hoki", "Nggak mungkin bisa", "Ngapain ikut-ikutan"</span>
             </li>
             <li>
               <span class="bully-tag bully-tag--social">Pengucilan</span>
-              Tidak diajak bergabung, dijauhi, atau diabaikan di grup chat
+              <span class="bully-desc">Tidak diajak bergabung, dijauhi, atau diabaikan di grup chat</span>
             </li>
             <li>
               <span class="bully-tag bully-tag--gaslight">Gaslighting</span>
-              "Kamu terlalu sensitif", "Lebay deh", "Itu cuma candaan kali"
+              <span class="bully-desc">"Kamu terlalu sensitif", "Lebay deh", "Itu cuma candaan kali"</span>
             </li>
             <li>
               <span class="bully-tag bully-tag--cyber">Cyberbullying</span>
-              Komentar jahat di media sosial, menyebarkan rumor, atau mempermalukan online
+              <span class="bully-desc">Komentar jahat di media sosial, menyebarkan rumor, atau mempermalukan online</span>
             </li>
           </ul>
         </div>
@@ -261,29 +258,29 @@
             <div class="aksi-step">
               <div class="aksi-num">1</div>
               <div>
-                <strong>Kenali</strong> — Sadari bahwa apa yang kamu rasakan itu valid.
-                Kata-kata menyakitkan bukan "lebay" untuk dirasakan.
+                <strong>Kenali.</strong> Sadari bahwa apa yang kamu rasakan itu valid.
+                Kata-kata yang menyakitkan bukan sesuatu yang perlu kamu diamkan.
               </div>
             </div>
             <div class="aksi-step">
               <div class="aksi-num">2</div>
               <div>
-                <strong>Ceritakan</strong> — Bicara ke orang yang kamu percaya: teman,
+                <strong>Ceritakan.</strong> Bicara ke orang yang kamu percaya: teman,
                 orang tua, atau Guru BK di sekolahmu.
               </div>
             </div>
             <div class="aksi-step">
               <div class="aksi-num">3</div>
               <div>
-                <strong>Batasi</strong> — Kamu berhak membatasi interaksi dengan orang
+                <strong>Batasi.</strong> Kamu berhak membatasi interaksi dengan orang
                 yang membuatmu tidak nyaman. Itu bukan lemah.
               </div>
             </div>
             <div class="aksi-step">
               <div class="aksi-num">4</div>
               <div>
-                <strong>Laporkan</strong> — Gunakan CANDRANATA untuk melaporkan
-                kasusmu secara aman dan anonim ke Guru BK.
+                <strong>Laporkan.</strong> Gunakan LATHI untuk melaporkan
+                kasusmu ke Guru BK dengan aman.
               </div>
             </div>
           </div>
@@ -308,7 +305,7 @@
 
       <div class="bullying-cta">
         <a href="game.html" class="btn btn--primary btn--lg">
-          <span aria-hidden="true">🌙</span> Mulai Perjalanan CANDRANATA
+          <span aria-hidden="true">🎮</span> Mulai Perjalanan LATHI
         </a>
         <p class="bullying-cta-note">
           Game ini dirancang untuk membantumu mengenali, menghadapi, dan melaporkan
@@ -322,20 +319,19 @@
   <section class="section section--about" id="tentang" aria-labelledby="heading-tentang">
     <div class="container">
       <div class="section-header">
-        <span class="section-label">Tentang CANDRANATA</span>
+        <span class="section-label">Tentang LATHI</span>
         <h2 class="section-title" id="heading-tentang">
           Bukan sekadar game,<br>ini tentang kamu.
         </h2>
         <p class="section-desc">
-          CANDRANATA adalah ruang aman berbentuk game edukasi interaktif untuk mengenali
-          kondisi mentalmu dan merespons verbal bullying yang kerap bersembunyi di balik kata "candaan".
+          LATHI adalah simulasi interaktif berbasis game untuk mengenali, menghadapi, dan melaporkan verbal bullying yang kerap bersembunyi di balik kata "candaan".
         </p>
       </div>
       <div class="cards-grid">
         <article class="feature-card">
           <div class="card-icon" aria-hidden="true">🎭</div>
           <h3 class="card-title">Asesmen Terselubung</h3>
-          <p class="card-text">Kondisi mentalmu diukur lewat pilihan game — bukan kuesioner kaku. Tidak ada yang terasa seperti tes psikologi.</p>
+          <p class="card-text">Kondisi mentalmu diukur lewat pilihan di dalam game, bukan kuesioner kaku. Tidak ada yang terasa seperti tes psikologi.</p>
         </article>
         <article class="feature-card">
           <div class="card-icon" aria-hidden="true">🗣️</div>
@@ -370,7 +366,7 @@
           <div class="step-content">
             <span class="step-location">Pos Pertama</span>
             <h3 class="step-title">Balai Rasa</h3>
-            <p class="step-desc">Ciptakan avatarmu. Pilih gender, cuaca hati, isi tas ransel — tanpa sadar kamu sedang memetakan kondisi mentalmu.</p>
+            <p class="step-desc">Ciptakan karaktermu. Pilih gender, cuaca hati, isi tas ransel. Tanpa kamu sadari, kamu sedang menceritakan kondisi mentalmu sendiri.</p>
             <ul class="step-items" role="list">
               <li>Pilih Gender Avatar</li>
               <li>Kustomisasi Karakter</li>
@@ -384,7 +380,7 @@
           <div class="step-content">
             <span class="step-location">Pos Kedua</span>
             <h3 class="step-title">Pasar Interaksi</h3>
-            <p class="step-desc">Bertemu NPC yang melontarkan ejekan berkedok candaan. Pilih responsmu — apakah kamu akan menghindar, melawan, atau menjadi asertif?</p>
+            <p class="step-desc">Bertemu teman-teman yang suka melontarkan ejekan berkedok candaan. Pilih responsmu dan lihat apa yang terjadi.</p>
             <ul class="step-items" role="list">
               <li>3 Skenario Bullying</li>
               <li>Dialog Multiple Choice</li>
@@ -411,12 +407,12 @@
           <div class="step-icon" aria-hidden="true">📖</div>
           <div class="step-content">
             <span class="step-location">Pos Keempat</span>
-            <h3 class="step-title">Bilik Lentera</h3>
-            <p class="step-desc">Ruang aman yang tenang. Ceritakan bebanmu di jurnal digital — bisa anonim atau dengan nama. Guru BK akan menerimanya.</p>
+            <h3 class="step-title">Bilik Cahaya</h3>
+            <p class="step-desc">Ruang yang tenang dan aman. Ceritakan apa yang kamu rasakan di jurnal digital. Guru BK di sekolahmu akan menerimanya.</p>
             <ul class="step-items" role="list">
               <li>Jurnal Digital Aman</li>
-              <li>Opsi Anonim/Bernama</li>
-              <li>Koneksi Langsung ke BK</li>
+              <li>Kirim dengan Nama</li>
+              <li>Terhubung ke Guru BK</li>
             </ul>
           </div>
         </li>
@@ -428,36 +424,48 @@
   <section class="section section--filosofi" id="filosofi" aria-labelledby="heading-filosofi">
     <div class="container">
       <div class="filosofi-layout">
-        <div class="filosofi-visual" aria-hidden="true">
-          <div class="lathi-urup-anim">
-            <div class="lathi-text">Lathi</div>
-            <div class="transform-arrow">→</div>
-            <div class="urup-text">Urup</div>
-          </div>
-          <div class="batik-ornament batik-ornament--1"></div>
-          <div class="batik-ornament batik-ornament--2"></div>
+        <div class="filosofi-visual">
+          <img
+            src="assets/images/filosofi-hero.jpe"
+            alt="Ilustrasi filosofi LATHI — Lathi dan Urup"
+            style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);
+              display:block;box-shadow:0 24px 64px rgba(44,24,16,0.6), 0 0 0 3px rgba(201,150,12,0.25);"
+          />
         </div>
         <div class="filosofi-content">
-          <span class="section-label">Filosofi Inti</span>
-          <h2 class="section-title" id="heading-filosofi">CANDRANATA</h2>
+          <span class="section-label">Landasan Nilai</span>
+          <h2 class="section-title" id="heading-filosofi">Landasan Nilai LATHI</h2>
+
           <p class="filosofi-quote">
-            <em>"Cipta agung nuntun dharmaning raga, menuju akal budi yang terang."</em>
+            <em>"Ajining diri dumunung aneng lathi."</em>
           </p>
           <p class="filosofi-text">
-            <strong>CANDRANATA</strong> berarti pikiran luhur yang menuntun laku raga
-            menuju akal budi yang terang dan senantiasa berpegang pada kebaikan.
+            <strong>Kehormatan diri bermuara pada ucapan.</strong>
+            Kata-kata yang dibungkus "cuma bercanda" tetap bisa melukai. Filosofi ini mengingatkan
+            bahwa ucapan yang baik adalah cermin kehormatan sejati.
+          </p>
+
+          <p class="filosofi-quote" style="margin-top:var(--space-5);">
+            <em>"Urip iku urup."</em>
           </p>
           <p class="filosofi-text">
-            Bagian <strong>"Cipta agung nuntun dharmaning raga"</strong> merepresentasikan
-            bagaimana niat dan pikiran luhur mengendalikan setiap tindakan fisik serta ucapan kita.
-            Dalam filosofi <em>lathi</em>, apa yang diucapkan harus selaras dengan kebenaran batin.
+            <strong>Hidup hendaknya menyalakan cahaya.</strong>
+            Menjadi <em>urup</em> berarti berani hadir, merangkul, dan menciptakan ruang aman
+            bagi sesama, bukan sekadar menyesali kesalahan, tapi nyata menjadi penerang.
           </p>
-          <p class="filosofi-text">
-            <strong>"Menuju akal budi yang terang"</strong> sejalan dengan makna
-            <em>urup</em> — menjadi terang, bermanfaat, dan menuntun diri serta sesama
-            ke arah yang benar. Platform ini hadir dalam semangat <strong>Neo-Tradisional</strong>
-            — kearifan Jawa bertemu sensibilitas Gen Z.
-          </p>
+
+          <div style="margin-top:var(--space-6);padding:var(--space-4) var(--space-5);
+            background:rgba(201,150,12,0.08);border-left:3px solid #C9960C;
+            border-radius:0 var(--radius-md) var(--radius-md) 0;">
+            <p style="font-size:var(--text-sm);font-weight:var(--weight-semi);
+              color:rgba(240,201,58,0.9);margin-bottom:var(--space-2);">
+              🌉 Jembatan Inovasi
+            </p>
+            <p class="filosofi-text" style="margin-bottom:0;font-size:var(--text-sm);">
+              <strong>LATHI</strong> mempertemukan kedua filosofi ini dalam satu ruang digital yang aman,
+              mengajak Gen Z menghentikan lelucon beracun sekaligus berani membela sesama.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -471,7 +479,7 @@
         <h2 class="cta-title" id="heading-cta">Siap memulai perjalananmu?</h2>
         <p class="cta-desc">Perjalanan 15 menit yang bisa mengubah cara kamu melihat dirimu sendiri. Semua aman, semua rahasia, semua untukmu.</p>
         <a href="game.html" class="btn btn--primary btn--xl">
-          <span aria-hidden="true">🌙</span> Mulai Sekarang — Gratis
+          <span aria-hidden="true">🌙</span> Mulai Sekarang, Gratis
         </a>
         <p class="cta-note">Tidak perlu daftar akun · Selesai dalam ±15 menit</p>
       </div>
@@ -481,38 +489,24 @@
   <!-- ░░ FOOTER ░░ -->
   <footer class="footer" role="contentinfo">
     <div class="container">
-      <div class="footer-grid">
+      <div class="footer-grid" style="grid-template-columns:1fr auto;">
         <div class="footer-brand">
-          <div class="footer-logo"><span aria-hidden="true">🌙</span> CANDRANATA</div>
-          <p class="footer-tagline">Cipta Agung Nuntun Dharmaning Raga</p>
+          <div class="footer-logo"><span aria-hidden="true">🎮</span> LATHI</div>
+          <p class="footer-tagline">Literasi Aksi Terintegrasi Hentikan Intimidasi</p>
           <p class="footer-sub">Platform Asesmen Kesehatan Mental &amp; Pelaporan Bullying</p>
         </div>
-        <nav class="footer-nav" aria-label="Navigasi footer">
+        <nav class="footer-nav" aria-label="Navigasi footer" style="text-align:right;">
           <h3 class="footer-nav-title">Navigasi</h3>
           <ul role="list">
-            <li><a href="#tentang">Tentang</a></li>
-            <li><a href="#bullying-info">Tentang Bullying</a></li>
+            <li><a href="#tentang">Tentang LATHI</a></li>
+            <li><a href="#bullying-info">Edukasi Bullying</a></li>
             <li><a href="#cara-main">Cara Main</a></li>
             <li><a href="game.html">Mulai Main</a></li>
           </ul>
         </nav>
-        <nav class="footer-nav" aria-label="Untuk Pendidik">
-          <h3 class="footer-nav-title">Untuk Pendidik</h3>
-          <ul role="list">
-            <li><a href="dashboard/admin.html" target="_blank" rel="noopener">Dashboard BK</a></li>
-            <li><a href="#">Panduan Guru</a></li>
-            <li><a href="#">Integrasi Sekolah</a></li>
-          </ul>
-        </nav>
-        <div class="footer-info">
-          <h3 class="footer-nav-title">Butuh Bantuan Segera?</h3>
-          <p>Jika kamu dalam kondisi krisis:</p>
-          <a href="tel:119" class="crisis-link">📞 Into The Light: 119 ext 8</a>
-          <a href="tel:021-7884-2580" class="crisis-link">📞 Yayasan Pulih: (021) 788-42580</a>
-        </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2024 CANDRANATA · Dibuat dengan 💛 untuk kesejahteraan mental generasi muda Indonesia</p>
+        <p>© 2026 LATHI · Literasi Aksi Terintegrasi Hentikan Intimidasi</p>
         <p class="footer-disclaimer">Platform ini bukan pengganti layanan kesehatan mental profesional.</p>
       </div>
     </div>

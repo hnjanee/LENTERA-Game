@@ -1,25 +1,45 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LENTERA — Mulai Perjalanan</title>
+  <title>LATHI - Mulai Perjalanan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles/main.css" />
   <link rel="stylesheet" href="styles/game.css" />
+  <style>
+    /* Font global override — semua elemen Press Start 2P */
+    * { font-family: 'Press Start 2P', monospace !important; }
+    /* Fix overlay visibility */
+    .pos-ui-overlay {
+      position: fixed !important;
+      top: 60px !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      z-index: 100 !important;
+    }
+    /* Jawa theme HUD */
+    .game-hud { background: rgba(26,10,10,0.97) !important; border-bottom: 1px solid rgba(201,150,12,0.3) !important; }
+    .hud-logo { color: #C9960C !important; }
+    .pos-node--active .pos-icon { background: #C1440C !important; border-color: #D4881A !important; box-shadow: 0 0 16px rgba(193,68,12,0.6) !important; }
+    .pos-node--complete .pos-icon { background: #1A4A4A !important; border-color: #D4881A !important; }
+    /* Joglo door and ornaments */
+    .scene-mustaka { position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:10px; height:14px; background:#C9960C; clip-path:polygon(50% 0%,100% 40%,80% 100%,20% 100%,0% 40%); filter:drop-shadow(0 0 4px rgba(240,201,58,0.8)); z-index:5; }
+    .joglo-batik-wall { position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(201,150,12,0.1) 4px,rgba(201,150,12,0.1) 5px); pointer-events:none; }
+    .joglo-door-carving { position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:26px; height:38px; background:linear-gradient(180deg,#8B5E3C 0%,#6B3A1F 100%); border-radius:13px 13px 0 0; border:2px solid #C9960C; border-bottom:none; }
+    .joglo-door-carving::before { content:'☸'; position:absolute; top:5px; left:50%; transform:translateX(-50%); font-size:9px; color:#C9960C; opacity:0.9; }
+  </style>
 </head>
 <body class="game-page">
 
-  <!-- ░░ GAME HUD (Heads-Up Display) ░░ -->
+  <!-- ΓûæΓûæ GAME HUD (Heads-Up Display) ΓûæΓûæ -->
   <header class="game-hud" role="banner" aria-label="Status permainan">
     <div class="hud-left">
-      <a href="index.html" class="hud-logo" aria-label="Kembali ke beranda LENTERA">
-        <span aria-hidden="true">🔦</span>
-        <span class="hud-logo-text">LENTERA</span>
+      <a href="index.html" class="hud-logo" aria-label="Kembali ke beranda LATHI">
+        <img src="assets/images/judul-LATHI.png" alt="LATHI"
+          style="height:28px;width:auto;image-rendering:pixelated;" />
       </a>
     </div>
 
@@ -28,21 +48,21 @@
         <li class="pos-node pos-node--active" data-pos="1" aria-current="step">
           <div class="pos-icon" aria-hidden="true">🏛️</div>
           <span class="pos-name">Balai Rasa</span>
-          <div class="pos-connector" aria-hidden="true"></div>
         </li>
+        <li class="pos-connector-line" aria-hidden="true"></li>
         <li class="pos-node pos-node--locked" data-pos="2">
           <div class="pos-icon" aria-hidden="true">🏪</div>
           <span class="pos-name">Pasar Interaksi</span>
-          <div class="pos-connector" aria-hidden="true"></div>
         </li>
+        <li class="pos-connector-line" aria-hidden="true"></li>
         <li class="pos-node pos-node--locked" data-pos="3">
-          <div class="pos-icon" aria-hidden="true">🏮</div>
+          <div class="pos-icon" aria-hidden="true">🌙</div>
           <span class="pos-name">Taman Urup</span>
-          <div class="pos-connector" aria-hidden="true"></div>
         </li>
+        <li class="pos-connector-line" aria-hidden="true"></li>
         <li class="pos-node pos-node--locked" data-pos="4">
           <div class="pos-icon" aria-hidden="true">📖</div>
-          <span class="pos-name">Bilik Lentera</span>
+          <span class="pos-name">Bilik Cahaya</span>
         </li>
       </ol>
     </nav>
@@ -50,8 +70,8 @@
     <div class="hud-right">
       <div class="hud-avatar-preview" id="hud-avatar-preview" aria-label="Avatar pemain" aria-live="polite">
         <div class="mini-avatar" id="mini-avatar">
-          <div class="mini-head"></div>
-          <div class="mini-body"></div>
+          <img src="assets/images/char-laki.png" alt="Avatar"
+            style="height:36px;width:auto;image-rendering:pixelated;display:block;" />
         </div>
         <span class="hud-player-name" id="hud-player-name">—</span>
       </div>
@@ -61,37 +81,132 @@
     </div>
   </header>
 
-  <!-- ░░ MAIN GAME VIEWPORT ░░ -->
+  <!-- ΓûæΓûæ MAIN GAME VIEWPORT ΓûæΓûæ -->
   <main class="game-viewport" id="game-viewport" role="main">
 
-    <!-- ══ LOADING SCREEN ══ -->
+    <!-- ΓòÉΓòÉ LOADING SCREEN ΓòÉΓòÉ -->
+    <!-- == LOADING SCREEN == -->
     <div class="game-screen" id="screen-loading" data-screen="loading" aria-live="polite" aria-busy="true">
       <div class="loading-content">
-        <div class="loading-lantern" aria-hidden="true">🏮</div>
-        <p class="loading-text">Menyalakan lentera…</p>
+        <div class="loading-lantern" aria-hidden="true">🌙</div>
+        <img src="assets/images/judul-LATHI.png" alt="LATHI"
+          style="max-height:48px;width:auto;image-rendering:pixelated;margin:8px auto 4px;display:block;" />
+        <p class="loading-text">Memuat LATHI…</p>
         <div class="loading-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
           <div class="loading-fill" id="loading-fill"></div>
         </div>
       </div>
     </div>
 
-    <!-- ══ POS 1: BALAI RASA ══ -->
+    <!-- == INTRO BULLYING == -->
+    <div class="game-screen" id="screen-intro-bullying" data-screen="intro-bullying" hidden>
+      <div class="pos-scene pos-scene--intro" aria-hidden="true">
+        <div class="ib-stars">✦ ✦ ✦ ✦ ✦</div>
+      </div>
+      <div class="intro-bullying-content">
+
+        <!-- Slide 1 -->
+        <div class="ib-slide active" data-slide="1">
+          <div class="ib-icon">📢</div>
+          <h2 class="ib-title">Sebelum Perjalanan Dimulai...</h2>
+          <p class="ib-text">Game ini mengangkat isu <strong>verbal bullying</strong>, tindakan menyakiti orang lain melalui kata-kata yang kerap bersembunyi di balik kata <em>"candaan"</em>.</p>
+          <p class="ib-text ib-text--muted">Cerita yang akan kamu temui di sini mungkin terasa dekat dengan pengalaman nyata. Itu memang disengaja, agar kamu bisa benar-benar merasakan dan belajar darinya.</p>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="ib-slide" data-slide="2">
+          <div class="ib-icon">💬</div>
+          <h2 class="ib-title">Apa itu Verbal Bullying?</h2>
+          <div class="ib-cards">
+            <div class="ib-card ib-card--red">
+              <span class="ib-card-icon">😣</span>
+              <div><strong>Body Shaming</strong><p>"Eh, makin subur aja nih. Haha, canda!"</p></div>
+            </div>
+            <div class="ib-card ib-card--orange">
+              <span class="ib-card-icon">😔</span>
+              <div><strong>Meremehkan</strong><p>"Tumben bagus, paling cuma hoki doang."</p></div>
+            </div>
+            <div class="ib-card ib-card--purple">
+              <span class="ib-card-icon">😟</span>
+              <div><strong>Pengucilan</strong><p>"Kamu ga usah ikut, ntar ngerusak suasana."</p></div>
+            </div>
+            <div class="ib-card ib-card--blue">
+              <span class="ib-card-icon">🤡</span>
+              <div><strong>Gaslighting</strong><p>"Lebay banget sih, itu kan cuma bercanda!"</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="ib-slide" data-slide="3">
+          <div class="ib-icon">🌱</div>
+          <h2 class="ib-title">Ingat ini selalu:</h2>
+          <div class="ib-affirmations">
+            <div class="ib-affirm"><span>💛</span><p>Perasaanmu <strong>valid</strong>. Kamu tidak lebay.</p></div>
+            <div class="ib-affirm"><span>💚</span><p>Kamu <strong>berhak</strong> merasa tidak nyaman dengan kata-kata yang menyakitkan.</p></div>
+            <div class="ib-affirm"><span>💙</span><p>Ada orang yang <strong>siap mendengarmu</strong>, Guru BK ada untukmu.</p></div>
+            <div class="ib-affirm"><span>🌙</span><p><strong>Lathi to Urup</strong>, kata-kata yang menyakitkan bisa diubah jadi kekuatan.</p></div>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="ib-slide" data-slide="4">
+          <div class="ib-icon">🌙</div>
+          <h2 class="ib-title">Siap memulai perjalananmu?</h2>
+          <p class="ib-text">Di LATHI kamu akan melewati <strong>4 Pos</strong> untuk mengenali dirimu, menghadapi situasi bullying, mengubahnya menjadi kekuatan, dan melaporkannya dengan aman jika perlu.</p>
+          <p class="ib-text ib-text--muted">Semua jawaban bersifat rahasia. Tidak ada jawaban benar atau salah. Ini tentang kamu dan perjalananmu sendiri.</p>
+        </div>
+
+        <!-- Nav -->
+        <div class="ib-nav">
+          <div class="ib-dots">
+            <button class="ib-dot active" data-target="1" aria-label="Slide 1"></button>
+            <button class="ib-dot" data-target="2" aria-label="Slide 2"></button>
+            <button class="ib-dot" data-target="3" aria-label="Slide 3"></button>
+            <button class="ib-dot" data-target="4" aria-label="Slide 4"></button>
+          </div>
+          <div class="ib-btn-row">
+            <button class="btn btn--ghost" id="btn-ib-prev" disabled>← Sebelumnya</button>
+            <button class="btn btn--primary" id="btn-ib-next">Selanjutnya →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ΓòÉΓòÉ POS 1: BALAI RASA ΓòÉΓòÉ -->
     <div class="game-screen" id="screen-pos1" data-screen="pos1" hidden aria-labelledby="pos1-title">
 
-      <!-- Background isometric scene -->
+      <!-- Background scene Balai Rasa -->
       <div class="pos-scene pos-scene--balai" aria-hidden="true">
+        <div class="scene-sky scene-sky--day"></div>
+        <div class="scene-cloud scene-cloud--1"></div>
+        <div class="scene-cloud scene-cloud--2"></div>
         <div class="scene-ground"></div>
-        <div class="scene-building scene-joglo">
+        <!-- Joglo -->
+        <div class="scene-joglo">
+          <div class="scene-mustaka"></div>
           <div class="scene-joglo-roof"></div>
-          <div class="scene-joglo-body"></div>
+          <div class="scene-joglo-body">
+            <div class="joglo-batik-wall"></div>
+            <div class="joglo-door-carving"></div>
+          </div>
+          <div style="text-align:center;font-size:7px;font-weight:700;color:#C9960C;margin-top:4px;letter-spacing:0.08em;text-transform:uppercase;">✦ Balai Rasa ✦</div>
         </div>
+        <!-- Gedung Sekolah -->
+        <div class="scene-school">
+          <div class="school-flag"></div>
+          <div class="school-roof"></div>
+          <div class="school-body">
+            <div class="school-window"></div>
+            <div class="school-window"></div>
+            <div class="school-door"></div>
+          </div>
+          <div style="text-align:center;font-size:7px;font-weight:700;color:#fff;background:#8B7355;padding:2px 8px;">SMA</div>
+        </div>
+        <!-- Pohon -->
         <div class="scene-tree scene-tree--1"></div>
         <div class="scene-tree scene-tree--2"></div>
-        <div class="scene-npc scene-npc--welcome">
-          <div class="npc-body npc-body--orange"></div>
-          <div class="npc-head"></div>
-          <div class="npc-speech-bubble">Selamat datang! 👋</div>
-        </div>
       </div>
 
       <!-- Pos 1 UI overlay -->
@@ -101,26 +216,30 @@
         <div class="pos-step" id="pos1-step-nama" data-step="nama">
           <div class="dialog-panel">
             <div class="dialog-header">
-              <span class="dialog-tag">Balai Rasa · Langkah 1</span>
+              <span class="dialog-tag">✦ Balai Rasa · Langkah 1 dari 6</span>
               <h2 class="dialog-title" id="pos1-title">Siapa namamu, petualang?</h2>
-              <p class="dialog-sub">Nama ini akan tertera di Kartu Lenteramu nanti.</p>
+              <p class="dialog-sub">Nama ini akan tertera di Kartu LATHImu nanti.</p>
             </div>
             <div class="dialog-body">
-              <label for="input-nama" class="input-label">Nama / Panggilan</label>
+              <label for="input-nama" class="input-label">Nama Lengkap</label>
               <input
                 type="text"
                 id="input-nama"
                 class="text-input"
-                placeholder="Ketik namamu di sini..."
-                maxlength="30"
+                placeholder="Tulis nama lengkapmu"
+                maxlength="50"
                 autocomplete="off"
                 aria-required="true"
                 aria-describedby="nama-hint"
               />
-              <p class="input-hint" id="nama-hint">
-                <span aria-hidden="true">💡</span>
-                Boleh nama asli, nama panggilan, atau nama karakter kesukaanmu.
-              </p>
+              <p class="input-hint" id="nama-hint">🔒 Namamu hanya akan dibaca oleh Guru BK.</p>
+              <label for="input-sekolah" class="input-label" style="margin-top:16px">Asal Sekolah</label>
+              <select id="input-sekolah" class="text-input select-input" aria-label="Pilih sekolah">
+                <option value="">Pilih sekolahmu</option>
+                <option value="SMA Al-Maahira IIBS Malang">SMA Al-Maahira IIBS Malang</option>
+                <option value="SMAN 3 Malang">SMAN 3 Malang</option>
+                <option value="SMAN 4 Malang">SMAN 4 Malang</option>
+              </select>
             </div>
             <div class="dialog-footer">
               <button class="btn btn--primary" id="btn-nama-lanjut" disabled aria-label="Lanjut ke pemilihan cuaca hati">
@@ -130,11 +249,52 @@
           </div>
         </div>
 
+        <!-- Step 1: Pilih Karakter -->
+        <div class="pos-step" id="pos1-step-gender" data-step="gender" hidden>
+          <div class="dialog-panel">
+            <div class="dialog-header">
+              <span class="dialog-tag">Balai Rasa · Langkah 2 dari 6</span>
+              <h2 class="dialog-title">Pilih karakter avatarmu</h2>
+              <p class="dialog-sub">Karakter mana yang ingin menemanimu dalam perjalanan ini?</p>
+            </div>
+            <div class="dialog-body">
+              <div class="gender-grid" id="gender-group" role="radiogroup" aria-label="Pilih karakter">
+                <label class="gender-card" data-value="laki">
+                  <input type="radio" name="gender" value="laki" class="sr-only" />
+                  <div class="char-preview" style="display:flex;align-items:flex-end;justify-content:center;height:130px;background:linear-gradient(180deg,#2A1505 0%,#1A0A02 100%);border-radius:8px;overflow:hidden;">
+                    <img src="assets/images/char-laki.png" alt="Karakter laki-laki"
+                      style="height:120px;width:auto;image-rendering:pixelated;display:block;" />
+                  </div>
+                  <div class="gender-label">
+                    <span class="gender-name">Laki-laki</span>
+                  </div>
+                  <div class="choice-check" aria-hidden="true">✓</div>
+                </label>
+                <label class="gender-card" data-value="perempuan">
+                  <input type="radio" name="gender" value="perempuan" class="sr-only" />
+                  <div class="char-preview" style="display:flex;align-items:flex-end;justify-content:center;height:130px;background:linear-gradient(180deg,#2A0510 0%,#1A0208 100%);border-radius:8px;overflow:hidden;">
+                    <img src="assets/images/char-perempuan.png" alt="Karakter perempuan"
+                      style="height:120px;width:auto;image-rendering:pixelated;display:block;" />
+                  </div>
+                  <div class="gender-label">
+                    <span class="gender-name">Perempuan</span>
+                  </div>
+                  <div class="choice-check" aria-hidden="true">✓</div>
+                </label>
+              </div>
+            </div>
+            <div class="dialog-footer">
+              <button class="btn btn--ghost btn--sm" id="btn-gender-back">← Kembali</button>
+              <button class="btn btn--primary" id="btn-gender-lanjut" disabled>Pilih Karakter →</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Step 1: Cuaca Hati -->
         <div class="pos-step" id="pos1-step-cuaca" data-step="cuaca" hidden>
           <div class="dialog-panel dialog-panel--wide">
             <div class="dialog-header">
-              <span class="dialog-tag">Balai Rasa · Langkah 2</span>
+              <span class="dialog-tag">Balai Rasa · Langkah 3 dari 6</span>
               <h2 class="dialog-title">Pilih "Cuaca Hati" avatarmu</h2>
               <p class="dialog-sub">Aura apa yang ingin mengelilingi karaktermu hari ini?</p>
             </div>
@@ -143,16 +303,14 @@
                 <label class="choice-card choice-card--weather" data-value="cerah" data-score-resiliensi="3">
                   <input type="radio" name="cuaca" value="cerah" class="sr-only" />
                   <div class="weather-preview weather-preview--cerah" aria-hidden="true">
-                    <div class="weather-avatar">
-                      <div class="avatar-display" data-weather="cerah"></div>
-                    </div>
-                    <div class="weather-effect">
-                      <span class="sun-ray" aria-hidden="true"></span>
-                      <span class="cloud-sm" aria-hidden="true">☁️</span>
+                    <div id="weather-char-cerah" class="weather-char" style="position:relative;z-index:2;">
+                      <img src="assets/images/char-laki.png" alt=""
+                        style="height:72px;width:auto;image-rendering:pixelated;display:block;
+                        filter:brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.3));" />
                     </div>
                   </div>
                   <div class="choice-label">
-                    <span class="choice-emoji" aria-hidden="true">⛅</span>
+                    <span class="choice-emoji" aria-hidden="true">☀</span>
                     <span class="choice-name">Cerah Berawan</span>
                     <span class="choice-desc">Hari yang cukup oke</span>
                   </div>
@@ -162,11 +320,10 @@
                 <label class="choice-card choice-card--weather" data-value="kabut" data-score-resiliensi="2">
                   <input type="radio" name="cuaca" value="kabut" class="sr-only" />
                   <div class="weather-preview weather-preview--kabut" aria-hidden="true">
-                    <div class="weather-avatar">
-                      <div class="avatar-display" data-weather="kabut"></div>
-                    </div>
-                    <div class="weather-effect">
-                      <span class="fog-wisp" aria-hidden="true"></span>
+                    <div id="weather-char-kabut" class="weather-char" style="position:relative;z-index:2;">
+                      <img src="assets/images/char-laki.png" alt=""
+                        style="height:72px;width:auto;image-rendering:pixelated;display:block;
+                        filter:brightness(0.8) saturate(0.5) drop-shadow(0 2px 4px rgba(0,0,0,0.3));" />
                     </div>
                   </div>
                   <div class="choice-label">
@@ -180,12 +337,10 @@
                 <label class="choice-card choice-card--weather" data-value="mendung" data-score-resiliensi="1">
                   <input type="radio" name="cuaca" value="mendung" class="sr-only" />
                   <div class="weather-preview weather-preview--mendung" aria-hidden="true">
-                    <div class="weather-avatar">
-                      <div class="avatar-display" data-weather="mendung"></div>
-                    </div>
-                    <div class="weather-effect">
-                      <span class="raindrop" aria-hidden="true">💧</span>
-                      <span class="raindrop raindrop--2" aria-hidden="true">💧</span>
+                    <div id="weather-char-mendung" class="weather-char" style="position:relative;z-index:2;">
+                      <img src="assets/images/char-laki.png" alt=""
+                        style="height:72px;width:auto;image-rendering:pixelated;display:block;
+                        filter:brightness(0.65) saturate(0.4) drop-shadow(0 2px 4px rgba(0,0,0,0.4));" />
                     </div>
                   </div>
                   <div class="choice-label">
@@ -210,7 +365,7 @@
         <div class="pos-step" id="pos1-step-tas" data-step="tas" hidden>
           <div class="dialog-panel dialog-panel--wide">
             <div class="dialog-header">
-              <span class="dialog-tag">Balai Rasa · Langkah 3</span>
+              <span class="dialog-tag">Balai Rasa · Langkah 4 dari 6</span>
               <h2 class="dialog-title">Apa yang kamu bawa di tas ranselmu?</h2>
               <p class="dialog-sub">Pilih satu barang bawaan untuk perjalananmu.</p>
             </div>
@@ -260,17 +415,21 @@
         <div class="pos-step" id="pos1-step-qte" data-step="qte" hidden>
           <div class="dialog-panel">
             <div class="dialog-header">
-              <span class="dialog-tag">Balai Rasa · Langkah 4</span>
+              <span class="dialog-tag">Balai Rasa · Langkah 5 dari 6</span>
               <h2 class="dialog-title">Ups! Ada yang menyenggolmu!</h2>
             </div>
             <!-- QTE Scene -->
             <div class="qte-scene" aria-hidden="true">
-              <div class="qte-avatar qte-avatar--player" id="qte-player">
-                <div class="avatar-display"></div>
+              <div class="qte-avatar qte-avatar--player" id="qte-char-player"
+                style="height:80px;display:flex;align-items:flex-end;">
+                <img src="assets/images/char-laki.png" alt="Karakter pemain"
+                  style="height:80px;width:auto;image-rendering:pixelated;" />
               </div>
               <div class="qte-collision-spark" id="qte-spark">💥</div>
-              <div class="qte-avatar qte-avatar--npc" id="qte-npc">
-                <div class="npc-display npc-display--rush"></div>
+              <div class="qte-avatar qte-avatar--npc" id="qte-npc"
+                style="height:80px;display:flex;align-items:flex-end;">
+                <img src="assets/images/npc-bully.png" alt="NPC"
+                  style="height:80px;width:auto;image-rendering:pixelated;" />
               </div>
             </div>
             <p class="dialog-sub" style="text-align:center; margin-bottom: 1rem;">
@@ -311,7 +470,7 @@
         <div class="pos-step" id="pos1-step-baterai" data-step="baterai" hidden>
           <div class="dialog-panel dialog-panel--wide">
             <div class="dialog-header">
-              <span class="dialog-tag">Balai Rasa · Langkah 5</span>
+              <span class="dialog-tag">Balai Rasa · Langkah 6 dari 6</span>
               <h2 class="dialog-title">Isi "Baterai Sosial" dulu</h2>
               <p class="dialog-sub">Sebelum melanjutkan perjalanan, avatarmu perlu istirahat sebentar. Di mana kamu paling nyaman duduk?</p>
             </div>
@@ -333,12 +492,12 @@
                 <label class="choice-card choice-card--baterai" data-value="pojok" data-score-isolasi="2">
                   <input type="radio" name="baterai" value="pojok" class="sr-only" />
                   <div class="baterai-scene" aria-hidden="true">
-                    <span class="scene-emoji">☕</span>
+                    <span class="scene-emoji">🪑</span>
                     <span class="scene-people">🧍</span>
                   </div>
                   <div class="choice-label">
                     <span class="choice-name">Pojok Warung Sepi</span>
-                    <span class="choice-desc">Butuh sedikit ruang sendiri</span>
+                    <span class="choice-desc">Butuh ruang sendiri dengan beberapa orang</span>
                   </div>
                   <div class="choice-check" aria-hidden="true">✓</div>
                 </label>
@@ -347,11 +506,11 @@
                   <input type="radio" name="baterai" value="pohon" class="sr-only" />
                   <div class="baterai-scene" aria-hidden="true">
                     <span class="scene-emoji">🌳</span>
-                    <span class="scene-people" style="font-size:0.8rem; opacity:0.5">🙈</span>
+                    <span class="scene-people" style="font-size:0.8rem; opacity:0.5">👤</span>
                   </div>
                   <div class="choice-label">
                     <span class="choice-name">Bersembunyi di Balik Pohon</span>
-                    <span class="choice-desc">Ingin sendiri dulu sebentar</span>
+                    <span class="choice-desc">Ingin sendiri dulu jauh dari orang-orang</span>
                   </div>
                   <div class="choice-check" aria-hidden="true">✓</div>
                 </label>
@@ -376,200 +535,232 @@
       </div><!-- /pos1-overlay -->
     </div><!-- /screen-pos1 -->
 
-    <!-- ══ POS 2: PASAR INTERAKSI ══ -->
+    <!-- ΓòÉΓòÉ POS 2: PASAR INTERAKSI ΓòÉΓòÉ -->
     <div class="game-screen" id="screen-pos2" data-screen="pos2" hidden aria-labelledby="pos2-title">
       <div class="pos-scene pos-scene--pasar" aria-hidden="true">
+        <!-- Langit sore -->
+        <div class="scene-sky scene-sky--afternoon"></div>
+        <!-- Matahari -->
+        <div style="position:absolute;top:12%;right:12%;font-size:3rem;
+          filter:drop-shadow(0 0 20px rgba(255,200,50,0.8));
+          animation:float 6s ease-in-out infinite;">☀️</div>
+        <!-- Tanah dengan tekstur -->
         <div class="scene-ground scene-ground--pasar"></div>
-        <div class="scene-stall scene-stall--1"></div>
-        <div class="scene-stall scene-stall--2"></div>
-        <div class="scene-crowd" aria-hidden="true">
-          <div class="crowd-npc crowd-npc--1"></div>
-          <div class="crowd-npc crowd-npc--2"></div>
-          <div class="crowd-npc crowd-npc--3"></div>
+        <!-- Strip bawah -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:6%;
+          background:repeating-linear-gradient(90deg,
+            #5C3A1A 0px,#5C3A1A 8px,#7B4B2A 8px,#7B4B2A 16px);"></div>
+        <!-- Warung kiri -->
+        <div class="scene-stall scene-stall--1">
+          <div class="stall-batik"></div>
         </div>
+        <!-- Warung kanan -->
+        <div class="scene-stall scene-stall--2">
+          <div class="stall-batik"></div>
+        </div>
+        <!-- Spanduk batik -->
+        <div class="pasar-spanduk" style="left:50%;transform:translateX(-50%);top:22%;">
+          <div class="pasar-spanduk-kain">✦ PASAR INTERAKSI ✦</div>
+        </div>
+        <!-- Bangunan kecil kiri -->
+        <div style="position:absolute;bottom:18%;left:4%;">
+          <div style="width:70px;height:0;border-left:35px solid transparent;
+            border-right:35px solid transparent;border-bottom:22px solid #7B4B2A;"></div>
+          <div style="width:70px;height:44px;background:#F5EDD8;
+            border:2px solid #7B4B2A;position:relative;">
+            <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+              width:14px;height:20px;background:#8B5E3C;border-radius:3px 3px 0 0;"></div>
+          </div>
+          <div style="text-align:center;font-size:6px;font-weight:700;
+            color:#C9960C;margin-top:2px;">✦ WARUNG ✦</div>
+        </div>
+        <!-- Bangunan kecil kanan -->
+        <div style="position:absolute;bottom:18%;right:4%;">
+          <div style="width:70px;height:0;border-left:35px solid transparent;
+            border-right:35px solid transparent;border-bottom:22px solid #4A7C59;"></div>
+          <div style="width:70px;height:44px;background:#F5EDD8;
+            border:2px solid #4A7C59;position:relative;">
+            <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+              width:14px;height:20px;background:#2D5A1B;border-radius:3px 3px 0 0;"></div>
+          </div>
+          <div style="text-align:center;font-size:6px;font-weight:700;
+            color:#C9960C;margin-top:2px;">✦ TOKO ✦</div>
+        </div>
+        <!-- Pohon kiri -->
+        <div class="scene-tree" style="position:absolute;bottom:20%;left:22%;
+          width:28px;height:55px;"></div>
+        <!-- Pohon kanan -->
+        <div class="scene-tree" style="position:absolute;bottom:20%;right:22%;
+          width:24px;height:46px;"></div>
+        <!-- Kotoran/debu kecil dekorasi -->
+        <div style="position:absolute;bottom:19%;left:38%;font-size:1rem;opacity:0.6;">🪨</div>
       </div>
-
       <div class="pos-ui-overlay" id="pos2-overlay">
-        <!-- Skenario wrapper — diisi oleh pos2.js -->
-        <div class="scenario-intro" id="pos2-intro">
+
+        <!-- Intro -->
+        <div id="pos2-intro">
           <div class="dialog-panel">
             <div class="dialog-header">
               <span class="dialog-tag">Pos 2 · Pasar Interaksi</span>
               <h2 class="dialog-title" id="pos2-title">Selamat datang di Pasar Interaksi</h2>
-              <p class="dialog-sub">
-                Di sini kamu akan bertemu beberapa kenalan. Mereka suka bercanda —
-                tapi candaannya kadang terasa… kurang enak. Perhatikan setiap interaksi dan pilih responsmu.
-              </p>
+              <p class="dialog-sub">Di sini kamu akan bertemu beberapa kenalan. Mereka suka bercanda tapi candaannya kadang terasa kurang enak. Pilih responsmu dengan bijak.</p>
             </div>
             <div class="dialog-footer">
-              <button class="btn btn--primary" id="btn-pos2-mulai">
-                Masuk ke Pasar <span aria-hidden="true">→</span>
-              </button>
+              <button class="btn btn--primary" id="btn-pos2-mulai">Masuk ke Pasar →</button>
             </div>
           </div>
         </div>
 
-        <!-- Active scenario panel — rendered by pos2.js -->
-        <div class="scenario-panel" id="scenario-panel" hidden>
+        <!-- Scenario panel -->
+        <div id="scenario-panel" hidden>
           <div class="npc-dialog-box" id="npc-dialog-box">
             <div class="npc-portrait-area">
               <div class="npc-portrait" id="npc-portrait" aria-hidden="true">
-                <div class="npc-portrait-body"></div>
-                <div class="npc-portrait-head"></div>
+                <img src="assets/images/npc-bully.png" alt="NPC"
+                  style="height:56px;width:auto;image-rendering:pixelated;display:block;" />
+                <div class="npc-portrait-body" style="display:none"></div>
               </div>
               <div class="npc-info">
-                <span class="npc-name" id="npc-name">NPC</span>
+                <span class="npc-name" id="npc-name">Dika</span>
                 <span class="npc-badge" id="npc-badge">Teman Sekelas</span>
               </div>
             </div>
-            <div class="npc-speech" id="npc-speech" aria-live="polite">
-              <!-- NPC dialog text -->
-            </div>
+            <div class="npc-speech" id="npc-speech" aria-live="polite"></div>
           </div>
-
-          <div class="response-choices" id="response-choices" role="radiogroup" aria-label="Pilihan respons">
-            <!-- Rendered by pos2.js -->
-          </div>
-
+          <div class="response-choices" id="response-choices" role="radiogroup" aria-label="Pilihan respons"></div>
           <div class="scenario-footer">
             <div class="scenario-counter" id="scenario-counter" aria-live="polite">
               Skenario <span id="scenario-current">1</span> dari <span id="scenario-total">3</span>
             </div>
-            <button class="btn btn--primary" id="btn-scenario-next" disabled>
-              Pilih Respons <span aria-hidden="true">→</span>
-            </button>
+            <button class="btn btn--primary" id="btn-scenario-next" disabled>Pilih Respons →</button>
           </div>
         </div>
 
-        <!-- Pos 2 complete screen -->
+        <!-- Complete -->
         <div class="pos-complete" id="pos2-complete" hidden>
           <div class="dialog-panel">
             <div class="dialog-header">
-              <div class="complete-icon" aria-hidden="true">✅</div>
+              <div class="complete-icon" aria-hidden="true">✔</div>
               <h2 class="dialog-title">Keren! Kamu sudah melewati Pasar Interaksi</h2>
               <p class="dialog-sub">Sekarang saatnya mengubah kata-kata itu menjadi kekuatan di Taman Urup.</p>
             </div>
             <div class="dialog-footer">
-              <button class="btn btn--primary" id="btn-goto-pos3">
-                Menuju Taman Urup 🏮
-              </button>
+              <button class="btn btn--primary" id="btn-goto-pos3">Menuju Taman Urup 🌙</button>
             </div>
           </div>
         </div>
+
+      </div>
       </div>
     </div>
 
-    <!-- ══ POS 3: TAMAN URUP ══ -->
+    <!-- ΓòÉΓòÉ POS 3: TAMAN URUP ΓòÉΓòÉ -->
+    <!-- POS 3: TAMAN URUP -->
     <div class="game-screen" id="screen-pos3" data-screen="pos3" hidden aria-labelledby="pos3-title">
+
+      <!-- Background scene -->
       <div class="pos-scene pos-scene--taman" aria-hidden="true">
         <div class="taman-bg"></div>
+        <!-- Bulan sabit -->
+        <div class="taman-moon" aria-hidden="true">🌙</div>
+        <!-- Bintang -->
+        <div class="taman-star taman-star--1">✦</div>
+        <div class="taman-star taman-star--2">✦</div>
+        <div class="taman-star taman-star--3">✦</div>
+        <!-- Lampion dekorasi -->
         <div class="taman-lantern taman-lantern--1" aria-hidden="true">🏮</div>
         <div class="taman-lantern taman-lantern--2" aria-hidden="true">🏮</div>
-        <div class="taman-lantern taman-lantern--3" aria-hidden="true">🏮</div>
+        <!-- Pohon kiri dan kanan -->
+        <div class="scene-tree" style="position:absolute;bottom:18%;left:4%;width:36px;height:70px;background:#2D5A1B;border-radius:50% 50% 20% 20%;"></div>
+        <div class="scene-tree" style="position:absolute;bottom:18%;right:4%;width:36px;height:70px;background:#2D5A1B;border-radius:50% 50% 20% 20%;"></div>
+        <!-- Kolam -->
+        <div class="taman-kolam" style="width:120px;height:40px;" aria-hidden="true">
+          <div class="kolam-teratai" style="bottom:40%;left:20%;">🌸</div>
+          <div class="kolam-teratai" style="bottom:30%;right:20%;">🌸</div>
+        </div>
+        <!-- Bunga -->
         <div class="taman-flower taman-flower--1" aria-hidden="true">🌸</div>
         <div class="taman-flower taman-flower--2" aria-hidden="true">🌺</div>
-        <div class="taman-tree" aria-hidden="true">🌿</div>
+        <!-- Tanah -->
+        <div class="scene-ground" style="height:25%;background:linear-gradient(180deg,#1A3A10 0%,#0F2208 100%);"></div>
+        <!-- Strip bawah -->
+        <div style="position:absolute;bottom:0;left:0;right:0;height:5%;background:repeating-linear-gradient(90deg,#0F2208 0px,#0F2208 8px,#1A3A10 8px,#1A3A10 16px);"></div>
       </div>
 
-      <div class="pos-ui-overlay" id="pos3-overlay">
-        <div class="puzzle-intro" id="pos3-intro">
+      <!-- Puzzle UI — langsung di atas background -->
+      <div class="pos-ui-overlay" id="pos3-overlay" style="align-items:flex-start!important;padding-top:16px!important;flex-direction:column!important;justify-content:flex-start!important;">
+
+        <!-- Intro -->
+        <div class="puzzle-intro" id="pos3-intro" style="margin:auto;width:90%;max-width:500px;">
           <div class="dialog-panel">
             <div class="dialog-header">
               <span class="dialog-tag">Pos 3 · Taman Urup</span>
               <h2 class="dialog-title" id="pos3-title">Ubah Lathi menjadi Urup</h2>
-              <p class="dialog-sub">
-                Kata-kata ejekan yang kamu dengar di pasar tadi telah hancur berkeping-keping.
-                Susun kembali kepingannya menjadi kalimat yang <strong>menguatkan dirimu</strong>.
-              </p>
+              <p class="dialog-sub">Kata-kata ejekan yang kamu dengar di pasar tadi telah hancur berkeping-keping. Susun kembali kepingannya menjadi kalimat yang <strong>menguatkan dirimu</strong>.</p>
             </div>
             <div class="dialog-footer">
-              <button class="btn btn--primary" id="btn-pos3-mulai">
-                Mulai Menyusun <span aria-hidden="true">🧩</span>
-              </button>
+              <button class="btn btn--primary" id="btn-pos3-mulai">Mulai Menyusun ✨</button>
             </div>
           </div>
         </div>
 
-        <!-- Puzzle area — rendered by pos3.js -->
-        <div class="puzzle-area" id="puzzle-area" hidden>
-          <div class="puzzle-header">
-            <div class="puzzle-context" id="puzzle-context" aria-live="polite">
-              <!-- Context kalimat ejekan -->
-            </div>
-            <div class="puzzle-progress">
-              Puzzle <span id="puzzle-current">1</span> / <span id="puzzle-total">3</span>
-            </div>
+        <!-- Puzzle area -->
+        <div class="puzzle-area" id="puzzle-area" hidden style="width:100%;max-width:700px;margin:0 auto;padding:0 16px;box-sizing:border-box;">
+
+          <!-- Header: context + counter -->
+          <div class="p3-header">
+            <div class="puzzle-context" id="puzzle-context" aria-live="polite"></div>
+            <div class="p3-counter">Puzzle <span id="puzzle-current">1</span> / <span id="puzzle-total">3</span></div>
           </div>
 
-          <!-- Lantern row — lights up as puzzles complete -->
-          <div class="lantern-row" aria-label="Lampion yang sudah menyala" aria-live="polite" id="lantern-row">
-            <div class="lantern-slot lantern-slot--1" data-puzzle="1" aria-hidden="true">🏮</div>
-            <div class="lantern-slot lantern-slot--2" data-puzzle="2" aria-hidden="true">🏮</div>
-            <div class="lantern-slot lantern-slot--3" data-puzzle="3" aria-hidden="true">🏮</div>
+          <!-- Lantern slots -->
+          <div class="lantern-row" id="lantern-row" aria-live="polite">
+            <div class="lantern-slot" data-puzzle="1" aria-hidden="true">🌙</div>
+            <div class="lantern-slot" data-puzzle="2" aria-hidden="true">🌙</div>
+            <div class="lantern-slot" data-puzzle="3" aria-hidden="true">🌙</div>
           </div>
 
           <!-- Drop zone -->
-          <div
-            class="drop-zone"
-            id="drop-zone"
-            role="region"
-            aria-label="Area susun kalimat afirmasi. Seret kata ke sini."
-            aria-dropeffect="move"
-          >
-            <p class="drop-placeholder" id="drop-placeholder">
-              Seret kata-kata di bawah ke sini untuk membentuk kalimat afirmasi ↓
-            </p>
-            <!-- Dropped word blocks rendered here -->
+          <div class="drop-zone" id="drop-zone" role="region" aria-label="Area susun kalimat">
+            <p class="drop-placeholder" id="drop-placeholder">Seret kata ke sini ↓</p>
           </div>
 
           <!-- Word bank -->
-          <div class="word-bank" id="word-bank" role="region" aria-label="Pilihan kata yang tersedia">
-            <!-- Word blocks rendered by pos3.js -->
-          </div>
+          <div class="word-bank" id="word-bank" role="region" aria-label="Pilihan kata"></div>
 
+          <!-- Controls -->
           <div class="puzzle-controls">
-            <button class="btn btn--ghost btn--sm" id="btn-puzzle-reset">
-              <span aria-hidden="true">↺</span> Ulangi
-            </button>
-            <button class="btn btn--primary" id="btn-puzzle-check" disabled>
-              Cek Kalimat <span aria-hidden="true">✓</span>
-            </button>
+            <button class="btn btn--ghost btn--sm" id="btn-puzzle-reset">↺ Ulangi</button>
+            <button class="btn btn--primary" id="btn-puzzle-check" disabled>Cek Kalimat ✓</button>
           </div>
 
-          <!-- Feedback overlay -->
+          <!-- Feedback -->
           <div class="puzzle-feedback" id="puzzle-feedback" hidden aria-live="assertive">
             <div class="feedback-content">
-              <div class="feedback-icon" id="feedback-icon" aria-hidden="true"></div>
+              <div class="feedback-icon" id="feedback-icon"></div>
               <p class="feedback-text" id="feedback-text"></p>
-              <button class="btn btn--primary" id="btn-puzzle-next">Lanjut <span aria-hidden="true">→</span></button>
+              <button class="btn btn--primary" id="btn-puzzle-next">Lanjut →</button>
             </div>
           </div>
         </div>
 
-        <!-- Pos 3 complete -->
-        <div class="pos-complete" id="pos3-complete" hidden>
+        <!-- Complete -->
+        <div class="pos-complete" id="pos3-complete" hidden style="margin:auto;">
           <div class="dialog-panel">
-            <div class="complete-animation" aria-hidden="true">
-              <span class="firework-emoji">🏮✨🌸✨🏮</span>
-            </div>
             <div class="dialog-header">
+              <div style="font-size:2rem;text-align:center;margin-bottom:12px;">🌙✨🌙</div>
               <h2 class="dialog-title">Semua lampion menyala!</h2>
-              <p class="dialog-sub">
-                Kamu telah mengubah lathi menjadi urup. Ada satu langkah terakhir —
-                Bilik Lentera sudah menunggumu.
-              </p>
+              <p class="dialog-sub">Kamu telah mengubah lathi menjadi urup. Bilik Cahaya sudah menunggumu.</p>
             </div>
             <div class="dialog-footer">
-              <button class="btn btn--primary" id="btn-goto-pos4">
-                Menuju Bilik Lentera 📖
-              </button>
+              <button class="btn btn--primary" id="btn-goto-pos4">Menuju Bilik Cahaya 📖</button>
             </div>
           </div>
         </div>
+
       </div>
     </div>
 
-    <!-- ══ POS 4: BILIK LENTERA ══ -->
     <div class="game-screen" id="screen-pos4" data-screen="pos4" hidden aria-labelledby="pos4-title">
       <div class="pos-scene pos-scene--bilik" aria-hidden="true">
         <div class="bilik-bg"></div>
@@ -583,28 +774,29 @@
           <div class="water-ripple"></div>
           <div class="water-ripple water-ripple--2"></div>
         </div>
-        <div class="bilik-lantern" aria-hidden="true">🏮</div>
+        <div class="bilik-lantern" aria-hidden="true">🌙</div>
       </div>
 
       <div class="pos-ui-overlay pos-ui-overlay--bilik" id="pos4-overlay">
-        <div class="journal-container" id="journal-container">
-          <div class="journal-header">
-            <span class="dialog-tag">Pos 4 · Bilik Lentera</span>
+        <div class="dialog-panel dialog-panel--wide" id="journal-container">
+          <div class="dialog-header">
+            <span class="dialog-tag">Pos 4 · Bilik Cahaya</span>
             <h2 class="dialog-title" id="pos4-title">Ruang Aman Untukmu</h2>
+            <p class="journal-info-sender">Pesan ini akan dikirim langsung ke Guru BK atas nama <strong id="journal-nama-pemain"></strong>.</p>
             <p class="dialog-sub">
               Ini adalah ruang yang tenang dan aman. Tidak ada yang bisa membacamu di sini
               kecuali Guru BK yang dipercaya.
             </p>
           </div>
 
-          <div class="journal-prompt" id="journal-prompt">
-            <p class="journal-question">
+          <div class="dialog-body">
+            <p class="dialog-sub journal-prompt">
               <span aria-hidden="true">🌿</span>
               Ada beban yang ingin kamu lepas hari ini? Ceritakan pelan-pelan di sini.
             </p>
           </div>
 
-          <div class="journal-body" id="journal-body">
+          <div>
             <textarea
               id="journal-text"
               class="journal-textarea"
@@ -624,27 +816,8 @@
           </div>
 
           <!-- Anonymity options -->
-          <div class="anon-options" role="group" aria-labelledby="anon-label">
-            <p class="anon-label" id="anon-label">Kirim sebagai:</p>
-            <div class="anon-choices">
-              <label class="anon-choice" id="anon-label-anon">
-                <input type="radio" name="anon" value="anonim" checked class="sr-only" />
-                <span class="anon-icon" aria-hidden="true">🎭</span>
-                <span class="anon-name">Anonim</span>
-                <span class="anon-desc">BK hanya tahu kelas/sekolahmu</span>
-                <div class="choice-check" aria-hidden="true">✓</div>
-              </label>
-              <label class="anon-choice" id="anon-label-nama">
-                <input type="radio" name="anon" value="bernama" class="sr-only" />
-                <span class="anon-icon" aria-hidden="true">🙋</span>
-                <span class="anon-name">Dengan Nama</span>
-                <span class="anon-desc">BK bisa menghubungimu secara personal</span>
-                <div class="choice-check" aria-hidden="true">✓</div>
-              </label>
-            </div>
-          </div>
 
-          <div class="journal-footer">
+          <div class="dialog-footer" style="flex-direction:column;gap:8px">
             <button class="btn btn--ghost" id="btn-skip-cerita" aria-label="Lewati bagian cerita, lanjut ke hasil">
               Belum siap cerita sekarang, hanya ingin duduk tenang 🌿
             </button>
@@ -656,15 +829,15 @@
       </div>
     </div>
 
-    <!-- ══ HASIL AKHIR: KARTU PROFIL MENTAL ══ -->
+    <!-- ΓòÉΓòÉ HASIL AKHIR: KARTU PROFIL MENTAL ΓòÉΓòÉ -->
     <div class="game-screen" id="screen-hasil" data-screen="hasil" hidden aria-labelledby="hasil-title">
       <div class="hasil-bg" aria-hidden="true">
         <div class="hasil-particles">
-          <span class="h-particle">✦</span>
-          <span class="h-particle">🏮</span>
-          <span class="h-particle">✧</span>
+          <span class="h-particle">✨</span>
+          <span class="h-particle">🌙</span>
+          <span class="h-particle">⭐</span>
           <span class="h-particle">🌸</span>
-          <span class="h-particle">✦</span>
+          <span class="h-particle">✨</span>
         </div>
       </div>
 
@@ -681,7 +854,7 @@
           <button class="btn btn--secondary" id="btn-konseling" id="btn-konseling" hidden>
             <span aria-hidden="true">💬</span> Jadwalkan Ngobrol Santai dengan BK
           </button>
-          <a href="index.html" class="btn btn--ghost">
+          <a href="index.html" class="btn btn--ghost" style="color:#F0D9A0 !important;border-color:rgba(240,217,160,0.4) !important;">
             <span aria-hidden="true">🏠</span> Kembali ke Beranda
           </a>
         </div>
@@ -690,7 +863,7 @@
 
   </main><!-- /game-viewport -->
 
-  <!-- ░░ PAUSE MODAL ░░ -->
+  <!-- ΓûæΓûæ PAUSE MODAL ΓûæΓûæ -->
   <div class="modal-overlay" id="modal-pause" hidden role="dialog" aria-modal="true" aria-labelledby="pause-title">
     <div class="modal-box">
       <h2 class="modal-title" id="pause-title">⏸ Jeda</h2>
@@ -703,16 +876,16 @@
     </div>
   </div>
 
-  <!-- ░░ TRANSITION OVERLAY ░░ -->
+  <!-- ΓûæΓûæ TRANSITION OVERLAY ΓûæΓûæ -->
   <div class="scene-transition" id="scene-transition" aria-hidden="true">
-    <div class="transition-lantern">🏮</div>
+    <div class="transition-lantern">🌙</div>
     <p class="transition-text" id="transition-text">Memuat…</p>
   </div>
 
-  <!-- ░░ TOAST NOTIFICATIONS ░░ -->
+  <!-- ΓûæΓûæ TOAST NOTIFICATIONS ΓûæΓûæ -->
   <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Scripts — order matters -->
+  <!-- Scripts, order matters -->
   <script src="js/state.js"></script>
   <script src="js/pos1-balai-rasa.js"></script>
   <script src="js/pos2-pasar-interaksi.js"></script>
@@ -721,8 +894,41 @@
   <script src="js/hasil.js"></script>
 
   <script>
-    // ── Game bootstrap ──
+    // ── Slideshow Intro Bullying ──
+    let currentSlide = 1;
+    const totalSlides = 4;
+
+    function showSlide(n) {
+      document.querySelectorAll('.ib-slide').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.ib-dot').forEach(d => d.classList.remove('active'));
+      const slide = document.querySelector('.ib-slide[data-slide="' + n + '"]');
+      const dot   = document.querySelector('.ib-dot[data-target="' + n + '"]');
+      if (slide) slide.classList.add('active');
+      if (dot)   dot.classList.add('active');
+      currentSlide = n;
+      const btnPrev = document.getElementById('btn-ib-prev');
+      const btnNext = document.getElementById('btn-ib-next');
+      if (btnPrev) btnPrev.disabled = (n === 1);
+      if (btnNext) btnNext.textContent = (n === totalSlides) ? '🌙 Mulai Perjalanan' : 'Selanjutnya →';
+    }
+
+    // -- Game bootstrap --
     document.addEventListener('DOMContentLoaded', () => {
+
+      // Intro bullying nav
+      document.getElementById('btn-ib-next')?.addEventListener('click', () => {
+        if (currentSlide < totalSlides) {
+          showSlide(currentSlide + 1);
+        } else {
+          LathiState.navigateTo('pos1', 'Memasuki Balai Rasa…');
+        }
+      });
+      document.getElementById('btn-ib-prev')?.addEventListener('click', () => {
+        if (currentSlide > 1) showSlide(currentSlide - 1);
+      });
+      document.querySelectorAll('.ib-dot').forEach(dot => {
+        dot.addEventListener('click', () => showSlide(parseInt(dot.dataset.target)));
+      });
       // Pause modal toggle
       const pauseBtn = document.getElementById('btn-pause');
       const pauseModal = document.getElementById('modal-pause');
@@ -742,13 +948,13 @@
       // Restart confirm
       document.getElementById('btn-restart-confirm')?.addEventListener('click', () => {
         if (confirm('Mulai ulang dari awal? Semua pilihan akan direset.')) {
-          LenteraState.reset();
+          LathiState.reset();
           location.reload();
         }
       });
 
       // Boot game
-      LenteraState.init();
+      LathiState.init();
     });
   </script>
 </body>

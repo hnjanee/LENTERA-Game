@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    LENTERA — pos2-pasar-interaksi.js
    Pos 2: Pasar Interaksi — Roleplay Dialog Verbal Bullying
    ============================================================
@@ -40,14 +40,14 @@ const Pos2PasarInteraksi = (() => {
           teks : '"Biarin aja, yang penting aku gak suka ngurusin hidup orang!"',
           tipe : 'reaktif',
           skor : 2,
-          feedback: 'Kamu memilih melawan. Ada bagusnya — setidaknya kamu tidak mendiamkan. Tapi respons yang lebih dingin seringkali lebih kuat.',
+          feedback: 'Kamu memilih melawan. Ada bagusnya, setidaknya kamu tidak mendiamkan. Tapi respons yang lebih dingin seringkali lebih kuat.',
         },
         {
           id   : 'C',
           teks : '"Iya nih lagi bahagia banget, makasih ya udah merhatiin." 😊',
           tipe : 'asertif',
           skor : 3,
-          feedback: 'Keren! Ini Lathi to Urup — kamu membalikkan narasi dengan tenang dan tetap percaya diri. Kata-kata mereka tidak punya kuasa atasmu.',
+          feedback: 'Keren! Ini Lathi to Urup, kamu membalikkan narasi dengan tenang dan tetap percaya diri. Kata-kata mereka tidak punya kuasa atasmu.',
         },
       ],
     },
@@ -63,16 +63,16 @@ const Pos2PasarInteraksi = (() => {
         {
           id   : 'A',
           teks : 'Menunduk diam dan berpikir, "Mungkin emang aku cuma hoki."',
-          tipe : 'internalisasi',
+          tipe : 'pasif',
           skor : 1,
-          feedback: 'Kamu menyerap kata-kata itu sebagai kebenaran. Tapi hati-hati — ini tanda kamu sedang membiarkan orang lain mendefinisikan dirimu. Usahamu nyata.',
+          feedback: 'Kamu menyerap kata-kata itu sebagai kebenaran. Tapi hati-hati, ini tanda kamu sedang membiarkan orang lain mendefinisikan dirimu. Usahamu nyata.',
         },
         {
           id   : 'B',
           teks : '"Maksud kamu apa ngomong gitu? Sirik aja!"',
           tipe : 'reaktif',
           skor : 2,
-          feedback: 'Kamu tidak diam — itu bagus! Tapi respons yang terlalu emosional kadang memberi mereka perhatian yang mereka cari.',
+          feedback: 'Kamu tidak diam, itu bagus! Tapi respons yang terlalu emosional kadang memberi mereka perhatian yang mereka cari.',
         },
         {
           id   : 'C',
@@ -95,7 +95,7 @@ const Pos2PasarInteraksi = (() => {
         {
           id   : 'A',
           teks : '"Oh oke, lagian aku juga sibuk kok." (Padahal tidak.)',
-          tipe : 'menarikdiri',
+          tipe : 'pasif',
           skor : 1,
           feedback: 'Kamu memilih pergi dengan berpura-pura tidak terluka. "Flight response" ini sering membuat luka itu tidak pernah sembuh karena tidak pernah diakui.',
         },
@@ -123,32 +123,26 @@ const Pos2PasarInteraksi = (() => {
 
   // ── Init ──────────────────────────────────────────────────
   function init() {
-    console.info('[Pos2] Inisialisasi Pasar Interaksi');
-
-    // Jika sudah selesai, skip
     if (LenteraGame.state.posCompleted.pos2) {
       LenteraState.navigateTo('pos3');
       return;
     }
 
-    // Restore progress: sudah berapa skenario yang diselesaikan
     currentSkenarioIndex = LenteraGame.state.skor.pos2Responses.length;
     selectedPilihan = null;
 
-    _bindIntro();
-  }
-
-  // ── Bind tombol intro ─────────────────────────────────────
-  function _bindIntro() {
+    // Pakai .onclick agar tidak menumpuk
     const btn = document.getElementById('btn-pos2-mulai');
-    btn?.addEventListener('click', () => {
-      document.getElementById('pos2-intro').hidden = true;
-      if (currentSkenarioIndex < SKENARIO.length) {
-        _showSkenario(currentSkenarioIndex);
-      } else {
-        _showComplete();
-      }
-    });
+    if (btn) {
+      btn.onclick = function() {
+        document.getElementById('pos2-intro').hidden = true;
+        if (currentSkenarioIndex < SKENARIO.length) {
+          _showSkenario(currentSkenarioIndex);
+        } else {
+          _showComplete();
+        }
+      };
+    }
   }
 
   // ── Tampilkan skenario ────────────────────────────────────
@@ -186,15 +180,12 @@ const Pos2PasarInteraksi = (() => {
     // Render pilihan
     _renderPilihan(skenario.pilihan);
 
-    // Bind tombol next
+    // Bind tombol next — pakai .onclick agar tidak menumpuk
     const btnNext = document.getElementById('btn-scenario-next');
     if (btnNext) {
-      btnNext.disabled = true;
-      btnNext.textContent = 'Pilih Respons →';
-      // Clone untuk hapus listener lama
-      const newBtn = btnNext.cloneNode(true);
-      btnNext.parentNode.replaceChild(newBtn, btnNext);
-      newBtn.addEventListener('click', () => _confirmPilihan(skenario));
+      btnNext.disabled  = true;
+      btnNext.textContent = 'Pilih Respons';
+      btnNext.onclick = function() { _confirmPilihan(skenario); };
     }
   }
 
@@ -229,14 +220,17 @@ const Pos2PasarInteraksi = (() => {
       container.appendChild(label);
     });
 
-    // Bind perubahan pilihan
-    container.addEventListener('change', (e) => {
-      if (e.target.type === 'radio') {
-        selectedPilihan = e.target.value;
-        const btnNext = document.getElementById('btn-scenario-next');
-        if (btnNext) btnNext.disabled = false;
-      }
-    });
+    // Bind perubahan pilihan — pakai .onchange agar tidak menumpuk
+    const finalContainer = document.getElementById('response-choices');
+    if (finalContainer) {
+      finalContainer.onchange = function(e) {
+        if (e.target.type === 'radio') {
+          selectedPilihan = e.target.value;
+          const btnNext = document.getElementById('btn-scenario-next');
+          if (btnNext) btnNext.disabled = false;
+        }
+      };
+    }
   }
 
   // ── Konfirmasi & simpan pilihan ───────────────────────────
@@ -284,25 +278,42 @@ const Pos2PasarInteraksi = (() => {
       </div>
     `;
 
-    // Inline styles untuk feedback box (tidak perlu CSS terpisah)
     const style = document.createElement('style');
     style.textContent = `
-      .response-feedback { margin-top: 8px; animation: slideInUp 200ms ease forwards; }
+      .response-feedback { margin-top: 10px; animation: slideInUp 200ms ease forwards; }
       .feedback-box {
         display: flex; gap: 10px; align-items: flex-start;
-        padding: 12px 14px; border-radius: 10px;
-        background: rgba(253,250,244,0.08); border: 1.5px solid rgba(255,255,255,0.1);
+        padding: 14px 16px; border-radius: 12px;
+        background: rgba(44,24,16,0.85); border: 2px solid rgba(201,150,12,0.4);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       }
-      .feedback-box--asertif { border-color: rgba(39,174,96,0.4); background: rgba(39,174,96,0.08); }
-      .feedback-box--reaktif { border-color: rgba(243,156,18,0.4); background: rgba(243,156,18,0.06); }
-      .feedback-box--pasif,.feedback-box--internalisasi,.feedback-box--menarikdiri
-                            { border-color: rgba(127,140,141,0.35); background: rgba(127,140,141,0.06); }
-      .feedback-icon-sm { font-size: 1.3rem; flex-shrink: 0; }
-      .feedback-msg { font-size: 13px; color: rgba(253,250,244,0.8); line-height: 1.6; margin: 0; }
+      .feedback-box--asertif {
+        border-color: #27AE60;
+        background: rgba(27,70,30,0.9);
+      }
+      .feedback-box--reaktif {
+        border-color: #C9960C;
+        background: rgba(60,40,10,0.9);
+      }
+      .feedback-box--pasif,
+      .feedback-box--internalisasi,
+      .feedback-box--menarikdiri {
+        border-color: rgba(201,150,12,0.5);
+        background: rgba(44,24,16,0.9);
+      }
+      .feedback-icon-sm { font-size: 1.4rem; flex-shrink: 0; }
+      .feedback-msg {
+        font-size: 13px;
+        color: #FDF6EC;
+        line-height: 1.7;
+        margin: 0;
+        font-weight: 500;
+      }
       .feedback-badge {
-        display: inline-block; font-size: 10px; font-weight: 600;
-        color: #27AE60; background: rgba(39,174,96,0.15);
-        padding: 2px 8px; border-radius: 20px; margin-top: 4px;
+        display: inline-block; font-size: 11px; font-weight: 700;
+        color: #7ED4A0; background: rgba(39,174,96,0.2);
+        padding: 3px 10px; border-radius: 20px; margin-top: 5px;
+        border: 1px solid rgba(39,174,96,0.4);
       }
     `;
     if (!document.getElementById('pos2-feedback-style')) {
@@ -332,7 +343,6 @@ const Pos2PasarInteraksi = (() => {
     if (currentSkenarioIndex >= SKENARIO.length) {
       _showComplete();
     } else {
-      // Animasi transisi ke skenario berikutnya
       const panel = document.getElementById('scenario-panel');
       panel.style.opacity = '0';
       panel.style.transform = 'translateX(-20px)';
@@ -342,6 +352,9 @@ const Pos2PasarInteraksi = (() => {
         panel.style.opacity = '';
         panel.style.transform = '';
         panel.style.transition = '';
+        // Bersihkan feedback lama sebelum render skenario baru
+        const oldFeedback = document.querySelectorAll('.response-feedback');
+        oldFeedback.forEach(el => el.remove());
         _showSkenario(currentSkenarioIndex);
       }, 250);
     }
@@ -349,20 +362,21 @@ const Pos2PasarInteraksi = (() => {
 
   // ── Tampilkan layar selesai ───────────────────────────────
   function _showComplete() {
-    document.getElementById('scenario-panel').hidden  = true;
-    document.getElementById('pos2-intro').hidden      = true;
-
+    const scenarioPanel = document.getElementById('scenario-panel');
+    const intro = document.getElementById('pos2-intro');
     const completeEl = document.getElementById('pos2-complete');
-    completeEl.hidden = false;
+    if (scenarioPanel) scenarioPanel.hidden = true;
+    if (intro) intro.hidden = true;
+    if (completeEl) completeEl.hidden = false;
 
-    // Bind tombol lanjut ke pos3
     const btn = document.getElementById('btn-goto-pos3');
-    btn?.addEventListener('click', () => {
-      LenteraNav.completePos('pos2');
-      LenteraState.navigateTo('pos3', 'Menuju Taman Urup… 🏮');
-    });
-
-    showToast('✅ Pasar Interaksi selesai! Keren.', 'success', 2500);
+    if (btn) {
+      btn.onclick = function() {
+        LenteraNav.completePos('pos2');
+        LenteraState.navigateTo('pos3', 'Menuju Taman Urup');
+      };
+    }
+    showToast('Pasar Interaksi selesai!', 'success', 2500);
   }
 
   // ── Public API ────────────────────────────────────────────
@@ -371,4 +385,3 @@ const Pos2PasarInteraksi = (() => {
 })();
 
 window.Pos2PasarInteraksi = Pos2PasarInteraksi;
-console.info('[LENTERA] pos2-pasar-interaksi.js dimuat ✓');
