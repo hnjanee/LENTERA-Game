@@ -800,10 +800,19 @@ let _sheetsFetched = false;
 // ── Fetch data dari Google Sheets ─────────────────────────
 async function fetchFromSheets() {
   try {
-    const [resLaporan, resSesi] = await Promise.all([
-      fetch(SHEETS_URL + '?type=laporan').then(r => r.json()),
-      fetch(SHEETS_URL + '?type=sesi').then(r => r.json()),
-    ]);
+    showToast('📡 Memuat data dari Google Sheets...', 'info');
+
+    const EXEC_URL = SHEETS_URL;
+
+    // Fetch laporan
+    const resLaporan = await fetch(EXEC_URL + '?type=laporan')
+      .then(r => r.json())
+      .catch(() => []);
+
+    // Fetch sesi
+    const resSesi = await fetch(EXEC_URL + '?type=sesi')
+      .then(r => r.json())
+      .catch(() => []);
 
     // Normalisasi laporan dari Sheets
     _sheetsLaporan = (Array.isArray(resLaporan) ? resLaporan : []).map((row, i) => ({
@@ -850,6 +859,8 @@ async function fetchFromSheets() {
     // Notifikasi
     if (_sheetsLaporan.length > 0 || _sheetsSesi.length > 0) {
       showToast(`✅ ${_sheetsLaporan.length} laporan dari Google Sheets dimuat`, 'success');
+    } else {
+      showToast('📭 Belum ada data di Google Sheets', 'info');
     }
   } catch(e) {
     console.warn('[LATHI] Gagal fetch dari Sheets:', e);
@@ -966,7 +977,7 @@ const _getDataSesiLokal = getDataSesi.bind({});
 // Override getDataSesi untuk include Sheets data
 const _origGetDataSesi = getDataSesi;
 function getDataSesi() {
-  const lokal = _origGetDataSesi();
+  const lokal = _origGetDataSesi.call(null);
   const lokalIds = new Set(lokal.map(s => s.id));
   const sheetsOnly = _sheetsSesi.filter(s => !lokalIds.has(s.id));
   return [...lokal, ...sheetsOnly];
