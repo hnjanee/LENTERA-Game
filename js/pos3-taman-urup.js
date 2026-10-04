@@ -159,6 +159,7 @@ const Pos3TamanUrup = (() => {
     block.setAttribute('tabindex', '0');
     block.setAttribute('aria-label', `Kalimat: ${teks}`);
     block.textContent = teks;
+    block.style.fontSize = '20px'; // override global Press Start 2P
 
     // Mouse drag
     block.addEventListener('dragstart', _onDragStart);
