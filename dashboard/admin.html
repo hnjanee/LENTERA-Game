@@ -1172,9 +1172,9 @@ function renderOverview() {
     if (lathiDist[s.tipe] !== undefined) return s.tipe;
     // Data lama ksatria/daun — hitung ulang dari skor
     const skor = Number(s.skor) || 0;
-    if (skor >= 75) return 'air-mengalir';
-    if (skor >= 50) return 'bambu-lentur';
-    if (skor >= 30) return 'duri-perisai';
+    if (skor >= 90) return 'air-mengalir';
+    if (skor >= 70) return 'bambu-lentur';
+    if (skor >= 45) return 'duri-perisai';
     return 'daun-terduduk';
   }
 
