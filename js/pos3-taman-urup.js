@@ -159,7 +159,7 @@ const Pos3TamanUrup = (() => {
     block.setAttribute('tabindex', '0');
     block.setAttribute('aria-label', `Kalimat: ${teks}`);
     block.textContent = teks;
-    block.style.fontSize = '16px';
+    block.style.fontSize = '30px';
 
     // Mouse drag
     block.addEventListener('dragstart', _onDragStart);
@@ -242,6 +242,7 @@ const Pos3TamanUrup = (() => {
     const puzzle = PUZZLES[currentPuzzleIndex];
     const block  = _createBlock(idx, puzzle.pilihan[idx].teks);
     block.classList.add('dropped');
+    block.style.fontSize = '34px'; // lebih besar di drop zone
 
     const dropZone    = document.getElementById('drop-zone');
     const placeholder = document.getElementById('drop-placeholder');
