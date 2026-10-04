@@ -765,7 +765,7 @@ let _sheetsFetched = false;
 // ── Fetch data dari Google Sheets ─────────────────────────
 async function fetchFromSheets() {
   try {
-    showToast('📡 Memuat data dari Google Sheets...', 'info');
+    toast('📡 Memuat data dari Google Sheets...', 'info');
 
     const EXEC_URL = SHEETS_URL;
 
@@ -823,13 +823,13 @@ async function fetchFromSheets() {
 
     // Notifikasi
     if (_sheetsLaporan.length > 0 || _sheetsSesi.length > 0) {
-      showToast(`✅ ${_sheetsLaporan.length} laporan dari Google Sheets dimuat`, 'success');
+      toast(`✅ ${_sheetsLaporan.length} laporan dari Google Sheets dimuat`, 'success');
     } else {
-      showToast('📭 Belum ada data di Google Sheets', 'info');
+      toast('📭 Belum ada data di Google Sheets', 'info');
     }
   } catch(e) {
     console.warn('[LATHI] Gagal fetch dari Sheets:', e);
-    showToast('⚠️ Tidak bisa terhubung ke Google Sheets', 'warning');
+    toast('⚠️ Tidak bisa terhubung ke Google Sheets', 'warning');
   }
 }
 
@@ -889,7 +889,7 @@ function _getDataLaporanLokal() {
   } catch (e) { return []; }
 }
 
-function getDataSesi() {
+function getDataSesiLokal() {
   const sesi = [];
   try {
     // Baca dari list sesi permanen yang disimpan saat game selesai
@@ -937,12 +937,11 @@ function getDataSesi() {
 }
 
 // Gabungkan sesi lokal + Sheets
-const _getDataSesiLokal = getDataSesi.bind({});
+// _getDataSesiLokal deprecated
 
 // Override getDataSesi untuk include Sheets data
-const _origGetDataSesi = getDataSesi;
-function getDataSesi() {
-  const lokal = _origGetDataSesi.call(null);
+function getDataSesiWithSheets() {
+  const lokal = getDataSesiLokal();
   const lokalIds = new Set(lokal.map(s => s.id));
   const sheetsOnly = _sheetsSesi.filter(s => !lokalIds.has(s.id));
   return [...lokal, ...sheetsOnly];
@@ -1125,7 +1124,7 @@ function renderOverview() {
     'Data per ' + new Intl.DateTimeFormat('id-ID', { dateStyle: 'full' }).format(new Date());
 
   const laporan = getDataLaporan().filter(l => _milikSekolah(l) && l.jenisLaporan !== 'konseling');
-  const sesi    = getDataSesi().filter(s => _milikSekolah(s));
+  const sesi    = getDataSesiWithSheets().filter(s => _milikSekolah(s));
   const belum   = laporan.filter(l => l._status === 'belum_dibaca').length;
   const daun    = sesi.filter(s => s.tipe === 'daun-terduduk').length;
   // Hitung dari lathi_laporan_bk dengan jenisLaporan === 'konseling'
@@ -1425,7 +1424,7 @@ function updateStatusLaporan(id, status, catatan) {
 
 /* ── SESI ── */
 function renderSesi(filter = {}) {
-  let data = getDataSesi().filter(s => _milikSekolah(s));
+  let data = getDataSesiWithSheets().filter(s => _milikSekolah(s));
   if (filter.sekolah) data = data.filter(s => s.sekolah === filter.sekolah);
   if (filter.tipe)    data = data.filter(s => s.tipe    === filter.tipe);
 
@@ -1512,7 +1511,7 @@ function renderKonseling() {
 /* ── ADMIN ── */
 function renderAdmin() {
   const laporan = getDataLaporan();
-  const sesi    = getDataSesi();
+  const sesi    = getDataSesiWithSheets();
   document.getElementById('storage-info').innerHTML = `
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
       <div style="text-align:center;padding:16px;background:var(--bg);border-radius:var(--r-md);border:1.5px solid var(--border)">
