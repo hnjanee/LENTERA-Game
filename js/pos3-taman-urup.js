@@ -104,7 +104,7 @@ const Pos3TamanUrup = (() => {
         <div style="margin-bottom:6px;font-style:italic;color:rgba(253,250,244,0.65);font-size:13px;">
           ${puzzle.konteks}
         </div>
-        <div style="font-size:12px;color:rgba(240,201,58,0.8);font-weight:600;">
+        <div style="font-size:15px;color:rgba(240,201,58,0.8);font-weight:600;">
           ${puzzle.instruksi}
         </div>`;
     }
@@ -159,7 +159,7 @@ const Pos3TamanUrup = (() => {
     block.setAttribute('tabindex', '0');
     block.setAttribute('aria-label', `Kalimat: ${teks}`);
     block.textContent = teks;
-    block.style.fontSize = '20px'; // override global Press Start 2P
+    block.style.fontSize = '13px'; // sesuai ukuran normal
 
     // Mouse drag
     block.addEventListener('dragstart', _onDragStart);
