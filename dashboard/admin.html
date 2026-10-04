@@ -487,6 +487,9 @@
       <span class="nav-count warn" id="cnt-konseling">0</span>
     </button>
     <div class="nav-group-label" style="margin-top:14px;">Pengaturan</div>
+    <button class="nav-btn" data-view="panduan">
+      <span class="nav-icon">📖</span> Cara Pakai
+    </button>
     <button class="nav-btn" data-view="admin">
       <span class="nav-icon">⚙️</span> Admin
     </button>
@@ -662,6 +665,139 @@
           </tr></thead>
           <tbody id="tbody-konseling-tbl"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- ═══ VIEW: PANDUAN ═══ -->
+    <div id="view-panduan" class="view" hidden>
+      <div class="page-header">
+        <h1 class="page-title">Cara Pakai Dashboard</h1>
+        <p class="page-sub">Panduan singkat untuk Guru BK dalam membaca dan menindaklanjuti data LATHI</p>
+      </div>
+
+      <div class="dash-grid">
+
+        <!-- Apa itu LATHI -->
+        <div class="panel full">
+          <div class="panel-head"><span class="panel-title">🌙 Apa itu LATHI?</span></div>
+          <div style="padding:18px;line-height:1.8;font-size:13px;color:var(--text-muted);">
+            <p><strong style="color:var(--text)">LATHI</strong> adalah game edukasi berbasis simulasi yang dimainkan siswa secara mandiri. Selama bermain, siswa merespons skenario bullying verbal, memilih afirmasi diri, dan menulis cerita di ruang aman (Bilik Cahaya).</p>
+            <p style="margin-top:8px;">Data yang masuk ke dashboard ini berasal dari pilihan-pilihan yang dibuat siswa selama bermain — bukan dari tes psikologi formal. Gunakan sebagai <strong style="color:var(--text)">bahan awal percakapan</strong>, bukan sebagai diagnosis.</p>
+          </div>
+        </div>
+
+        <!-- Alur permainan -->
+        <div class="panel full">
+          <div class="panel-head"><span class="panel-title">🗺️ Alur Permainan & Sumber Data</span></div>
+          <div style="padding:18px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+              <div style="background:var(--bg);border-radius:var(--r-md);padding:14px;border:1.5px solid var(--border);">
+                <div style="font-size:1.2rem;margin-bottom:6px;">🏛️</div>
+                <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Pos 1 — Balai Rasa</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Siswa mengisi nama, sekolah, gender, dan memilih pilihan yang mencerminkan perasaan & kondisi sosialnya. Menghasilkan skor <strong>Resiliensi</strong> dan nilai <strong>Isolasi Sosial</strong>.</div>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r-md);padding:14px;border:1.5px solid var(--border);">
+                <div style="font-size:1.2rem;margin-bottom:6px;">🏪</div>
+                <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Pos 2 — Pasar Interaksi</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">3 skenario bullying verbal. Siswa memilih cara merespons: <strong>Asertif</strong> (tenang & percaya diri), <strong>Reaktif</strong> (balik menyerang), atau <strong>Pasif</strong> (diam/menghindar).</div>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r-md);padding:14px;border:1.5px solid var(--border);">
+                <div style="font-size:1.2rem;margin-bottom:6px;">🌙</div>
+                <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Pos 3 — Taman Urup</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Puzzle afirmasi diri. Siswa memilih kalimat yang paling menguatkan dirinya. Bersifat edukatif, tidak menghasilkan skor.</div>
+              </div>
+              <div style="background:var(--bg);border-radius:var(--r-md);padding:14px;border:1.5px solid var(--border);">
+                <div style="font-size:1.2rem;margin-bottom:6px;">📖</div>
+                <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Pos 4 — Bilik Cahaya</div>
+                <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Ruang aman untuk menulis cerita. Siswa boleh menulis pengalaman bullying atau memilih untuk melewati. <strong>Ini data paling penting</strong> untuk tindak lanjut BK.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Membaca kartu LATHI -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">🃏 Membaca Kartu LATHI</span></div>
+          <div style="padding:18px;font-size:13px;">
+            <p style="color:var(--text-muted);margin-bottom:12px;line-height:1.7;">Kartu LATHI menggambarkan kecenderungan respons siswa terhadap tekanan sosial, bukan label permanen.</p>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:rgba(74,184,212,.07);border-radius:var(--r-md);border:1px solid rgba(74,184,212,.2);">
+                <span style="font-size:1.3rem;flex-shrink:0;">🌊</span>
+                <div><div style="font-weight:700;font-size:12px;">Air Mengalir</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Empati tinggi, asertif, berani membela diri dan orang lain.</div></div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:rgba(107,196,122,.07);border-radius:var(--r-md);border:1px solid rgba(107,196,122,.2);">
+                <span style="font-size:1.3rem;flex-shrink:0;">🎋</span>
+                <div><div style="font-weight:700;font-size:12px;">Bambu Lentur</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Tenang dan asertif, kecerdasan emosional baik.</div></div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:rgba(212,98,74,.07);border-radius:var(--r-md);border:1px solid rgba(212,98,74,.2);">
+                <span style="font-size:1.3rem;flex-shrink:0;">🏜️</span>
+                <div><div style="font-weight:700;font-size:12px;">Duri Perisai</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Pemberani tapi reaktif, perlu pendampingan manajemen emosi.</div></div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:rgba(212,165,106,.07);border-radius:var(--r-md);border:1px solid rgba(212,165,106,.2);">
+                <span style="font-size:1.3rem;flex-shrink:0;">🍂</span>
+                <div><div style="font-weight:700;font-size:12px;">Daun Terduduk</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Cenderung pasif dan menyimpan beban sendiri. <strong style="color:var(--orange)">Perlu perhatian lebih dari Guru BK.</strong></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Membaca skor -->
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">📊 Membaca Skor Siswa</span></div>
+          <div style="padding:18px;font-size:13px;color:var(--text-muted);">
+            <div style="margin-bottom:14px;">
+              <div style="font-weight:700;color:var(--text);margin-bottom:5px;">Resiliensi (0–15)</div>
+              <div style="line-height:1.7;">Akumulasi dari pilihan siswa di Pos 1 dan Pos 2. Semakin tinggi, semakin kuat kemampuan siswa menghadapi tekanan.</div>
+              <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="badge green">≥ 10 — Tinggi</span>
+                <span class="badge orange">6–9 — Sedang</span>
+                <span class="badge red">≤ 5 — Rendah</span>
+              </div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <div style="font-weight:700;color:var(--text);margin-bottom:5px;">Isolasi Sosial (1–3)</div>
+              <div style="line-height:1.7;">Dari pilihan "Baterai Sosial" di Pos 1. Menggambarkan kecenderungan siswa menarik diri dari lingkungan sosial.</div>
+              <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <span class="badge green">1 — Rendah (suka bergaul)</span>
+                <span class="badge orange">2 — Sedang</span>
+                <span class="badge red">3 — Tinggi (menarik diri)</span>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:700;color:var(--text);margin-bottom:5px;">Respons Skenario</div>
+              <div style="line-height:1.7;">Tiga skenario bullying, masing-masing dicatat tipe responsnya. Lihat detail di modal untuk membaca konteks lengkap percakapan dan pilihan yang diambil siswa.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tindak lanjut -->
+        <div class="panel full">
+          <div class="panel-head"><span class="panel-title">✅ Panduan Tindak Lanjut</span></div>
+          <div style="padding:18px;">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;font-size:12px;">
+              <div style="padding:14px;border-radius:var(--r-md);background:rgba(39,174,96,.06);border:1.5px solid rgba(39,174,96,.2);">
+                <div style="font-weight:700;color:var(--green);margin-bottom:6px;">📋 Ada Laporan (Bilik Cahaya)</div>
+                <div style="color:var(--text-muted);line-height:1.7;">Siswa sudah cukup berani untuk berbagi. Baca isi laporan dengan seksama. Hubungi siswa secara personal untuk follow-up — jangan dibahas terbuka di kelas.</div>
+              </div>
+              <div style="padding:14px;border-radius:var(--r-md);background:rgba(155,89,182,.06);border:1.5px solid rgba(155,89,182,.2);">
+                <div style="font-weight:700;color:var(--purple);margin-bottom:6px;">🔕 Tidak Ada Laporan (Skip)</div>
+                <div style="color:var(--text-muted);line-height:1.7;">Siswa belum siap cerita. Tetap pantau dari profil mental dan respons skenarionya. Ciptakan kesempatan ngobrol santai tanpa tekanan.</div>
+              </div>
+              <div style="padding:14px;border-radius:var(--r-md);background:rgba(91,143,212,.06);border:1.5px solid rgba(91,143,212,.2);">
+                <div style="font-weight:700;color:var(--blue);margin-bottom:6px;">💬 Permintaan Konseling</div>
+                <div style="color:var(--text-muted);line-height:1.7;">Siswa secara aktif minta ngobrol. Prioritaskan jadwalkan sesi 1-on-1 sesegera mungkin. Lihat tab <em>Permintaan Konseling</em> untuk daftar lengkapnya.</div>
+              </div>
+              <div style="padding:14px;border-radius:var(--r-md);background:rgba(243,156,18,.06);border:1.5px solid rgba(243,156,18,.2);">
+                <div style="font-weight:700;color:var(--orange);margin-bottom:6px;">🍂 Kartu Daun Terduduk</div>
+                <div style="color:var(--text-muted);line-height:1.7;">Cenderung pasif dan menarik diri. Pendekatan proaktif dari Guru BK dibutuhkan — siswa ini mungkin tidak akan datang sendiri.</div>
+              </div>
+            </div>
+            <div style="margin-top:14px;padding:12px 16px;background:var(--bg);border-radius:var(--r-md);border:1.5px solid var(--border);font-size:12px;color:var(--text-muted);line-height:1.7;">
+              💡 <strong style="color:var(--text)">Catatan penting:</strong> Skor dan kartu LATHI adalah indikator awal berdasarkan pilihan dalam game, bukan hasil asesmen psikologi formal. Semua siswa tetap layak diperhatikan. Gunakan kolom <em>Catatan Tindak Lanjut</em> di setiap laporan untuk mencatat langkah yang sudah diambil.
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1072,6 +1208,11 @@ const VIEW_TITLES = {
   laporan  : '📋 Laporan Masuk',
   analisis : '📈 Analisis',
   konseling: '💬 Permintaan Konseling',
+  panduan  : '📖 Cara Pakai Dashboard',
+  admin    : '⚙️ Admin',
+};
+  analisis : '📈 Analisis',
+  konseling: '💬 Permintaan Konseling',
   admin    : '⚙️ Admin',
 };
 
@@ -1092,6 +1233,7 @@ function switchView(id) {
     case 'laporan'  : renderLaporan(); break;
     case 'analisis' : renderAnalisis(); break;
     case 'konseling': renderKonseling(); break;
+    case 'panduan'  : break; // konten statis, tidak perlu render
     case 'admin'    : renderAdmin(); break;
   }
 }
@@ -1351,11 +1493,63 @@ function bukaModalLaporan(id) {
     'daun-terduduk': 'Cenderung pasif dan menarik diri, membutuhkan perhatian dan pendampingan lebih.',
   }[l._tipeMental] || 'Data belum tersedia.';
   const asertifCount = (l.skor?.pos2 || []).filter(r => r.tipe === 'asertif').length;
-  const responsLabel = ['Pasif', 'Reaktif', 'Asertif'];
-  const pos2Detail = (l.skor?.pos2 || []).map((r,i) => {
-    const tipe = (r.tipe === 'internalisasi' || r.tipe === 'menarikdiri') ? 'pasif' : r.tipe;
-    return `<span class="badge ${tipe === 'asertif' ? 'green' : tipe === 'reaktif' ? 'orange' : 'gray'}" style="margin:2px;">S${r.skenario}: ${tipe}</span>`;
-  }).join('') || '<span style="color:var(--text-light)">Tidak ada data</span>';
+
+  // Data skenario lengkap untuk konteks Guru BK
+  const SKENARIO_INFO = {
+    1: {
+      tema : 'Body Shaming',
+      dialog: 'Eh [nama], sekarang makin "subur" aja nih. Porsi makannya nambah ya? Hahaha, canda subur!',
+      pilihan: {
+        A: 'Ikut ketawa canggung lalu cepat-cepat pergi.',
+        B: '"Biarin aja, yang penting aku gak suka ngurusin hidup orang!"',
+        C: '"Iya nih lagi bahagia banget, makasih ya udah merhatiin." 😊',
+      }
+    },
+    2: {
+      tema : 'Meremehkan Pencapaian',
+      dialog: 'Tumben tugas [nama] bagus. Paling juga hoki doang kan? Yaelah, jangan baper, cuma bercanda kali!',
+      pilihan: {
+        A: 'Menunduk diam dan berpikir, "Mungkin emang aku cuma hoki."',
+        B: '"Maksud kamu apa ngomong gitu? Sirik aja!"',
+        C: '"Alhamdulillah dong, hoki kan rezeki juga. Semoga tugas kamu juga lancar ya." 🤲',
+      }
+    },
+    3: {
+      tema : 'Pengucilan Halus',
+      dialog: 'Kita mau nongkrong nih. [nama] ga usah ikut deh, ntar malah ngerusak suasana. Hahaha, joke doang santai!',
+      pilihan: {
+        A: '"Oh oke, lagian aku juga sibuk kok." (Padahal tidak.)',
+        B: '"Dih, siapa juga yang mau ikut nongkrong sama kalian."',
+        C: '"Wah seru tuh, but have fun ya! Aku memang ada urusan lain kok." 😌',
+      }
+    },
+  };
+
+  const pos2Detail = (l.skor?.pos2 || []).length
+    ? (l.skor.pos2).map(r => {
+        const tipe     = (r.tipe === 'internalisasi' || r.tipe === 'menarikdiri') ? 'pasif' : r.tipe;
+        const info     = SKENARIO_INFO[r.skenario] || {};
+        const pilihanTeks = info.pilihan?.[r.pilihan] || '—';
+        const badgeColor  = tipe === 'asertif' ? 'green' : tipe === 'reaktif' ? 'orange' : 'gray';
+        const tipeIcon    = tipe === 'asertif' ? '🌟' : tipe === 'reaktif' ? '⚡' : '🌱';
+        return `
+          <div style="margin-bottom:10px;padding:10px 12px;background:var(--card);border-radius:8px;border:1.5px solid var(--border);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+              <span style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">
+                Skenario ${r.skenario} — ${esc(info.tema || '')}
+              </span>
+              <span class="badge ${badgeColor}">${tipeIcon} ${tipe}</span>
+            </div>
+            <p style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:5px;line-height:1.5;">
+              NPC berkata: "${esc(info.dialog?.replace('[nama]', l.namaPemain || 'siswa') || '')}"
+            </p>
+            <p style="font-size:12px;color:var(--text);line-height:1.5;">
+              <span style="color:var(--text-muted);font-size:10px;font-weight:600;">Pilihan ${r.pilihan}:</span>
+              ${esc(pilihanTeks)}
+            </p>
+          </div>`;
+      }).join('')
+    : '<p style="color:var(--text-light);font-size:12px;">Tidak ada data respons.</p>';
 
   document.getElementById('modal-laporan-body').innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
@@ -1396,24 +1590,32 @@ function bukaModalLaporan(id) {
         <div>
           <div style="font-size:22px;font-weight:800;color:${_skorPct(l.skor) < 50 ? 'var(--red)' : 'var(--green)'}">${_skorPct(l.skor)}%</div>
           <div style="font-size:10px;color:var(--text-muted)" title="Gabungan resiliensi (50%) + koneksi sosial (25%) + asertivitas Pos 2 (25%)">Kesehatan Mental</div>
+          <div style="font-size:10px;font-weight:700;margin-top:2px;color:${_skorPct(l.skor) >= 70 ? 'var(--green)' : _skorPct(l.skor) >= 45 ? 'var(--orange)' : 'var(--red)'}">${_skorPct(l.skor) >= 70 ? 'Tinggi' : _skorPct(l.skor) >= 45 ? 'Sedang' : 'Rendah'}</div>
         </div>
         <div>
           <div style="font-size:22px;font-weight:800;">${l.skor?.resiliensi ?? 0}<span style="font-size:12px;color:var(--text-muted)">/15</span></div>
           <div style="font-size:10px;color:var(--text-muted)">Resiliensi</div>
+          <div style="font-size:10px;font-weight:700;margin-top:2px;color:${(l.skor?.resiliensi ?? 0) >= 10 ? 'var(--green)' : (l.skor?.resiliensi ?? 0) >= 6 ? 'var(--orange)' : 'var(--red)'}">${(l.skor?.resiliensi ?? 0) >= 10 ? 'Tinggi' : (l.skor?.resiliensi ?? 0) >= 6 ? 'Sedang' : 'Rendah'}</div>
         </div>
         <div>
-          <div style="font-size:22px;font-weight:800;color:${(l.skor?.isolasi ?? 0) >= 3 ? 'var(--red)' : ''}">${l.skor?.isolasi ?? 0}<span style="font-size:12px;color:var(--text-muted)">/3</span></div>
+          <div style="font-size:22px;font-weight:800;color:${(l.skor?.isolasi ?? 0) >= 3 ? 'var(--red)' : (l.skor?.isolasi ?? 0) >= 2 ? 'var(--orange)' : 'var(--green)'}">${l.skor?.isolasi ?? 0}<span style="font-size:12px;color:var(--text-muted)">/3</span></div>
           <div style="font-size:10px;color:var(--text-muted)">Isolasi Sosial</div>
+          <div style="font-size:10px;font-weight:700;margin-top:2px;color:${(l.skor?.isolasi ?? 0) >= 3 ? 'var(--red)' : (l.skor?.isolasi ?? 0) >= 2 ? 'var(--orange)' : 'var(--green)'}">${(l.skor?.isolasi ?? 0) >= 3 ? 'Tinggi ⚠️' : (l.skor?.isolasi ?? 0) >= 2 ? 'Sedang' : 'Rendah'}</div>
         </div>
       </div>
-      <div style="font-size:10px;color:var(--text-light);margin-bottom:10px;line-height:1.6;">
+      <div style="font-size:10px;color:var(--text-light);margin-bottom:12px;line-height:1.6;">
         <strong>Kesehatan Mental</strong> = resiliensi (50%) + koneksi sosial / kebalikan isolasi (25%) + asertivitas Pos 2 (25%).
-        Isolasi merah = siswa menarik diri dari lingkungan sosial.
+        Isolasi <strong>Tinggi</strong> = siswa cenderung menarik diri dari lingkungan sosial.
+        Resiliensi <strong>Rendah + Isolasi Tinggi</strong> = prioritas tindak lanjut.
       </div>
-      <div style="margin-bottom:4px;">
-        <span style="font-size:11px;font-weight:600;color:var(--text-muted);">Respons per Skenario (${asertifCount}/3 asertif):</span>
-        <div style="margin-top:5px;">${pos2Detail}</div>
+    </div>
+
+    <div style="background:var(--bg);border-radius:var(--r-md);padding:14px;margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:10px;">
+        Respons Skenario Bullying
+        <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-light);margin-left:6px;">${asertifCount}/3 respons asertif</span>
       </div>
+      ${pos2Detail}
     </div>
 
     <div style="margin-bottom:4px">
