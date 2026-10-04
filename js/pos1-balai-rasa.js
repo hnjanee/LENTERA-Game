@@ -152,7 +152,7 @@ const Pos1BalaiRasa = (() => {
   }
 
   /* ══════════════════════════════════════════════════════════
-     STEP 2: CUACA HATI
+     STEP 2: PERASAAN TENTANG SEKOLAH
   ══════════════════════════════════════════════════════════ */
   function _setupCuaca() {
     const btn = document.getElementById('btn-cuaca-lanjut');
