@@ -457,6 +457,18 @@ function showToast(msg, type = 'info') { LathiUI.toast(msg, type); }
 // ── Kirim sesi ke Google Sheets ───────────────────────────
 const _SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxR2OsfuO1QiL8n8DpedpD1sKcggm_g-DriXz52fYYBgPPklfIoRXDP_vCRGo8x8W7Teg/exec';
 
+function _hitungTipe(resiliensi, isolasi, skor) {
+  const asertifCount = (skor.pos2Responses || []).filter(r => r.tipe === 'asertif').length;
+  const pasifCount   = (skor.pos2Responses || []).filter(r =>
+    r.tipe === 'pasif' || r.tipe === 'internalisasi' || r.tipe === 'menarikdiri'
+  ).length;
+
+  if (resiliensi >= 7 && isolasi <= 1 && asertifCount >= 2) return 'air-mengalir';
+  if (resiliensi >= 5 && asertifCount >= 1)                  return 'bambu-lentur';
+  if (resiliensi >= 4 && pasifCount <= 1)                    return 'duri-perisai';
+  return 'daun-terduduk';
+}
+
 function _kirimSesiKeSheets() {
   try {
     const s = _state;

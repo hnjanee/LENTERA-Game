@@ -1155,14 +1155,16 @@ function renderOverview() {
   renderTren(sesi);
 
   // Distribusi Kartu LATHI
-  const lathiDist = { 'ksatria': 0, 'daun': 0 };
+  const lathiDist = { 'air-mengalir': 0, 'bambu-lentur': 0, 'duri-perisai': 0, 'daun-terduduk': 0 };
   sesi.forEach(s => { if (s.tipe && lathiDist[s.tipe] !== undefined) lathiDist[s.tipe]++; });
   const lathiPanelEl = document.getElementById('lathi-dist-panel');
   if (lathiPanelEl) {
     const totalSesi = sesi.length || 1;
     const distItems = [
-      { key: 'ksatria', emoji: '⚔️', label: 'Ksatria LATHI',  color: '#C1440C' },
-      { key: 'daun',    emoji: '🍃', label: 'Daun Terduduk', color: '#2D7A4F' },
+      { key: 'air-mengalir',  emoji: '🌊', label: 'Air Mengalir',  color: '#4AB8D4' },
+      { key: 'bambu-lentur',  emoji: '🎋', label: 'Bambu Lentur',  color: '#6BC47A' },
+      { key: 'duri-perisai',  emoji: '🏜️', label: 'Duri Perisai',  color: '#D4624A' },
+      { key: 'daun-terduduk', emoji: '🍃', label: 'Daun Terduduk', color: '#D4A56A' },
     ];
     lathiPanelEl.innerHTML = distItems.map(d => {
       const cnt = lathiDist[d.key];
