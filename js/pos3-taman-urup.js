@@ -17,18 +17,18 @@
 const Pos3TamanUrup = (() => {
 
   // ── Data Puzzle ───────────────────────────────────────────
+  // Setiap puzzle: 1 kalimat afirmasi terbaik + 2 kalimat yang mengiyakan ejekan
   const PUZZLES = [
     {
       id      : 1,
       konteks : '💬 Kamu dibilang: "Kamu baper banget sih, lebay deh!"',
       instruksi: 'Pilih kalimat yang paling menguatkan dirimu:',
       pilihan : [
-        { teks: 'Aku boleh merasa sedih. Perasaanku nyata dan valid.', terbaik: true  },
-        { teks: 'Aku harus kuat dan tidak boleh menangis.',             terbaik: false },
-        { teks: 'Tidak apa-apa merasa kecewa sesekali.',                terbaik: false },
-        { teks: 'Mungkin mereka benar, aku memang terlalu sensitif.',   terbaik: false },
+        { teks: 'Aku boleh merasa sedih. Perasaanku nyata dan valid.',  terbaik: true  },
+        { teks: 'Iya, mungkin aku memang terlalu lebay dan sensitif.',  terbaik: false },
+        { teks: 'Benar juga, aku harus berhenti baper dan lebih tegar.', terbaik: false },
       ],
-      lampionMsg  : '🌙 Lampion menyala! Merasa sedih itu manusiawi, bukan kelemahan.',
+      lampionMsg  : 'Lampion menyala! Merasa sedih itu manusiawi, bukan kelemahan.',
       refleksiSalah: 'Perasaanmu nyata dan berhak diakui. Kamu tidak lebay — kamu manusia.',
     },
     {
@@ -36,12 +36,11 @@ const Pos3TamanUrup = (() => {
       konteks : '💬 Kamu dibilang: "Bagus sih, tapi paling cuma hoki doang."',
       instruksi: 'Pilih kalimat yang paling menguatkan dirimu:',
       pilihan : [
-        { teks: 'Usahaku nyata dan berharga, terlepas dari pendapat orang.',  terbaik: true  },
-        { teks: 'Semoga lain kali mereka mau mengakui kerja kerasku.',         terbaik: false },
-        { teks: 'Aku akan membuktikan bahwa ini bukan keberuntungan.',         terbaik: false },
-        { teks: 'Mungkin ada benarnya, aku harus lebih keras lagi.',           terbaik: false },
+        { teks: 'Usahaku nyata dan berharga, terlepas dari pendapat orang.', terbaik: true  },
+        { teks: 'Mungkin benar, hasilku memang karena keberuntungan saja.',  terbaik: false },
+        { teks: 'Iya, aku harus kerja lebih keras agar tidak dibilang hoki.', terbaik: false },
       ],
-      lampionMsg  : '🌙 Lampion menyala! Kerja kerasmu bukan kebetulan.',
+      lampionMsg  : 'Lampion menyala! Kerja kerasmu bukan kebetulan.',
       refleksiSalah: 'Nilaimu tidak ditentukan oleh pengakuan orang lain. Usahamu sudah nyata.',
     },
     {
@@ -49,12 +48,11 @@ const Pos3TamanUrup = (() => {
       konteks : '💬 Kamu dibilang: "Kamu ga usah ikut, ntar ngerusak suasana."',
       instruksi: 'Pilih kalimat yang paling menguatkan dirimu:',
       pilihan : [
-        { teks: 'Aku layak diterima dan kehadiranku berarti.',          terbaik: true  },
-        { teks: 'Tidak apa-apa, masih ada orang lain yang mau bersamaku.', terbaik: false },
-        { teks: 'Aku akan tunjukkan bahwa aku tidak mengganggu.',       terbaik: false },
-        { teks: 'Mungkin lebih baik aku tidak ikut saja.',              terbaik: false },
+        { teks: 'Aku layak diterima dan kehadiranku berarti.',              terbaik: true  },
+        { teks: 'Mungkin aku memang terlalu mengganggu, lebih baik minggir.', terbaik: false },
+        { teks: 'Iya, kayaknya aku memang sering bikin suasana jadi canggung.', terbaik: false },
       ],
-      lampionMsg  : '🌙 Lampion menyala! Kamu berharga dan layak ada di sini.',
+      lampionMsg  : 'Lampion menyala! Kamu berharga dan layak ada di sini.',
       refleksiSalah: 'Kamu tidak perlu membuktikan apa-apa. Kehadiranmu sendiri sudah bernilai.',
     },
   ];
@@ -123,12 +121,18 @@ const Pos3TamanUrup = (() => {
 
   // ── Render pilihan kalimat ────────────────────────────────
   function _renderPilihan(puzzle) {
-    // Gunakan word-bank sebagai container pilihan, drop-zone disembunyikan
+    // Sembunyikan drop-zone — tidak dipakai di mode pilih kalimat
     const dropZone = document.getElementById('drop-zone');
-    if (dropZone) dropZone.hidden = true;
+    if (dropZone) {
+      dropZone.hidden = true;
+      dropZone.style.display = 'none';
+    }
+    const placeholder = document.getElementById('drop-placeholder');
+    if (placeholder) placeholder.hidden = true;
 
     const bank = document.getElementById('word-bank');
     bank.innerHTML = '';
+    bank.style.flexDirection = 'column';
 
     // Acak urutan pilihan
     const indices = [...puzzle.pilihan.keys()];
@@ -139,16 +143,17 @@ const Pos3TamanUrup = (() => {
       const btn     = document.createElement('button');
       btn.className = 'kalimat-pilihan';
       btn.textContent = pilihan.teks;
-      btn.dataset.index   = i;
-      btn.dataset.terbaik = pilihan.terbaik;
+      btn.dataset.index   = String(i);
+      btn.dataset.terbaik = pilihan.terbaik ? '1' : '0'; // simpan sebagai string '1'/'0'
       btn.style.animationDelay = `${order * 80}ms`;
+      btn.setAttribute('draggable', 'false');             // non-draggable
       btn.setAttribute('aria-label', `Pilihan: ${pilihan.teks}`);
 
       btn.addEventListener('click', () => _pilihJawaban(puzzle, i, btn));
       bank.appendChild(btn);
     });
 
-    // Sembunyikan tombol cek & reset (tidak dipakai di mode baru)
+    // Sembunyikan tombol cek & reset
     const controls = document.querySelector('.puzzle-controls');
     if (controls) controls.hidden = true;
   }
@@ -158,16 +163,16 @@ const Pos3TamanUrup = (() => {
     if (answered) return;
     answered = true;
 
-    const pilihan   = puzzle.pilihan[pilihanIndex];
-    const terbaik   = pilihan.terbaik;
+    const pilihan = puzzle.pilihan[pilihanIndex];
+    const terbaik = pilihan.terbaik === true; // pastikan boolean
 
     // Tandai semua tombol
     document.querySelectorAll('.kalimat-pilihan').forEach(b => {
       b.disabled = true;
       const idx  = parseInt(b.dataset.index, 10);
-      if (puzzle.pilihan[idx].terbaik) {
+      if (puzzle.pilihan[idx].terbaik === true) {
         b.classList.add('kalimat-benar');
-      } else if (parseInt(b.dataset.index, 10) === pilihanIndex) {
+      } else if (idx === pilihanIndex) {
         b.classList.add('kalimat-salah');
       } else {
         b.classList.add('kalimat-redup');
