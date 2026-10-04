@@ -149,17 +149,18 @@ const HasilKartu = (() => {
     // Resiliensi (50%) + Koneksi Sosial (25%) + Asertivitas Pos 2 (25%)
     const maxResi  = 15;
     const maxIso   = 3;
-    const pctResi  = (resiliensi / maxResi) * 50;
-    const pctIso   = ((maxIso - isolasi + 1) / maxIso) * 25;
-    const pctPos2  = (asertifCount / 3) * 25;
-    const total    = Math.min(100, Math.round(pctResi + pctIso + pctPos2));
 
-    // Hitung jumlah per kelompok respons (Pos 2)
+    // Hitung jumlah per kelompok respons (Pos 2) — harus sebelum pctPos2
     const asertifCount = responses.filter(r => r.tipe === 'asertif').length;
     const reaktifCount = responses.filter(r => r.tipe === 'reaktif').length;
     const pasifCount   = responses.filter(
       r => r.tipe === 'pasif' || r.tipe === 'internalisasi' || r.tipe === 'menarikdiri'
     ).length;
+
+    const pctResi  = (resiliensi / maxResi) * 50;
+    const pctIso   = ((maxIso - isolasi + 1) / maxIso) * 25;
+    const pctPos2  = (asertifCount / 3) * 25;
+    const total    = Math.min(100, Math.round(pctResi + pctIso + pctPos2));
 
     // ── Sistem poin gabungan semua pos ──────────────────────
     // Pos 1 — Resiliensi (0-5 poin): tinggi = resilien
