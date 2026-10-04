@@ -1158,11 +1158,9 @@ function renderOverview() {
   const lathiDist = { 'air-mengalir': 0, 'bambu-lentur': 0, 'duri-perisai': 0, 'daun-terduduk': 0 };
 
   function _normTipe(s) {
-    // Data lama pakai ksatria/daun, mapping ke 4 tipe baru
-    if (s.tipe === 'ksatria') return 'air-mengalir';
-    if (s.tipe === 'daun')    return 'daun-terduduk';
+    // Kalau sudah 4 tipe yang benar, pakai langsung
     if (lathiDist[s.tipe] !== undefined) return s.tipe;
-    // Fallback: hitung dari skor
+    // Data lama ksatria/daun — hitung ulang dari skor
     const skor = Number(s.skor) || 0;
     if (skor >= 75) return 'air-mengalir';
     if (skor >= 50) return 'bambu-lentur';
