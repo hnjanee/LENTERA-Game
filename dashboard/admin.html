@@ -697,9 +697,6 @@
             <button class="btn primary" id="btn-export-laporan">
               📋 Export Laporan (JSON)
             </button>
-            <button class="btn ghost" id="btn-export-sesi">
-              🎮 Export Data Sesi (JSON)
-            </button>
             <button class="btn danger-soft" id="btn-hapus-data">
               🗑️ Hapus Semua Data Lokal
             </button>
@@ -1546,11 +1543,7 @@ function renderAdmin() {
     toast('File laporan diunduh', 'green');
   });
 
-  // Export sesi
-  document.getElementById('btn-export-sesi')?.addEventListener('click', () => {
-    downloadJSON(sesi, `LATHI_sesi_${Date.now()}.json`);
-    toast('File sesi diunduh', 'green');
-  });
+
 
   // Hapus data
   document.getElementById('btn-hapus-data')?.addEventListener('click', () => {
