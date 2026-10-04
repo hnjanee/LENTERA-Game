@@ -4272,16 +4272,33 @@ input, select, textarea, button, label, span, p, h1, h2, h3, h4, div {
   justify-content: flex-end;
 }
 
-/* Feedback di dalam puzzle area */
+/* Feedback di dalam puzzle area — popup modal di tengah layar */
 .puzzle-feedback {
-  background: rgba(10,20,10,0.9) !important;
-  border-radius: 12px !important;
-  padding: 16px !important;
-  margin-top: 10px !important;
-  border: 1px solid rgba(201,150,12,0.3) !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999 !important;
+  background: rgba(0,0,0,0.75) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-height: unset !important;
+  margin-top: 0 !important;
 }
 .puzzle-feedback[hidden] { display: none !important; }
-.feedback-content { text-align: center; }
+.feedback-content {
+  background: rgba(15,40,15,0.98) !important;
+  border: 2px solid rgba(201,150,12,0.6) !important;
+  border-radius: 16px !important;
+  padding: 32px 28px !important;
+  max-width: 500px !important;
+  width: 100% !important;
+  text-align: center !important;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.8) !important;
+}
 .feedback-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
 .feedback-text {
   font-size: 14px !important;
@@ -4412,7 +4429,13 @@ input, select, textarea, button, label, span, p, h1, h2, h3, h4, div {
   opacity: 0.35;
 }
 
-/* ── Pos3: Kalimat Block (drag & drop kalimat) ── */
+/* ── Pos3: Kalimat Block font size override ── */
+#word-bank .kalimat-block,
+#drop-zone .kalimat-block {
+  font-size: var(--kalimat-fs, 14px) !important;
+}
+#word-bank .kalimat-block { --kalimat-fs: 13px; }
+#drop-zone .kalimat-block { --kalimat-fs: 15px; }
 .kalimat-block {
   width: 100% !important;
   padding: 14px 18px !important;
