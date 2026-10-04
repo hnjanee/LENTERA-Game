@@ -84,24 +84,28 @@ const HasilKartu = (() => {
 
   // ── Render utama ──────────────────────────────────────────
   function render() {
-    const state = LenteraGame.state;
+    try {
+      const state = LenteraGame.state;
 
-    // Hitung kalau belum
-    if (!state.hasil.kalkulasiDone) {
+      // Selalu kalkulasi ulang supaya perubahan algoritma langsung teraplikasi
       _kalkulasi(state);
+
+      // Simpan sesi ke list permanen supaya dashboard bisa baca
+      _simpanSesi(state);
+
+      const tipe   = state.hasil.tipe;
+      const tipeInfo = TIPE_DATA[tipe] || TIPE_DATA['daun-terduduk'];
+
+      _renderKartu(state, tipeInfo);
+      _renderActions(state, tipeInfo);
+
+      // Konfeti / animasi selesai
+      setTimeout(() => _playCompletionAnimation(tipe), 600);
+    } catch(e) {
+      console.error('[LATHI] Error saat render kartu:', e);
+      const kartu = document.getElementById('kartu-profil');
+      if (kartu) kartu.innerHTML = `<div style="color:red;padding:20px;font-size:12px;">Error: ${e.message}</div>`;
     }
-
-    // Simpan sesi ke list permanen supaya dashboard bisa baca
-    _simpanSesi(state);
-
-    const tipe   = state.hasil.tipe;
-    const tipeInfo = TIPE_DATA[tipe] || TIPE_DATA['daun-terduduk'];
-
-    _renderKartu(state, tipeInfo);
-    _renderActions(state, tipeInfo);
-
-    // Konfeti / animasi selesai
-    setTimeout(() => _playCompletionAnimation(tipe), 600);
   }
 
   // ── Simpan sesi ke list permanen ──────────────────────────
