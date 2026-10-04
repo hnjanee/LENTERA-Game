@@ -478,9 +478,7 @@
       <span class="nav-icon">📋</span> Laporan Masuk
       <span class="nav-count" id="cnt-laporan">0</span>
     </button>
-    <button class="nav-btn" data-view="sesi">
-      <span class="nav-icon">🎮</span> Data Sesi
-    </button>
+
     <button class="nav-btn" data-view="analisis">
       <span class="nav-icon">📈</span> Analisis
     </button>
@@ -625,39 +623,6 @@
             <th>Tipe Laporan</th><th>Tipe Mental</th><th>Skor</th><th>Tanggal</th><th>Status</th><th>Aksi</th>
           </tr></thead>
           <tbody id="tbody-laporan"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ═══ VIEW: SESI ═══ -->
-    <div id="view-sesi" class="view" hidden>
-      <div class="page-header">
-        <h1 class="page-title">Data Sesi Permainan</h1>
-        <p class="page-sub">Semua sesi yang sudah selesai dimainkan</p>
-      </div>
-      <div class="panel">
-        <div class="filter-bar">
-          <span class="filter-lbl">Filter:</span>
-          <select class="filter-select" id="sf-sekolah">
-            <option value="">Semua Sekolah</option>
-            <option>SMA Al-Maahira IIBS Malang</option>
-            <option>SMAN 3 Malang</option>
-            <option>SMAN 4 Malang</option>
-          </select>
-          <select class="filter-select" id="sf-tipe">
-            <option value="">Semua Tipe</option>
-            <option value="air-mengalir">🌊 Air Mengalir</option>
-            <option value="bambu-lentur">🎋 Bambu Lentur</option>
-            <option value="duri-perisai">🏜️ Duri Perisai</option>
-            <option value="daun-terduduk">🍂 Daun Terduduk</option>
-          </select>
-        </div>
-        <table class="tbl" aria-label="Tabel sesi">
-          <thead><tr>
-            <th>Nama</th><th>Sekolah</th><th>Tipe Mental</th>
-            <th>Skor</th><th>Stres</th><th>Laporan</th><th>Waktu Main</th>
-          </tr></thead>
-          <tbody id="tbody-sesi"></tbody>
         </table>
       </div>
     </div>
@@ -1099,7 +1064,6 @@ function applySession() {
 const VIEW_TITLES = {
   overview : '📊 Ringkasan',
   laporan  : '📋 Laporan Masuk',
-  sesi     : '🎮 Data Sesi',
   analisis : '📈 Analisis',
   konseling: '💬 Permintaan Konseling',
   admin    : '⚙️ Admin',
@@ -1120,7 +1084,6 @@ function switchView(id) {
   switch (id) {
     case 'overview' : renderOverview(); break;
     case 'laporan'  : renderLaporan(); break;
-    case 'sesi'     : renderSesi(); break;
     case 'analisis' : renderAnalisis(); break;
     case 'konseling': renderKonseling(); break;
     case 'admin'    : renderAdmin(); break;
@@ -1625,10 +1588,7 @@ document.getElementById('btn-reset-filter')?.addEventListener('click', () => {
   document.getElementById('f-cari').value    = '';
   renderLaporan({ sekolah: _session?.sekolah || '' });
 });
-document.getElementById('sf-sekolah')?.addEventListener('change', () =>
-  renderSesi({ sekolah: document.getElementById('sf-sekolah').value, tipe: document.getElementById('sf-tipe').value }));
-document.getElementById('sf-tipe')?.addEventListener('change', () =>
-  renderSesi({ sekolah: document.getElementById('sf-sekolah').value, tipe: document.getElementById('sf-tipe').value }));
+
 
 /* ── MODAL EVENTS ── */
 const modalEl = document.getElementById('modal-laporan');
