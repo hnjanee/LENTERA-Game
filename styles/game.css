@@ -4411,3 +4411,42 @@ input, select, textarea, button, label, span, p, h1, h2, h3, h4, div {
 .kalimat-pilihan.kalimat-redup {
   opacity: 0.35;
 }
+
+/* ── Pos3: Kalimat Block (drag & drop kalimat) ── */
+.kalimat-block {
+  width: 100% !important;
+  padding: 14px 18px !important;
+  margin-bottom: 10px !important;
+  font-size: 12px !important;
+  line-height: 1.65 !important;
+  text-align: left !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  cursor: grab !important;
+  border-radius: 12px !important;
+  background: rgba(255,255,255,0.08) !important;
+  border: 1.5px solid rgba(255,255,255,0.15) !important;
+  color: rgba(253,250,244,0.92) !important;
+  transition: background 150ms, border-color 150ms, transform 120ms !important;
+  display: block !important;
+  box-sizing: border-box !important;
+}
+.kalimat-block:hover:not([draggable="false"]) {
+  background: rgba(244,166,42,0.15) !important;
+  border-color: rgba(244,166,42,0.5) !important;
+  transform: translateY(-2px) !important;
+}
+.kalimat-block.dragging {
+  opacity: 0.4 !important;
+  cursor: grabbing !important;
+}
+.kalimat-block.dropped {
+  background: rgba(201,150,12,0.25) !important;
+  border-color: #C9960C !important;
+  color: #FDF6EC !important;
+  cursor: grab !important;
+}
+.kalimat-block[draggable="false"] {
+  cursor: default !important;
+  opacity: 0.6 !important;
+}

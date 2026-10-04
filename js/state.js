@@ -466,7 +466,7 @@ function _kirimSesiKeSheets() {
     const pctResi    = (resiliensi / 9) * 70;
     const pctIso     = ((3 - isolasi + 1) / 3) * 30;
     const totalSkor  = Math.min(100, Math.round(pctResi + pctIso));
-    const tipe       = (resiliensi >= 7 && isolasi <= 1) ? 'ksatria' : 'daun';
+    const tipe = s.hasil?.tipe || _hitungTipe(resiliensi, isolasi, s.skor);
 
     const payload = {
       type    : 'sesi',
