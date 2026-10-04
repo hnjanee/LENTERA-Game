@@ -475,9 +475,11 @@ function _kirimSesiKeSheets() {
     // Hitung tipe dan skor
     const resiliensi = s.skor.resiliensi;
     const isolasi    = s.skor.isolasi;
-    const pctResi    = (resiliensi / 9) * 70;
-    const pctIso     = ((3 - isolasi + 1) / 3) * 30;
-    const totalSkor  = Math.min(100, Math.round(pctResi + pctIso));
+    const pctResi    = (resiliensi / 15) * 50;
+    const pctIso     = ((3 - isolasi + 1) / 3) * 25;
+    const asertif    = (s.skor.pos2Responses || []).filter(r => r.tipe === 'asertif').length;
+    const pctPos2    = (asertif / 3) * 25;
+    const totalSkor  = Math.min(100, Math.round(pctResi + pctIso + pctPos2));
     const tipe = s.hasil?.tipe || _hitungTipe(resiliensi, isolasi, s.skor);
 
     const payload = {
