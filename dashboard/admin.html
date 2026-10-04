@@ -1162,6 +1162,11 @@ function renderOverview() {
     if (s.tipe === 'ksatria') return 'air-mengalir';
     if (s.tipe === 'daun')    return 'daun-terduduk';
     if (lathiDist[s.tipe] !== undefined) return s.tipe;
+    // Fallback: hitung dari skor
+    const skor = Number(s.skor) || 0;
+    if (skor >= 75) return 'air-mengalir';
+    if (skor >= 50) return 'bambu-lentur';
+    if (skor >= 30) return 'duri-perisai';
     return 'daun-terduduk';
   }
 
