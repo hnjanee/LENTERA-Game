@@ -6,21 +6,23 @@
    ALGORITMA KALKULASI:
    ─────────────────────────────────────────────────────────
    INPUT:
-     skor.resiliensi  → max 9 poin
-     skor.isolasi     → 1-3 poin
-     skor.stresType   → 'akademik' | 'sosial' | 'insecurity'
-     skor.pos2Responses → array { skenario, pilihan, tipe, skor }
-                          tipe: 'asertif' | 'reaktif' | 'pasif' | 'internalisasi' | 'menarikdiri'
-     laporan.submitted  → boolean
+     skor.resiliensi  → max 15 poin (Pos 1)
+     skor.isolasi     → 1-3 poin (Pos 1)
+     skor.pos2Responses → array respons asertif/reaktif/pasif (Pos 2)
+     laporan.submitted  → boolean (Pos 4)
 
-   TIPE KARTU (4 kategori):
+   SISTEM POIN GABUNGAN (Pos 1-2):
+     Pos 1 Resiliensi  → 1-5 poin (berdasarkan nilai resiliensi)
+     Pos 1 Isolasi     → 1-3 poin (isolasi rendah = poin tinggi)
+     Pos 2 Asertivitas → (asertif × 2) - (reaktif × 1), max 6
+     Total max         → ~14 poin
+
+   TIPE KARTU:
    ─────────────────────────────────────────────────────────
-   'air-mengalir'  → asertif >= 3  ATAU (asertif >= 2 DAN laporan.submitted)
-   'bambu-lentur'  → asertif terbanyak (tie-break C > B > A)
-   'duri-perisai'  → reaktif terbanyak
-   'daun-terduduk' → pasif/internalisasi/menarikdiri terbanyak
-
-   Tombol konseling → tipe === 'daun-terduduk' ATAU laporan.submitted
+   'air-mengalir'  → totalPoin >= 13
+   'bambu-lentur'  → totalPoin >= 9
+   'duri-perisai'  → reaktif dominan
+   'daun-terduduk' → default (pasif/isolasi tinggi)
    ─────────────────────────────────────────────────────────
 */
 
@@ -143,34 +145,42 @@ const HasilKartu = (() => {
     const isolasi    = state.skor.isolasi;
     const responses  = state.skor.pos2Responses;
 
-    // Hitung total skor (0-100%) — rumus lama tetap dipakai untuk bar skor
+    // Hitung total skor (0-100%)
     const maxResi  = 15;
     const maxIso   = 3;
     const pctResi  = (resiliensi / maxResi) * 70;
     const pctIso   = ((maxIso - isolasi + 1) / maxIso) * 30;
     const total    = Math.min(100, Math.round(pctResi + pctIso));
 
-    // Hitung jumlah per kelompok respons
+    // Hitung jumlah per kelompok respons (Pos 2)
     const asertifCount = responses.filter(r => r.tipe === 'asertif').length;
     const reaktifCount = responses.filter(r => r.tipe === 'reaktif').length;
     const pasifCount   = responses.filter(
       r => r.tipe === 'pasif' || r.tipe === 'internalisasi' || r.tipe === 'menarikdiri'
     ).length;
 
-    // Tentukan tipe kartu LATHI
+    // ── Sistem poin gabungan semua pos ──────────────────────
+    // Pos 1 — Resiliensi (0-5 poin): tinggi = resilien
+    const poinResi = resiliensi >= 12 ? 5 : resiliensi >= 8 ? 4 : resiliensi >= 5 ? 3 : resiliensi >= 3 ? 2 : 1;
+    // Pos 1 — Isolasi (0-3 poin): isolasi rendah = positif
+    const poinIso  = isolasi === 1 ? 3 : isolasi === 2 ? 2 : 1;
+    // Pos 2 — Asertivitas (0-6 poin): 2 poin per respons asertif
+    const poinPos2 = (asertifCount * 2) - (reaktifCount * 1);
+    // Pos 4 — tidak dihitung dalam tipe mental
+    const poinLaporan = 0;
+
+    const totalPoin = poinResi + poinIso + poinPos2; // max ~14
+
+    // Tentukan tipe kartu dari poin gabungan
     let tipe;
-    // BONUS: Air Mengalir — semua 3 asertif, ATAU 2+ asertif DAN sudah kirim laporan
-    if (asertifCount >= 3 || (asertifCount >= 2 && state.laporan.submitted)) {
+    if (totalPoin >= 13) {
       tipe = 'air-mengalir';
+    } else if (totalPoin >= 9) {
+      tipe = 'bambu-lentur';
+    } else if (reaktifCount > asertifCount && reaktifCount >= pasifCount) {
+      tipe = 'duri-perisai';
     } else {
-      // Mayoritas menang; tie-break: asertif > reaktif > pasif
-      if (asertifCount >= reaktifCount && asertifCount >= pasifCount) {
-        tipe = 'bambu-lentur';
-      } else if (reaktifCount > asertifCount && reaktifCount >= pasifCount) {
-        tipe = 'duri-perisai';
-      } else {
-        tipe = 'daun-terduduk';
-      }
+      tipe = 'daun-terduduk';
     }
 
     state.hasil.tipe          = tipe;

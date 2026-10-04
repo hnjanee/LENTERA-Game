@@ -969,9 +969,17 @@ function _tipeMental(skor) {
   const pasifCount   = responses.filter(
     r => r.tipe === 'pasif' || r.tipe === 'internalisasi' || r.tipe === 'menarikdiri'
   ).length;
-  // Air Mengalir hanya jika semua 3 asertif (laporan.submitted tidak tersedia di konteks dashboard)
-  if (asertifCount >= 3) return 'air-mengalir';
-  if (asertifCount >= reaktifCount && asertifCount >= pasifCount) return 'bambu-lentur';
+
+  // Sistem poin gabungan — konsisten dengan hasil.js
+  const resiliensi = skor.resiliensi || 0;
+  const isolasi    = skor.isolasi    || 3;
+  const poinResi   = resiliensi >= 12 ? 5 : resiliensi >= 8 ? 4 : resiliensi >= 5 ? 3 : resiliensi >= 3 ? 2 : 1;
+  const poinIso    = isolasi === 1 ? 3 : isolasi === 2 ? 2 : 1;
+  const poinPos2   = (asertifCount * 2) - (reaktifCount * 1);
+  const totalPoin  = poinResi + poinIso + poinPos2;
+
+  if (totalPoin >= 13) return 'air-mengalir';
+  if (totalPoin >= 9)  return 'bambu-lentur';
   if (reaktifCount > asertifCount && reaktifCount >= pasifCount) return 'duri-perisai';
   return 'daun-terduduk';
 }
