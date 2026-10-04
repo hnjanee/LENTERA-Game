@@ -4360,3 +4360,54 @@ input, select, textarea, button, label, span, p, h1, h2, h3, h4, div {
 #puzzle-area {
   padding: 0 20px !important;
 }
+
+/* ── Pos3: Kalimat Afirmasi (mode pilih kalimat) ── */
+.kalimat-pilihan {
+  display: block;
+  width: 100%;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  color: rgba(253,250,244,0.92);
+  font-family: var(--font-display, 'Minecraft', monospace);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
+  cursor: pointer;
+  transition: background 180ms, border-color 180ms, transform 120ms;
+  animation: slideInUp 200ms forwards;
+}
+.kalimat-pilihan:hover:not(:disabled) {
+  background: rgba(244,166,42,0.15);
+  border-color: rgba(244,166,42,0.5);
+  transform: translateY(-2px);
+}
+.kalimat-pilihan:disabled { cursor: default; }
+
+/* Jawaban terbaik */
+.kalimat-pilihan.kalimat-benar {
+  background: rgba(39,174,96,0.25) !important;
+  border-color: #27AE60 !important;
+  color: #A0E8C0 !important;
+  font-weight: 700;
+}
+.kalimat-pilihan.kalimat-benar::before {
+  content: '✅ ';
+}
+
+/* Jawaban yang dipilih tapi bukan terbaik */
+.kalimat-pilihan.kalimat-salah {
+  background: rgba(231,76,60,0.18) !important;
+  border-color: rgba(231,76,60,0.5) !important;
+  color: rgba(253,250,244,0.7) !important;
+}
+.kalimat-pilihan.kalimat-salah::before {
+  content: '❌ ';
+}
+
+/* Pilihan lain yang tidak dipilih */
+.kalimat-pilihan.kalimat-redup {
+  opacity: 0.35;
+}
