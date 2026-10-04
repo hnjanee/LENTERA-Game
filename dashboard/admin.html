@@ -997,9 +997,11 @@ function _lathiCardBadge(tipe) {
 
 function _skorPct(skor) {
   if (!skor) return 0;
-  const r = Math.min(15, skor.resiliensi || 0);
-  const i = Math.max(0, Math.min(3, skor.isolasi || 0));
-  return Math.round((r / 15) * 70 + ((3 - i + 1) / 3) * 30);
+  const r  = Math.min(15, skor.resiliensi || 0);
+  const i  = Math.max(0, Math.min(3, skor.isolasi || 0));
+  const pos2 = skor.pos2 || [];
+  const asertif = pos2.filter(x => x.tipe === 'asertif').length;
+  return Math.min(100, Math.round((r / 15) * 50 + ((3 - i + 1) / 3) * 25 + (asertif / 3) * 25));
 }
 
 /* ── LOGIN ── */
@@ -1393,7 +1395,7 @@ function bukaModalLaporan(id) {
         </div>
         <div>
           <div style="font-size:22px;font-weight:800;color:${_skorPct(l.skor) < 50 ? 'var(--red)' : 'var(--green)'}">${_skorPct(l.skor)}%</div>
-          <div style="font-size:10px;color:var(--text-muted)" title="Gabungan resiliensi (70%) + koneksi sosial (30%)">Kesehatan Mental</div>
+          <div style="font-size:10px;color:var(--text-muted)" title="Gabungan resiliensi (50%) + koneksi sosial (25%) + asertivitas Pos 2 (25%)">Kesehatan Mental</div>
         </div>
         <div>
           <div style="font-size:22px;font-weight:800;">${l.skor?.resiliensi ?? 0}<span style="font-size:12px;color:var(--text-muted)">/15</span></div>
@@ -1405,7 +1407,7 @@ function bukaModalLaporan(id) {
         </div>
       </div>
       <div style="font-size:10px;color:var(--text-light);margin-bottom:10px;line-height:1.6;">
-        <strong>Kesehatan Mental</strong> = resiliensi (70%) + koneksi sosial / kebalikan isolasi (30%).
+        <strong>Kesehatan Mental</strong> = resiliensi (50%) + koneksi sosial / kebalikan isolasi (25%) + asertivitas Pos 2 (25%).
         Isolasi merah = siswa menarik diri dari lingkungan sosial.
       </div>
       <div style="margin-bottom:4px;">
