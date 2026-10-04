@@ -117,6 +117,12 @@ const HasilKartu = (() => {
         gender    : state.player.avatarConfig?.gender || '',
         tipe      : state.hasil.tipe,
         skor      : state.hasil.totalSkor || 0,
+        skorDetail: {
+          resiliensi: state.skor.resiliensi,
+          isolasi   : state.skor.isolasi,
+          stresType : state.skor.stresType,
+          pos2      : state.skor.pos2Responses,
+        },
         stres     : state.skor.stresType || null,
         laporan   : state.laporan.submitted || false,
       };
