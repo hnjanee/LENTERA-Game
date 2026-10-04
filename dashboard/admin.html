@@ -1156,7 +1156,16 @@ function renderOverview() {
 
   // Distribusi Kartu LATHI
   const lathiDist = { 'air-mengalir': 0, 'bambu-lentur': 0, 'duri-perisai': 0, 'daun-terduduk': 0 };
-  sesi.forEach(s => { if (s.tipe && lathiDist[s.tipe] !== undefined) lathiDist[s.tipe]++; });
+
+  function _normTipe(s) {
+    // Data lama pakai ksatria/daun, mapping ke 4 tipe baru
+    if (s.tipe === 'ksatria') return 'air-mengalir';
+    if (s.tipe === 'daun')    return 'daun-terduduk';
+    if (lathiDist[s.tipe] !== undefined) return s.tipe;
+    return 'daun-terduduk';
+  }
+
+  sesi.forEach(s => { lathiDist[_normTipe(s)]++; });
   const lathiPanelEl = document.getElementById('lathi-dist-panel');
   if (lathiPanelEl) {
     const totalSesi = sesi.length || 1;
