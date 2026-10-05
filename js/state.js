@@ -458,14 +458,22 @@ function showToast(msg, type = 'info') { LathiUI.toast(msg, type); }
 const _SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxR2OsfuO1QiL8n8DpedpD1sKcggm_g-DriXz52fYYBgPPklfIoRXDP_vCRGo8x8W7Teg/exec';
 
 function _hitungTipe(resiliensi, isolasi, skor) {
-  const asertifCount = (skor.pos2Responses || []).filter(r => r.tipe === 'asertif').length;
-  const pasifCount   = (skor.pos2Responses || []).filter(r =>
+  const responses    = skor.pos2Responses || [];
+  const asertifCount = responses.filter(r => r.tipe === 'asertif').length;
+  const reaktifCount = responses.filter(r => r.tipe === 'reaktif').length;
+  const pasifCount   = responses.filter(r =>
     r.tipe === 'pasif' || r.tipe === 'internalisasi' || r.tipe === 'menarikdiri'
   ).length;
 
-  if (resiliensi >= 7 && isolasi <= 1 && asertifCount >= 2) return 'air-mengalir';
-  if (resiliensi >= 5 && asertifCount >= 1)                  return 'bambu-lentur';
-  if (resiliensi >= 4 && pasifCount <= 1)                    return 'duri-perisai';
+  // Sistem poin gabungan — identik dengan hasil.js _kalkulasi()
+  const poinResi  = resiliensi >= 12 ? 5 : resiliensi >= 8 ? 4 : resiliensi >= 5 ? 3 : resiliensi >= 3 ? 2 : 1;
+  const poinIso   = isolasi === 1 ? 3 : isolasi === 2 ? 2 : 1;
+  const poinPos2  = (asertifCount * 2) - (reaktifCount * 1);
+  const totalPoin = poinResi + poinIso + poinPos2;
+
+  if (totalPoin >= 13) return 'air-mengalir';
+  if (totalPoin >= 9)  return 'bambu-lentur';
+  if (reaktifCount > asertifCount && reaktifCount >= pasifCount) return 'duri-perisai';
   return 'daun-terduduk';
 }
 

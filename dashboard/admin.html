@@ -1196,9 +1196,7 @@ function applySession() {
   document.getElementById('topbar-school-label').textContent = _session.sekolah;
   // Set filter sekolah otomatis sesuai login
   const selL = document.getElementById('f-sekolah');
-  const selS = document.getElementById('sf-sekolah');
   if (selL) selL.value = _session.sekolah;
-  if (selS) selS.value = _session.sekolah;
   renderAll();
 }
 
@@ -1209,8 +1207,6 @@ const VIEW_TITLES = {
   analisis : '📈 Analisis',
   konseling: '💬 Permintaan Konseling',
   panduan  : '📖 Cara Pakai Dashboard',
-  analisis : '📈 Analisis',
-  konseling: '💬 Permintaan Konseling',
   admin    : '⚙️ Admin',
 };
 
@@ -1282,6 +1278,7 @@ function renderOverview() {
   document.getElementById('st-sesi').textContent          = sesi.length;
   document.getElementById('st-daun').textContent          = daun;
   document.getElementById('st-konseling').textContent     = konseling;
+  document.getElementById('st-tanpa-laporan').textContent = sesi.filter(s => !s.laporan).length;
 
   // Enrich (must be before rendering tbody)
   laporan.forEach(l => { l._tipeMental = _tipeMental(l.skor); });
@@ -1460,7 +1457,7 @@ function renderLaporan(filter = {}) {
         <button class="btn primary sm" onclick="bukaModalLaporan('${esc(l.id)}')">Baca</button>
       </td>
     </tr>`).join('') :
-    `<tr><td colspan="8"><div class="empty">
+    `<tr><td colspan="9"><div class="empty">
       <div class="empty-icon">📭</div>
       <p class="empty-text">Tidak ada laporan</p>
       <p class="empty-sub">Data laporan akan muncul setelah siswa mengirim cerita dari Bilik Cahaya</p>
@@ -1639,35 +1636,6 @@ function updateStatusLaporan(id, status, catatan) {
   if (catatan !== undefined) all[idx]._catatan = catatan;
   saveLaporan(all);
   updateBadges();
-}
-
-/* ── SESI ── */
-function renderSesi(filter = {}) {
-  let data = getDataSesiWithSheets().filter(s => _milikSekolah(s));
-  if (filter.sekolah) data = data.filter(s => s.sekolah === filter.sekolah);
-  if (filter.tipe)    data = data.filter(s => s.tipe    === filter.tipe);
-
-  const tbody = document.getElementById('tbody-sesi');
-  tbody.innerHTML = data.length ? data.map(s => `
-    <tr>
-      <td style="font-weight:600">${esc(s.nama)}</td>
-      <td style="font-size:12px;color:var(--text-muted)">${esc(s.sekolah)}</td>
-      <td>${s.tipe ? _lathiCardBadge(s.tipe) : '<span style="color:var(--text-light);font-size:12px">— belum selesai</span>'}</td>
-      <td>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div class="mini-bar"><div class="mini-fill ${s.tipe === 'air-mengalir' || s.tipe === 'bambu-lentur' ? 'gold' : 'gray'}" style="width:${typeof s.skor === 'object' ? _skorPct(s.skor) : s.skor}%"></div></div>
-          <span style="font-size:11px;font-weight:600">${typeof s.skor === 'object' ? _skorPct(s.skor) : s.skor}%</span>
-        </div>
-      </td>
-      <td><span class="badge ${s.stres === 'akademik' ? 'blue' : s.stres === 'sosial' ? 'purple' : 'orange'}">${s.stres || '—'}</span></td>
-      <td>${s.laporan ? '<span class="badge red">Ada Laporan</span>' : '<span style="color:var(--text-light);font-size:12px">Tidak ada</span>'}</td>
-      <td style="font-size:11px;color:var(--text-muted)">${timeAgo(s.mulai)}</td>
-    </tr>`).join('') :
-    `<tr><td colspan="7"><div class="empty">
-      <div class="empty-icon">🎮</div>
-      <p class="empty-text">Belum ada sesi yang selesai</p>
-      <p class="empty-sub">Data muncul setelah siswa menyelesaikan semua pos di LATHI</p>
-    </div></td></tr>`;
 }
 
 /* ── ANALISIS ── */

@@ -110,13 +110,14 @@ const Pos4BilikLentera = (() => {
 
     const state   = LenteraGame.state;
     const payload = {
-      sessionId  : state.sessionId,
-      timestamp  : new Date().toISOString(),
-      isAnonim   : false,
-      namaPemain : state.player.nama,
-      sekolah    : state.player.sekolah || '',
-      gender     : state.player.avatarConfig?.gender || '',
-      isiLaporan : isi,
+      sessionId   : state.sessionId,
+      timestamp   : new Date().toISOString(),
+      isAnonim    : false,
+      jenisLaporan: 'laporan',
+      namaPemain  : state.player.nama,
+      sekolah     : state.player.sekolah || '',
+      gender      : state.player.avatarConfig?.gender || '',
+      isiLaporan  : isi,
       skor: {
         resiliensi : state.skor.resiliensi,
         isolasi    : state.skor.isolasi,
